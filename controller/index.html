@@ -4,18 +4,63 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Drone Controller</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
   </head>
   <body>
+    <button id="connect">Connect to server</button>
     <div class="movement">
-      <button id="up">up</button>
-      <button id="down">down</button>
-      <button id="left">left</button>
-      <button id="right">right</button>
+      <button id="up" data-val="up">up</button>
+      <button id="down" data-val="down">down</button>
+      <button id="left" data-val="left">left</button>
+      <button id="right" data-val="right">right</button>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/socket.io@4.7.5/client-dist/socket.io.min.js"></script>
     <script>
-      const socket = new WebSocket("ws://localhost:6969");
+      const movements = $("#up,#down,#left,#right");
+      let connected = false;
+
+      const socket = new WebSocket("ws://localhost:8765");
+      socket.addEventListener("open", (e) => {
+        connected = true;
+        console.log("Connected to server");
+      });
+
+      socket.addEventListener("message", handleMessage);
+
+      socket.addEventListener("close", (e) => {
+        console.log("Connection closed", e);
+        connected = false;
+      });
+
+      socket.addEventListener("error", (e) => {
+        console.error(e);
+      });
+
+      movements.on("click", function (e) {
+        const $target = $(e.currentTarget);
+        const value = $target.data("val");
+
+        sendMessage(value);
+      });
+
+      function handleMessage(e) {
+        console.log(e);
+      }
+
+      function sendMessage(msg) {
+        if (!connected) {
+          console.error("Not connected to server yet!");
+          return;
+        }
+
+        console.log(`Sending message...[${msg}]`);
+        socket.send(msg);
+      }
     </script>
   </body>
 </html>

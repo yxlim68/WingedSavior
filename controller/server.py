@@ -1,19 +1,29 @@
-import socket
+import websockets
+import asyncio
 
-s = socket.socket()
-print("Create Socket")
+connected_clients = set()
 
-port = 6969
-
-s.bind(('', port))
-
-s.listen(5)
-
-while True:
-    c, addr = s.accept()
+async def handler(websocket: websockets.WebSocketServerProtocol, path):
+    connected_clients.add(websocket)
+    print("New connection: ", websocket.id)
+    try:
+        while True:
+            data = await websocket.recv()
+            reply = f"Data recieved as: {data}"
+            print(reply)
+            await websocket.send(reply)
+        
+    except websockets.ConnectionClosed as e:
+        print(f"Connection closed: {e}")
+    except Exception as e:
+        print(e)
+        
+        
+async def main():
+    server = await websockets.serve(handler, host="localhost", port=8765)
+    print("Server started at localhost:6969")
     
-    print("got connection from:", addr)
-    
-    c.send("Thank you for connecting".encode())
+    await server.wait_closed()
 
-    c.close()
+if __name__ == '__main__':
+    asyncio.run(main())
