@@ -4,8 +4,7 @@ from ultralytics.engine.results import Results
 
 model = YOLO("yolov8n.pt")
 
-cap = cv2.VideoCapture(0)
-
+cap = cv2.VideoCapture("oop.mp4")
 
 def detect_person(result: Results) -> bool:
     # only consider that probs that a person at least 0.8
