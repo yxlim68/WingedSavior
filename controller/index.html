@@ -18,10 +18,12 @@
       <button id="down" data-val="down">down</button>
       <button id="left" data-val="left">left</button>
       <button id="right" data-val="right">right</button>
+      <button id="stop" data-val="stop">Stop</button>
     </div>
 
     <script>
       const movements = $("#up,#down,#left,#right");
+      const $btnStop = $("#stop");
       let connected = false;
 
       const socket = new WebSocket("ws://localhost:8765");
@@ -46,6 +48,10 @@
         const value = $target.data("val");
 
         sendMessage(value);
+      });
+
+      $btnStop.on("click", function (e) {
+        sendMessage("stop");
       });
 
       function handleMessage(e) {
