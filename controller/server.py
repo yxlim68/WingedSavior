@@ -3,18 +3,29 @@ from djitellopy import Tello
 import websockets
 import asyncio
 
-connected_clients = set()
+from flask import Flask
+
+from drone.state import connected_clients, app
+from drone.video import video_feed
+
 command = ''
 is_flying = False
 
 tello = Tello()
 
+
+def get_connected_clients() -> set:
+    return connected_clients
+
+
 def tello_connect_if_not():
     try:
         print(f'[Connect Attempt] Drone battery {tello.get_battery()} to check connection')
     except:
-        print('f[Connect Attempt] Drone is not connected. Attempting to connect')
+        print(f'f[Connect Attempt] Drone is not connected. Attempting to connect...')
         tello.connect()
+        print(f'f[Connect Attempt] Batter is: {tello.get_battery()}%')
+
 
 def flythread():
     global command
@@ -51,6 +62,7 @@ async def handler(websocket: websockets.WebSocketServerProtocol, path):
     print("[main] New connection: ", websocket.id)
     try:
         while True:
+            print('[main]', connected_clients)
             data = await websocket.recv()
             reply = f"Data received: {data}"
             print(reply)
@@ -71,7 +83,16 @@ async def main():
     await server.wait_closed()
 
 
+
+def init_app():
+    app.run(host="0.0.0.0", port=8766)
+
+
 if __name__ == '__main__':
     fly_thread = threading.Thread(target=flythread, daemon=True)
-    fly_thread.start()
+
+    web_thread = threading.Thread(target=init_app, daemon=True)
+
+    web_thread.start()
+
     asyncio.run(main())

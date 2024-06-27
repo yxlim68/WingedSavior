@@ -21,9 +21,14 @@
       <button id="stop" data-val="stop">Stop</button>
     </div>
 
+    <img id="gambar" style="width: 100%; max-width: 100%" />
+
+    <img src="http://127.0.0.1:8766/video_feed"/>
+
     <script>
       const movements = $("#up,#down,#left,#right");
       const $btnStop = $("#stop");
+      const $image = $("#gambar");
       let connected = false;
 
       const socket = new WebSocket("ws://localhost:8765");
@@ -54,8 +59,21 @@
         sendMessage("stop");
       });
 
+      let previousImageURL = "";
       function handleMessage(e) {
         console.log(e);
+        console.log(e.data);
+        if (e.data) {
+          <!-- if (previousImageURL) URL.revokeObjectURL(previousImageURL); -->
+
+          const blob = new Blob([e.data], { type: "image/jpeg" });
+
+          const url = URL.createObjectURL(blob);
+          console.log(url);
+          previousImageURL = url;
+
+          $image.prop("src", url);
+        }
       }
 
       function sendMessage(msg) {
