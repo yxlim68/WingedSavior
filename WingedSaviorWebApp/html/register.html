@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winged Saviors - Register</title>
+	<link href="styles.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <header class="fixed-header">
+        <div class="header-content">
+            <img src="img/logo.png" alt="Winged Saviors Logo" class="logo" height="50px" width="auto">
+        </div>
+    </header>
+
+    <div class="register-container">
+        <div class="register-box">
+            <h2>Register for Winged Saviors</h2>
+            <form id="registerForm" onsubmit="return registerUser()">
+                <label for="first-name">First Name</label>
+                <input type="text" id="first-name" name="first-name" placeholder="First Name" required>
+                <label for="last-name">Last Name</label>
+                <input type="text" id="last-name" name="last-name" placeholder="Last Name" required>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Username" required>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Email" required>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
+                <button type="submit">Register</button>
+            </form>
+            <div class="login-link">
+                <p>Already have an account? <a href="login.html">Login here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function registerUser() {
+            // Perform form validation
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match.');
+                return false;
+            }
+
+            // Here you can add code to store user information (e.g., using Firebase)
+
+            // Redirect to profile.html after successful registration
+            window.location.href = 'profile.html';
+
+            return false; // Prevent form from submitting via default behavior
+        }
+    </script>
+</body>
+</html>

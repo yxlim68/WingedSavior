@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Winged Saviors</title>
+	<link href="styles.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <header class="fixed-header">
+        <div class="header-content">
+            <img src="img/logo.png" alt="Winged Saviors Logo" class="logo" height="50px" width="auto">
+        </div>
+    </header>
+    <div class="image-container">
+        <!-- Insert your image content here -->
+    </div>
+    <div class="login-container">
+        <div class="login-box">
+            <h2>Login to Winged Saviors</h2>
+            <form action="#" method="POST">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <div class="form-check">
+                    <div class="forgot-password">
+                        <a href="#">Forgot password?</a>
+                    </div>
+                    <div class="password-toggle">
+                        <img src="img/icon_HidePassword.png" alt="Show Password" id="togglePassword">
+                    </div>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+            <div class="register-link">
+                <p>Don't have an account? <a href="register.html">Register here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function() {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.src = type === 'password' ? 'img/icon_HidePassword.png' : 'img/icon_ShowPassword.png';
+        });
+    </script>
+</body>
+</html>

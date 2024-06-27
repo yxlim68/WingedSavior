@@ -1,0 +1,564 @@
+/* Base Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header Styles */
+.fixed-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    z-index: 1000;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.fixed-header .header-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fixed-header .logo-img {
+    height: 50px;
+    width: auto;
+    margin: 0 20px;
+}
+
+/* Container Styles */
+.profile-container, .register-container, .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 150px);
+    margin-top: 80px;
+}
+
+.profile-box, .login-box, .register-box {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 2em;
+    width: 350px;
+    text-align: center;
+}
+
+.profile-box img, .login-box img, .register-box img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 1em;
+}
+
+.profile-box h2, .login-box h2, .register-box h2 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+    color: #007BFF;
+}
+
+.profile-box p {
+    margin-bottom: 1em;
+    color: #333;
+}
+
+/* Form Styles */
+.login-box form, .register-box form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-box label, .register-box label {
+    font-size: 1.2em;
+    margin-bottom: 0.5em;
+    color: #333;
+    text-align: left;
+    width: 100%;
+}
+
+.login-box input[type="text"], .login-box input[type="password"], .register-box input[type="text"], .register-box input[type="password"], .register-box input[type="email"] {
+    width: calc(100% - 22px);
+    padding: 0.5em;
+    margin-bottom: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+/* Password Toggle Styles */
+.password-toggle {
+    position: relative;
+    width: calc(30% - 30px);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 0.5em;
+    margin-top: 20px;
+}
+
+.password-toggle img {
+    cursor: pointer;
+    width: 25px;
+    height: 20px;
+    margin-left: 10px;
+}
+
+/* Forgot Password Styles */
+.forgot-password {
+    text-align: left;
+    margin-top: 0;
+    font-size: 0.9em;
+    color: #007BFF;
+    flex-grow: 1;
+}
+
+/* Checkbox Styles */
+.form-check {
+    margin-bottom: 1em;
+    text-align: left;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-check label {
+    flex-grow: 1;
+}
+
+.login-box input[type="checkbox"], .register-box input[type="checkbox"] {
+    margin-right: 0.5em;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.3s ease;
+}
+
+.login-box input[type="checkbox"]:checked::before, .register-box input[type="checkbox"]:checked::before {
+    content: '\2714';
+    font-size: 14px;
+    color: #007BFF;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.login-box input[type="checkbox"]:hover, .register-box input[type="checkbox"]:hover {
+    background-color: #f0f0f0;
+}
+
+/* Button Styles */
+.profile-box button, .login-box button, .register-box button, .feature button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 1em 2em;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 1em;
+}
+
+.profile-box button:hover, .login-box button:hover, .register-box button:hover, .feature button:hover {
+    background-color: #0056b3;
+}
+
+/* Link Styles */
+.feedback-link, .register-link, .login-link {
+    text-align: center;
+    margin-top: 1em;
+}
+
+.feedback-link a, .register-link a, .login-link a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.feedback-link a:hover, .register-link a:hover, .login-link a:hover {
+    text-decoration: underline;
+}
+
+/* Splash Screen Styles */
+.splash-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+}
+
+.splash-screen h1 {
+    font-size: 3em;
+    margin-top: 20px;
+    animation: fadeInOut 5s ease-in-out;
+}
+
+.splash-screen img {
+    height: 150px; /* Adjust height to fit better */
+    width: auto;
+    animation: fadeInOut 5s ease-in-out;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Container Styles */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Feature Styles */
+.features {
+    background-color: #fff;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.features h2 {
+    color: #007BFF;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.feature {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f0f4f8;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.feature:hover {
+    transform: translateY(-5px);
+}
+
+.feature h3 {
+    color: #007BFF;
+    font-size: 1.2em;
+}
+
+.feature p {
+    color: #666;
+    margin-top: 5px;
+}
+
+/* Project History Styles */
+.project-history {
+    margin-top: 80px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.project-history h2 {
+    color: #007BFF;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f2f2f2;
+}
+
+/* Bottom Navigation Styles */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #007BFF;
+    padding: 10px 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+	border-top-left-radius: 30px;
+	border-top-right-radius: 30px;
+}
+
+.bottom-nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+.bottom-nav ul li {
+    flex: 1;
+    text-align: center;
+}
+
+.bottom-nav ul li a {
+    display: block;
+    padding: 5px;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.bottom-nav ul li a:hover {
+    background-color: #0056b3;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .profile-box, .login-box, .register-box {
+        width: 90%;
+    }
+
+    .features {
+        padding: 10px;
+    }
+
+    .feature {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .fixed-header {
+        padding: 5px 0;
+    }
+
+    .fixed-header .header-content {
+        flex-direction: column;
+    }
+
+    .fixed-header .logo-img {
+        margin: 0;
+    }
+}
+
+/* Additional padding for main content */
+main {
+    padding-bottom: 60px; /* Adjust the value as needed */
+}
+
+/* Additional form styles */
+.form-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 2em;
+    margin-top: 20px;
+}
+
+.form-group {
+    margin-bottom: 1.5em;
+}
+
+.form-group label {
+    display: block;
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+    color: #333;
+}
+
+.form-group input[type="text"] {
+    width: calc(100% - 22px);
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.features h2 {
+    color: #007BFF;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Button Styles */
+.form-container button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 1em 2em;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 1em;
+}
+
+.form-container button:hover {
+    background-color: #0056b3;
+}
+
+/* Media Queries */
+@media (max-width: 600px) {
+    .profile-box, .login-box, .register-box, .form-container {
+        width: 80%;
+    }
+}
+
+/* Additional profile styles */
+.profile-box {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 2em;
+    width: 350px;
+    text-align: center;
+    margin-top: 0px;
+}
+
+.profile-box img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 1em;
+}
+
+.profile-box h2 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+    color: #007BFF;
+}
+
+.profile-box p {
+    margin-bottom: 0.5em;
+    color: #333;
+}
+
+.profile-actions {
+    margin-top: 1em;
+}
+
+.settings-button {
+    background-color: transparent;
+    color: #007BFF;
+    border: none;
+    padding: 0.5em 1em;
+    font-size: 1em;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.settings-button:hover {
+    color: #0056b3;
+}
+
+.feedback-link {
+    margin-top: 1em;
+}
+
+.feedback-link a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.feedback-link a:hover {
+    text-decoration: underline;
+}
+
+/* Container Styles */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Bottom Navigation Styles */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #007BFF;
+    padding: 10px 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+}
+
+.bottom-nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+.bottom-nav ul li {
+    flex: 1;
+    text-align: center;
+}
+
+.bottom-nav ul li a {
+    display: block;
+    padding: 5px;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.bottom-nav ul li a:hover {
+    background-color: #0056b3;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .profile-box, .login-box, .register-box {
+        width: 90%;
+    }
+
+    .features {
+        padding: 10px;
+    }
+
+    .fixed-header {
+        padding: 5px 0;
+    }
+
+    .fixed-header .header-content {
+        flex-direction: column;
+    }
+
+    .fixed-header .logo-img {
+        margin: 0;
+    }
+}
