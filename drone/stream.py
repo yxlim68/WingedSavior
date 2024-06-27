@@ -1,6 +1,6 @@
 import cv2
 from djitellopy import Tello
-from flask import Flask, Response
+from flasktest import Flask, Response
 from ultralytics import YOLO
 
 from drone.config import TELLO_HOST
@@ -10,11 +10,9 @@ tello = Tello(host=TELLO_HOST)
 model = YOLO('yolov8n.pt')
 app = Flask(__name__)
 
-
 @app.route('/')
 def home():
     return Response("This flask home")
-
 
 def video_feed():
     def generate():
