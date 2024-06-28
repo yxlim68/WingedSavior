@@ -33,9 +33,41 @@ def db():
         return (conn, cursor)
     except connector.Error as e:
         log(f'Error while connecting to database: {e}')
-        return None
+        raise e
         
 
+@app.route("/register", methods=['POST'])
+def register():
+    if request.method != 'POST':
+        return Response(status=405)
+    
+    try:
+        data = request.json
+        print(data)
+        
+        _, cursor = db()
+        
+        query = f"INSERT INTO users(email, username, password) VALUES('{data['email']}', '{data['username']}','{data['password']}')"
+        
+        cursor.execute(query)
+        user_id = cursor.lastrowid
+        cursor.execute("commit")
+        
+        # TODO: Add validation
+        return {
+            "message": "Success",
+            "user_id": user_id
+        }
+        
+    except Exception as e:
+        log('[register] Error occured')
+        print(e) 
+        return jsonify({
+                "message": "Error",
+                "error": str(e)
+            }), 500
+    
+    
 
 @app.route('/login', methods=['POST'])
 def login():
