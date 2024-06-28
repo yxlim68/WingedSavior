@@ -47,7 +47,7 @@ def register():
         
         _, cursor = db()
         
-        query = f"INSERT INTO users(email, username, password) VALUES('{data['email']}', '{data['username']}','{data['password']}')"
+        query = f"INSERT INTO users(firstname, lastname, email, username, password) VALUES('{data['firstname']}','{data['lastname']}','{data['email']}', '{data['username']}','{data['password']}')"
         
         cursor.execute(query)
         user_id = cursor.lastrowid
