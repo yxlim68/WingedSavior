@@ -65,16 +65,46 @@ def register():
         return jsonify({
                 "message": "Error",
                 "error": str(e)
-            }), 500
+            }), 400
     
     
 
 @app.route('/login', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        return Response("KKK")
+    if request.method != 'POST':
+        return {}, 405
 
-    return Response({"message": "405"}, status=405, content_type="application/json")
+    try:
+        data = request.json
+        
+        _, cursor = db()
+        
+        # TODO: add encryption
+        query = f"SELECT * FROM users WHERE username = '{data['username']}' AND password = '{data['password']}'"
+        
+        cursor.execute(query)
+        
+        res = cursor.fetchone()
+        
+        if not res:
+            return {
+                "message": "Failed"
+            }, 200
+        
+        return {
+            "message": "Success",
+            "user": res
+        }, 200
+        
+        
+    except Exception as e:
+        log('[login] Error occured')
+        print(e) 
+        return {
+            "message": "Error",
+            "error": str(e)
+        }, 400
+
 
 @app.route('/create_project', methods=['POST'])
 def create_project():
