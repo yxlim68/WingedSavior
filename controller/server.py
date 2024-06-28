@@ -7,7 +7,7 @@ from flask import Flask
 
 from drone.state import connected_clients, app
 from drone.video import video_feed
-from controller.web import login
+from controller.web import login, create_project, get_snapshot
 
 command = ''
 is_flying = False

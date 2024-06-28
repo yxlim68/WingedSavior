@@ -6,7 +6,6 @@ from ultralytics import YOLO
 from plyer import notification
 import numpy as np
 import os
-from geopy.geocoders import Nominatim
 import requests
 import mysql.connector as connector
 import platform
@@ -26,7 +25,7 @@ def check_and_start_xampp():
 
         if b'No tasks' in apache_status.stdout or b'No tasks' in mysql_status.stdout:
             print("Starting XAMPP...")
-            subprocess.run(['C:\\xampp\\xampp_start.exe'])
+            # subprocess.run(['C:\\xampp\\xampp_start.exe'])
             time.sleep(10)  # Wait for XAMPP to start
         else:
             print("XAMPP is already running.")
@@ -38,7 +37,7 @@ def check_and_start_xampp():
 def stop_xampp():
     if platform.system() == 'Windows':
         print("Stopping XAMPP...")
-        subprocess.run(['C:\\xampp\\xampp_stop.exe'])
+        # subprocess.run(['C:\\xampp\\xampp_stop.exe'])
     elif platform.system() == 'Linux':
         print("Stopping XAMPP...")
         subprocess.run(['/opt/lampp/lampp', 'stop'])
