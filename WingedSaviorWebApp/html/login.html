@@ -91,7 +91,7 @@
             throw new Error("Login failed :" + (await res.text()));
           }
 
-          const data = await res.json().user;
+          const data = (await res.json()).user;
 
           localStorage.setItem("user", JSON.stringify(data));
           window.location.href = "home.html";
