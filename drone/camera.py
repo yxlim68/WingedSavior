@@ -11,6 +11,7 @@ import mysql.connector as connector
 import platform
 import subprocess
 import sys
+import hashlib
 
 # Assuming a frame size of 960x720 (adjust according to your Tello camera resolution)
 FRAME_WIDTH = 960
@@ -25,7 +26,7 @@ def check_and_start_xampp():
 
         if b'No tasks' in apache_status.stdout or b'No tasks' in mysql_status.stdout:
             print("Starting XAMPP...")
-            # subprocess.run(['C:\\xampp\\xampp_start.exe'])
+            subprocess.run(['C:\\xampp\\xampp_start.exe'])
             time.sleep(10)  # Wait for XAMPP to start
         else:
             print("XAMPP is already running.")
@@ -37,7 +38,7 @@ def check_and_start_xampp():
 def stop_xampp():
     if platform.system() == 'Windows':
         print("Stopping XAMPP...")
-        # subprocess.run(['C:\\xampp\\xampp_stop.exe'])
+        subprocess.run(['C:\\xampp\\xampp_stop.exe'])
     elif platform.system() == 'Linux':
         print("Stopping XAMPP...")
         subprocess.run(['/opt/lampp/lampp', 'stop'])
@@ -167,6 +168,9 @@ if __name__ == '__main__':
     fly_thread = threading.Thread(target=fly, args=(tello,), daemon=True)
     fly_thread.start()
 
+    seen_person_hashes = set()
+    last_notification_time = time.time()  # Track the last notification time
+
     while True:
         result_frame = tello.get_frame_read()
         frame = result_frame.frame
@@ -184,26 +188,24 @@ if __name__ == '__main__':
 
         predict_image = results[0].plot()
 
+        current_time = time.time()
+
         # Check if any human is detected
         for result in results[0].boxes:
             if result.cls == 0:  # class 0 is typically 'person' in COCO dataset
                 confidence = result.conf.item()  # Convert Tensor to Python float
                 x1, y1, x2, y2 = map(int, result.xyxy[0])  # Get bounding box coordinates
                 x, y, w, h = x1, y1, x2 - x1, y2 - y1  # Convert to (x, y, w, h)
-                #
-                # # Calculate approximate center of the bounding box
-                # center_x = x + w // 2
-                # center_y = y + h // 2
 
-                # Get current location
-                # location = get_location()
-                # if location:
-                #     latitude, longitude = location
+                # Generate hash of bounding box coordinates
+                bbox_hash = hashlib.md5(f"{x1}{y1}{x2}{y2}".encode()).hexdigest()
 
-                send_notification(f"Human detected with confidence {confidence:.2f}")
-                snap(frame, confidence, x, y, w, h)  # Take a snapshot
-
-                    # print(f"Human detected at Latitude: {latitude}, Longitude: {longitude}")
+                # Check if this person has been seen before and if the last notification was more than a minute ago
+                if bbox_hash not in seen_person_hashes and (current_time - last_notification_time) > 10:
+                    seen_person_hashes.add(bbox_hash)
+                    last_notification_time = current_time
+                    send_notification(f"Human detected with confidence {confidence:.2f}")
+                    snap(frame, confidence, x, y, w, h)  # Take a snapshot
 
         cv2.imshow("Drone Camera", frame)
         cv2.imshow("Prediction", predict_image)
