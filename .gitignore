@@ -1,3 +1,4 @@
 snapshots
 yolov8n.pt
 node_modules
+__pycache__
