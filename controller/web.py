@@ -4,7 +4,8 @@ from flask import Response, jsonify, request, Flask
 from flask_cors import CORS
 import mysql.connector as connector
 
-DEBUG_WEB = True
+from drone.state import DEBUG_WEB
+
 
 def log(msg):
     print('[web] ' + msg)
