@@ -2,7 +2,6 @@ from flask import Flask
 import controller.routes as routes
 import drone.video as video_route
 
-import mysql.connector as connector
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -16,22 +15,6 @@ CORS(app)
 
 def log(msg, prefix="web"):
     print(f'[{prefix}] ' + msg)
-
-def db():
-    try:
-        conn = connector.connect(
-            host="localhost",
-            database="drone",
-            user="root",
-            password=""
-        )
-        
-        cursor = conn.cursor(dictionary=True)
-        
-        return (conn, cursor)
-    except connector.Error as e:
-        log(f'Error while connecting to database: {e}')
-        raise e
 
 
 def init_app():

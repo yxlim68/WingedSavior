@@ -3,6 +3,7 @@ import json
 from flask import Blueprint, Response, jsonify, request, Flask
 import mysql.connector as connector
 
+from controller.db import db
 from drone.config import DEBUG_WEB
 
 routes_bp = Blueprint("general routes", __name__)
