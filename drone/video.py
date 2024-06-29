@@ -2,12 +2,11 @@ import asyncio
 
 import cv2
 from djitellopy import Tello
-from flask import Response
+from flask import Blueprint, Response
 
-from drone.state import tello, app
+video_bp = Blueprint("Video BP", __name__)
 
-
-@app.route("/video_feed", endpoint='_video_feed')
+@video_bp.route("/video_feed", endpoint='_video_feed')
 def video_feed():
     tello_connect_if_not()
     tello.streamon()
@@ -30,3 +29,7 @@ def video_feed():
     return Response(generate(),  mimetype="multipart/x-mixed-replace;boundary=frame")
 
 from controller.server import tello_connect_if_not
+
+
+
+    
