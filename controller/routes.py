@@ -1,7 +1,6 @@
 import base64
 import json
 from flask import Blueprint, Response, jsonify, request, Flask
-import mysql.connector as connector
 
 from controller.db import db
 from drone.config import DEBUG_WEB
@@ -125,6 +124,3 @@ def get_snapshot():
 
 if __name__ == "__main__":
     init_app()
-
-if DEBUG_WEB:
-    from drone.video import video_feed

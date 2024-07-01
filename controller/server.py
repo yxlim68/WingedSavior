@@ -1,12 +1,16 @@
 import threading
-from djitellopy import Tello
 import websockets
 import asyncio
 
+from controller.web import init_app
+from drone.tello import tello
 from drone.state import connected_clients
 
 command = ''
 is_flying = False
+
+
+
 
 
 
@@ -78,10 +82,6 @@ async def main():
     print("Server started at localhost:8765")
     await server.wait_closed()
 
-
-
-def init_app():
-    app.run(host="0.0.0.0", port=8766)
 
 
 if __name__ == '__main__':
