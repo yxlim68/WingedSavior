@@ -23,7 +23,7 @@
 
     <img id="gambar" style="width: 100%; max-width: 100%" />
 
-    <img src="http://127.0.0.1:8766/video_feed"/>
+    <img src="http://127.0.0.1:8766/video_feed" />
 
     <script>
       const movements = $("#up,#down,#left,#right");
@@ -31,7 +31,7 @@
       const $image = $("#gambar");
       let connected = false;
 
-      const socket = new WebSocket("ws://localhost:8765");
+      const socket = new WebSocket("ws://192.168.200.40:8765");
       socket.addEventListener("open", (e) => {
         connected = true;
         console.log("Connected to server");

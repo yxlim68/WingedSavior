@@ -2,9 +2,6 @@ from ultralytics import YOLO
 import cv2
 from ultralytics.engine.results import Results
 
-model = YOLO("yolov8n.pt")
-
-cap = cv2.VideoCapture("oop.mp4")
 
 def detect_person(result: Results) -> bool:
     # only consider that probs that a person at least 0.8
@@ -20,26 +17,31 @@ def detect_person(result: Results) -> bool:
 
     return False
 
+if __name__ == '__main__':
+            
+    model = YOLO("yolov8n.pt")
 
-while cap.isOpened():
-    ret, frame = cap.read()
+    cap = cv2.VideoCapture(0)
+    
+    while cap.isOpened():
+        ret, frame = cap.read()
 
-    if not ret:
-        print("Failed to ready frame!")
-        continue
+        if not ret:
+            print("Failed to ready frame!")
+            continue
 
-    results = model.track(frame, persist=True, verbose=True)
+        results = model.track(frame, persist=True, verbose=True)
 
-    annotated_frame = results[0].plot()
+        annotated_frame = results[0].plot()
 
-    person_detected = detect_person(results[0])
-    if person_detected:
-        print("Person detected")
-        cv2.imshow("Detected Frame", annotated_frame)
-    cv2.imshow("Tracking", annotated_frame)
+        person_detected = detect_person(results[0])
+        if person_detected:
+            print("Person detected")
+            cv2.imshow("Detected Frame", annotated_frame)
+        cv2.imshow("Tracking", annotated_frame)
 
-    if cv2.waitKey(1) & 0xFF == ord("q"):
-        break
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            break
 
-cap.release()
-cv2.destroyAllWindows()
+    cap.release()
+    cv2.destroyAllWindows()

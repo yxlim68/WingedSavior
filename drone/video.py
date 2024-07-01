@@ -1,6 +1,8 @@
 import cv2
 from flask import Blueprint, Response
 from drone.config import DEBUG_VIDEO
+from drone.detection import detect_person
+from drone.yolo import model
 
 video_bp = Blueprint("Video BP", __name__)
 
@@ -10,7 +12,7 @@ if DEBUG_VIDEO:
 @video_bp.route("/video_feed", endpoint='_video_feed')
 def video_feed():
     if not DEBUG_VIDEO:
-        from drone.tello import tello
+        from drone.tello import tello, tello_connect_if_not
         
         tello_connect_if_not()
         tello.streamon()
@@ -27,8 +29,17 @@ def video_feed():
     def generate():
         while True:
             frame = get_frame()
+            
+            results = model.track(frame, persist=True, classes=0, verbose=False)
 
-            success, jpeg = cv2.imencode('.jpg', frame)
+            person_detected = detect_person(results[0])
+
+            if person_detected:
+                output = results[0].plot()
+            else:
+                output = frame
+
+            success, jpeg = cv2.imencode('.jpg', output)
 
             if not success:
                 print('[video_feed] Frame Dropped')
@@ -38,9 +49,3 @@ def video_feed():
                    b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
 
     return Response(generate(),  mimetype="multipart/x-mixed-replace;boundary=frame")
-
-from controller.server import tello_connect_if_not
-
-
-
-    
