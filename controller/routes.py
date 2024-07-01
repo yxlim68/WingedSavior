@@ -88,7 +88,7 @@ def create_project():
     # TODO: add validation
     
     (_, cursor) = db()
-    query = f"insert into project(name, coordinate, detect) values ({data['name']},{data['coordinate']},{data['detection']})"
+    query = f"insert into project(name, coordinate, detect) values ('{data['name']}','{data['coordinate']}','{data['detection']}')"
     cursor.execute(query)
     project_id = cursor.lastrowid
     
@@ -122,5 +122,19 @@ def get_snapshot():
     
     return jsonify(encoded)
 
-if __name__ == "__main__":
-    init_app()
+@routes_bp.route('/check_project')
+def check_project():
+    project_id = request.args.get('project')
+    if not project_id:
+        return {}, 404
+    
+    _, cur = db()
+    
+    query = f"SELECT * FROM project WHERE id = '{project_id}'"
+    cur.execute(query)
+    res = cur.fetchone()
+    print(res)
+    if not res:
+        return {}, 404
+    
+    return {}, 200

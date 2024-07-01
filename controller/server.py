@@ -3,7 +3,6 @@ import websockets
 import asyncio
 import socket
 
-
 from controller.web import init_app
 from drone.tello import tello, tello_connect_if_not
 from drone.state import connected_clients
@@ -14,8 +13,6 @@ is_flying = False
 
 def get_connected_clients() -> set:
     return connected_clients
-
-
 
 
 def flythread():
@@ -67,6 +64,7 @@ async def handler(websocket: websockets.WebSocketServerProtocol, path):
     finally:
         connected_clients.remove(websocket)
 
+
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
@@ -79,9 +77,10 @@ def get_local_ip():
         s.close()
     return ip
 
+
 async def main():
     server = await websockets.serve(handler, host="0.0.0.0", port=8765)
-    
+
     print("Server started at:")
     local_ip = get_local_ip()
     print(f"Server started at {local_ip}:8765 and is accessible from local network devices")

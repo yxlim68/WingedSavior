@@ -9,7 +9,7 @@ video_bp = Blueprint("Video BP", __name__)
 if DEBUG_VIDEO:
     cap = cv2.VideoCapture(0)
 
-@video_bp.route("/video_feed", endpoint='_video_feed')
+@video_bp.route("/video_feed")
 def video_feed():
     if not DEBUG_VIDEO:
         from drone.tello import tello, tello_connect_if_not
@@ -29,6 +29,8 @@ def video_feed():
     def generate():
         while True:
             frame = get_frame()
+
+            # output = frame
             
             results = model.track(frame, persist=True, classes=0, verbose=False)
 

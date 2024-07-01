@@ -1,0 +1,1 @@
+python -m flask --app controller/server.py --debug run

@@ -77,7 +77,8 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <script>
+    <script type="module">
+      import { api } from "./conn.js";
       $(function () {
         const $form = $("#new-project-form");
         const $name = $("#project-name");
@@ -91,17 +92,25 @@
           const coordinate = $coordinate.prop("value");
           const detection = $detection.prop("value");
 
-          // send to backend
-          const res = await fetch(api("/create_project"), {
-            method: "post",
-            headers: {
-              "Content-Type": "application/json",
-              accept: "application/json",
-            },
-            body: JSON.stringify({ name, coordinate, detection }),
-          });
+          try {
+            // send to backend
+            const res = await fetch(api("/create_project"), {
+              method: "post",
+              headers: {
+                "Content-Type": "application/json",
+                accept: "application/json",
+              },
+              body: JSON.stringify({ name, coordinate, detection }),
+            });
 
-          console.log(await res.text());
+            const data = await res.json();
+            const projectId = data.project_id;
+
+            // redirect to project page
+            window.location.href = `project.html?project=${projectId}`;
+          } catch (e) {
+            alert("Failed to create project\n\n" + e);
+          }
         });
       });
     </script>
