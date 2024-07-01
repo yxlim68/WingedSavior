@@ -1,30 +1,21 @@
 import threading
 import websockets
 import asyncio
+import socket
+
 
 from controller.web import init_app
-from drone.tello import tello
+from drone.tello import tello, tello_connect_if_not
 from drone.state import connected_clients
 
 command = ''
 is_flying = False
 
 
-
-
-
-
 def get_connected_clients() -> set:
     return connected_clients
 
 
-def tello_connect_if_not():
-    try:
-        print(f'[Connect Attempt] Drone battery {tello.get_battery()} to check connection')
-    except:
-        print(f'f[Connect Attempt] Drone is not connected. Attempting to connect...')
-        tello.connect()
-        print(f'f[Connect Attempt] Batter is: {tello.get_battery()}%')
 
 
 def flythread():
@@ -76,12 +67,28 @@ async def handler(websocket: websockets.WebSocketServerProtocol, path):
     finally:
         connected_clients.remove(websocket)
 
+def get_local_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('10.254.254.254', 1))
+        ip = s.getsockname()[0]
+    except Exception:
+        ip = '127.0.0.1'
+    finally:
+        s.close()
+    return ip
 
 async def main():
-    server = await websockets.serve(handler, host="localhost", port=8765)
-    print("Server started at localhost:8765")
+    server = await websockets.serve(handler, host="0.0.0.0", port=8765)
+    
+    print("Server started at:")
+    local_ip = get_local_ip()
+    print(f"Server started at {local_ip}:8765 and is accessible from local network devices")
+    for sock in server.sockets:
+        host, port = sock.getsockname()[:2]
+        print(f"Host: {host}, Port: {port}")
     await server.wait_closed()
-
 
 
 if __name__ == '__main__':
