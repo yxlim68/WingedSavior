@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Feed - WingedSaviors</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  </head>
+  <body>
+    <header class="fixed-header">
+      <div class="header-content">
+        <img
+          src="img/logo.png"
+          alt="Winged Saviors Logo"
+          class="logo-img"
+          height="50px"
+          width="auto"
+        />
+      </div>
+    </header>
+
+    <main>
+      <br />
+      <section class="features">
+        <div class="container">
+          <h2>Live Feed</h2>
+
+          <div class="feature">
+            <img id="video-src" alt="" />
+            <div id="errmodal" style="display: none">
+              <h3><i class="ph-fill ph-warning"></i> Connection Error</h3>
+              <p>Error loading live feed</p>
+              <a href="video.html">Try again</a>
+            </div>
+            <style>
+              #errmodal {
+                width: 300px;
+                max-width: 100%;
+                margin: 0 auto;
+                background-color: #fff;
+                padding: 10px;
+                border-radius: 16px;
+              }
+              #errmodal h3 {
+                color: #b91c1c;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+              }
+              #errmodal a {
+                display: block;
+                margin-top: 20px;
+                width: 100%;
+                box-sizing: border-box;
+                text-align: center;
+                text-decoration: none;
+                padding: 8px 12px;
+                background-color: #059669;
+                color: #fff;
+                border-radius: 6px;
+              }
+            </style>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <nav class="bottom-nav">
+        <ul>
+          <li>
+            <a href="home.html" class="active">
+              <img src="img/home.png" alt="Home" /><br />
+              <span class="nav-name">Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="notification.html">
+              <img src="img/notification.png" alt="Notifications" />
+              <span class="nav-name">Notifications</span>
+            </a>
+          </li>
+          <li>
+            <a href="profile.html">
+              <img src="img/user.png" alt="Profile" /><br />
+              <span class="nav-name">Profile</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </footer>
+
+    <script type="module" src="video.js"></script>
+  </body>
+</html>
