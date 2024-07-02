@@ -1,58 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Notifications - Winged Saviors</title>
-    <link href="styles.css" rel="stylesheet" type="text/css">
+    <link href="styles.css" rel="stylesheet" type="text/css" />
     <!-- Meta tags for SEO and social media -->
-    <meta name="description" content="Stay updated with the latest notifications from Winged Saviors.">
-    <meta property="og:title" content="Notifications - Winged Saviors">
-    <meta property="og:description" content="Stay updated with the latest notifications from Winged Saviors.">
-    <meta property="og:image" content="img/logo.png">
-    <meta property="og:url" content="https://www.wingedsaviors.com/notifications.html">
-</head>
-<body>
+    <meta
+      name="description"
+      content="Stay updated with the latest notifications from Winged Saviors."
+    />
+    <meta property="og:title" content="Notifications - Winged Saviors" />
+    <meta
+      property="og:description"
+      content="Stay updated with the latest notifications from Winged Saviors."
+    />
+    <meta property="og:image" content="img/logo.png" />
+    <meta
+      property="og:url"
+      content="https://www.wingedsaviors.com/notifications.html"
+    />
+  </head>
+  <body>
     <header class="fixed-header">
-        <div class="header-content">
-            <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img">
-        </div>
+      <div class="header-content">
+        <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img" />
+      </div>
     </header>
-    <main><br><br><br>
-        <section class="notifications container">
-            <h2>Notifications</h2>
-            <div class="alert">
-                <p><strong>Alert:</strong> New object detected: Tree at X: 100, Y: 200, Z: 50.</p>
-            </div>
-            <div class="alert">
-                <p><strong>Alert:</strong> New object detected: Building at X: 150, Y: 250, Z: 70.</p>
-            </div>
-            <div class="alert">
-                <p><strong>Alert:</strong> New object detected: Car at X: 200, Y: 300, Z: 100.</p>
-            </div>
-        </section>
+    <main>
+      <br /><br /><br />
+      <section class="notifications container">
+        <h2>Notifications</h2>
+        <div class="alert">
+          <p>
+            <strong>Alert:</strong> New object detected: Tree at X: 100, Y: 200,
+            Z: 50.
+          </p>
+        </div>
+        <div class="alert">
+          <p>
+            <strong>Alert:</strong> New object detected: Building at X: 150, Y:
+            250, Z: 70.
+            <!-- <img src="data:image/jpeg;base64," alt=""> -->
+          </p>
+        </div>
+        <div class="alert">
+          <p>
+            <strong>Alert:</strong> New object detected: Car at X: 200, Y: 300,
+            Z: 100.
+          </p>
+        </div>
+      </section>
     </main>
     <footer class="bottom-nav">
-        <ul>
-            <li>
-                <a href="home.html" class="active">
-                    <img src="img/home.png" alt="Home"><br>
-                    <span class="nav-name">Home</span>
-                </a>
-            </li>
-            <li>
-                <a href="notification.html">
-                    <img src="img/notification.png" alt="Notifications">
-                    <span class="nav-name">Notifications</span>
-                </a>
-            </li>
-            <li>
-                <a href="profile.html">
-                    <img src="img/user.png" alt="Profile"><br>
-                    <span class="nav-name">Profile</span>
-                </a>
-            </li>
-        </ul>
+      <ul>
+        <li>
+          <a href="home.html" class="active">
+            <img src="img/home.png" alt="Home" /><br />
+            <span class="nav-name">Home</span>
+          </a>
+        </li>
+        <li>
+          <a href="notification.html">
+            <img src="img/notification.png" alt="Notifications" />
+            <span class="nav-name">Notifications</span>
+          </a>
+        </li>
+        <li>
+          <a href="profile.html">
+            <img src="img/user.png" alt="Profile" /><br />
+            <span class="nav-name">Profile</span>
+          </a>
+        </li>
+      </ul>
     </footer>
-</body>
+
+    <script type="module">
+      import {
+        initNotification,
+        getAllNotificationImages,
+      } from "./notification.js";
+      import { requiredProject } from "./conn.js";
+      import "./jquery.min.js";
+
+      $(function () {
+        let notifications = [];
+        let loadedImages = [];
+        let loadNoti = false;
+
+        requiredProject(async (projectId) => {
+          initNotification(projectId, async (notis) => {
+            console.log(notis);
+            if (!loadNoti) {
+              notifications = notis;
+              loadedImages = await getAllNotificationImages(notis);
+              console.log(loadedImages);
+              loadNoti = true;
+              updateNotificationView();
+              return;
+            }
+
+            // update subsequent request
+            let loadedIds = notifications.reduce(
+              (acc, c) => [...acc, c.id],
+              []
+            );
+            let unloadedNotis = notis.filter(
+              (noti) => !loadedIds.includes(noti.id)
+            );
+            console.log(unloadedNotis);
+
+            if (unloadedNotis.length === 0) return;
+
+            notifications = notis;
+            loadedImages = [
+              ...loadedImages,
+              ...(await getAllNotificationImages(unloadedNotis)),
+            ];
+
+            console.log(loadedImages);
+            updateNotificationView();
+          });
+        });
+
+        function updateNotificationView() {
+          const $container = $(".notifications.container");
+          const $alerts = $(".alert", $container);
+          const ids = $alerts.map((i, d) => $(d).data("id")).toArray();
+          for (const noti of notifications) {
+            if (ids.includes(noti.id)) continue;
+
+            const imageData = loadedImages.find((i) => i.SSID === noti.img_id);
+
+            const alert = createAlert(noti.id, "Person", imageData.SS);
+
+            $container.append(alert);
+          }
+        }
+
+        function createAlert(id, type, image) {
+          const alert = $(`
+          <div class="alert" data-id="${id}">
+            <strong>Alert:</strong> New object detected: ${type} at X: 150, Y:
+            250, Z: 70.
+             <img src="data:image/jpeg;base64,${image}" alt="">
+          </div>
+          `);
+
+          return alert;
+        }
+      });
+    </script>
+  </body>
 </html>

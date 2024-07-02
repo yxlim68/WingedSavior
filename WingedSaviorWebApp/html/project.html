@@ -79,19 +79,19 @@
 
     <script type="module">
       // check project id
-      import { api, checkProjectExist } from "./conn.js";
+      import { api, checkProjectExist, requiredProject } from "./conn.js";
+      import { initNotification } from "./notification.js";
       import "./jquery.min.js";
 
       $(async function () {
-        const params = new URLSearchParams(window.location.search);
-        const projectId = params.get("project");
+        await requiredProject((projectId) => {
+          // init notification
 
-        // TODO: redirect user to project list page
-
-        if (!projectId) alert("No valid project found");
-
-        const exist = await checkProjectExist(projectId);
-        if (!exist) alert("Invalid project");
+          initNotification(projectId, (noti) => {
+            console.log("ttt");
+            console.log(noti);
+          });
+        });
       });
     </script>
   </body>

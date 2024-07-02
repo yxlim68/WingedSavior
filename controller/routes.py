@@ -103,24 +103,67 @@ def create_project():
 
 @routes_bp.route('/get_snapshot')
 def get_snapshot():
+    image_ids = request.args.get('id')
+    project_id = request.args.get('project')
     
-    print(request.args)
-    snapshot_id = request.args.get("id")
+    if not image_ids and not project_id:
+        return {"message": "Please provide image ids or project id"}, 400
     
-    (_, cursor) = db()
-
-    query = f"SELECT * FROM img WHERE SSID = {snapshot_id}"
-    cursor.execute(query)
-    result = cursor.fetchone()
-
-    ssb64 = base64.b64encode(result['SS'])
+    if image_ids and project_id:
+        return {"message": "Provide either project id or image ids only"}, 400
     
-    result['SS'] = ssb64.decode('utf-8')
-    result['Time'] = result['Time'].strftime('%d/%m/%Y')
     
-    encoded = json.dumps(result)
+    _, cur = db()
     
-    return jsonify(encoded)
+    
+    
+    def format_results(result):
+        ssb64 = base64.b64encode(result['SS'])
+    
+        result['SS'] = ssb64.decode('utf-8')
+        result['Time'] = result['Time'].strftime('%d/%m/%Y')
+        
+        return result
+    
+    if image_ids:
+        try:
+            # convert to array
+            
+            ids = json.loads(image_ids)
+            
+            ids = map(lambda x: str(x), ids)
+            
+            query_ids = "(" + ",".join(ids) + ")"
+            
+            print(str(query_ids))
+            
+            query = f'SELECT * FROM img WHERE SSID in {query_ids}'
+            cur.execute(query)
+            
+            results = cur.fetchall()
+            
+            results = map(format_results, results)
+            
+            
+            
+            return jsonify(list(results)), 200
+            
+        except json.JSONDecodeError as e:
+            return jsonify(e), 400
+        except Exception as e:
+            return jsonify(e), 500
+        
+    
+    # handle project id
+    
+    query = "SELECT * FROM img WHERE project_id = %s"
+    cur.execute(query, (project_id,))
+    
+    results = list(map(format_results, cur.fetchall()))
+    
+    return jsonify(results), 200
+    
+    
 
 @routes_bp.route('/check_project')
 def check_project():
@@ -133,7 +176,6 @@ def check_project():
     query = f"SELECT * FROM project WHERE id = '{project_id}'"
     cur.execute(query)
     res = cur.fetchone()
-    print(res)
     if not res:
         return {}, 404
     

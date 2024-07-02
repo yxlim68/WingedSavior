@@ -1,5 +1,5 @@
 export const DEBUG_VIDEO = false;
-export const DEBUG_ANDROID = true;
+export const DEBUG_ANDROID = false;
 
 export let BACKEND_URL;
 if (DEBUG_VIDEO) {
@@ -23,4 +23,21 @@ export async function checkProjectExist(projectId) {
   } catch (e) {
     return false;
   }
+}
+
+export async function requiredProject(cb) {
+  const params = new URLSearchParams(window.location.search);
+  const projectId = params.get("project");
+
+  // TODO: redirect user to project list page
+
+  if (!projectId) alert("No valid project found");
+
+  const exist = await checkProjectExist(projectId);
+  if (!exist) {
+    alert("Invalid project");
+    return;
+  }
+
+  cb(projectId);
 }
