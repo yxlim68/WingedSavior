@@ -138,3 +138,21 @@ def check_project():
         return {}, 404
     
     return {}, 200
+
+@routes_bp.route('/notification')
+def notification():
+    
+    project_id = request.args.get('project')
+    
+    if not project_id:
+        return {}, 400
+    
+    _, cur = db()
+    
+    query = "SELECT * FROM notification WHERE project_id = %s"
+    
+    cur.execute(query, (project_id,))
+    
+    results = cur.fetchall()
+    
+    return jsonify(results), 200

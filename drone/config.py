@@ -4,3 +4,5 @@ DEBUG_WEB = True
 
 # use device camera instead of drone
 DEBUG_VIDEO = True
+
+DEBUG_WEBSOCKET = True
