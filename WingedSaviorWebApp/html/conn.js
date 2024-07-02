@@ -1,10 +1,13 @@
 export const DEBUG_VIDEO = false;
+export const DEBUG_ANDROID = true;
 
 export let BACKEND_URL;
 if (DEBUG_VIDEO) {
   BACKEND_URL = "http://127.0.0.1:5000";
+} else if (DEBUG_ANDROID) {
+  BACKEND_URL = "http://10.0.2.2:8766";
 } else {
-  BACKEND_URL = "http://127.0.0.1:8766";
+  BACKEND_URL = "http://192.168.200.40:8766";
 }
 
 export function api(path) {
