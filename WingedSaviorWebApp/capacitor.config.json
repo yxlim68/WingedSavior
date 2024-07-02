@@ -1,5 +1,11 @@
 {
   "appId": "com.wingedsavior.app",
   "appName": "Winged Savior",
-  "webDir": "html"
+  "webDir": "html",
+  "android": {
+    "allowMixedContent": true
+  },
+  "server": {
+    "androidScheme": "http"
+  }
 }
