@@ -13,13 +13,13 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
-        background-color: #007bff;
+        background-color: #2f3645;
         color: white;
         text-align: center;
       }
 
       .splash-screen h1 {
-        font-size: 3em;
+        font-size: 2em;
         margin-top: 20px; /* Add some spacing between the logo and the welcome message */
         animation: fadeInOut 5s ease-in-out;
       }
@@ -46,19 +46,12 @@
   <body>
     <div class="splash-screen">
       <img src="img/logo.png" alt="Logo" />
-      <h1>Welcome to Winged Saviors</h1>
-      <a href="home.html">Home</a>
-      asds
+      <h1>Welcome to<br />Winged Saviors</h1>
     </div>
-    <script type="module">
-      import { registerNotificationHandler } from "./notification.js";
-      console.log("test");
-      registerNotificationHandler();
-    </script>
     <script>
       // Redirect to home.html after 5 seconds
       setTimeout(function () {
-        // window.location.href = "home.html";
+        window.location.href = "firstPage.html";
       }, 5000);
     </script>
   </body>
