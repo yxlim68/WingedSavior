@@ -232,9 +232,9 @@
         />
         <h2 id="name-display">User's Name</h2>
         <p>Email: <span id="email-display">user@example.com</span></p>
-        <p>Username: username</p>
-        <p>Member Since: Jun 2024</p>
-        <p>Location: <span id="location-display">City, Country</span></p>
+        <p>Username: <span id="username-display">username</span></p>
+        <!-- <p>Member Since: Jun 2024</p> -->
+        <!-- <p>Location: <span id="location-display">City, Country</span></p> -->
         <div class="profile-actions">
           <button
             class="settings-button"
@@ -280,25 +280,35 @@
       </nav>
     </footer>
 
-    <script>
+    <script type="module">
+      import "./jquery.min.js";
+      import { api } from "./conn.js";
+
       // Load profile data from localStorage
       window.onload = function () {
-        const name = localStorage.getItem("name");
-        const email = localStorage.getItem("email");
-        const location = localStorage.getItem("location");
-        const profilePic = localStorage.getItem("profilePic");
+        const user = localStorage.getItem("user");
+
+        if (!user) {
+          alert("Invalid user");
+          window.location.href = "login.html";
+        }
+
+        // parse user data
+        const userData = JSON.parse(user);
+
+        const name = `${userData.firstname}  ${userData.lastname}`;
+        const email = userData.email;
+        const username = userData.username;
 
         if (name) {
-          document.getElementById("name-display").textContent = name;
+          $("#name-display").text(name);
         }
         if (email) {
-          document.getElementById("email-display").textContent = email;
+          $("#email-display").text(email);
         }
-        if (location) {
-          document.getElementById("location-display").textContent = location;
-        }
-        if (profilePic) {
-          document.getElementById("profile-pic-display").src = profilePic;
+
+        if (username) {
+          $("#username-display").text(username);
         }
       };
     </script>
