@@ -156,13 +156,13 @@
 // //     if (millis() - lastErr > 1000) {
 // //       lastErr = millis();
 // //       Serial.println(F("No GPS detected: check wiring."));
-// //     }    
+// //     }
 // //   }
 // // }
 
 // // void displayInfo()
 // // {
-// //   Serial.print(F("Location: ")); 
+// //   Serial.print(F("Location: "));
 // //   if (gps.location.isValid())
 // //   {
 // //     Serial.print(gps.location.lat(), 6);
@@ -260,18 +260,18 @@
 // //       HTTPClient http;
 
 // //       String serverPath = api("/ping");
-      
+
 
 // //       http.begin(serverPath.c_str());
 
 // //       http.addHeader("Content-Type: application/json")
 
 // //       String J
-      
-      
+
+
 // //       // Send HTTP GET request
 // //       int httpResponseCode = http.GET();
-      
+
 // //       if (httpResponseCode>0) {
 // //         Serial.print("HTTP Response code: ");
 // //         Serial.println(httpResponseCode);
@@ -301,14 +301,97 @@
 const char* SSID = "PSIS WiFi";
 const char* PASSWORD = "";
 
-HardwareSerial GPSSerial(2);
-TinyGPSPlus
+#define GPS_BAUD 9600
+#define RXD2 16
+#define TXD2 17
 
+HardwareSerial GPSSerial(2);
+TinyGPSPlus gps;
+
+unsigned long timerDelay = 1000;  // send wifi data every 1 second
+unsigned long lastTimeSent = 0;
+
+const String serverName = "http://192.168.200.65:8766";
+
+String api(String path) {
+  return serverName + path;
+}
 
 void setup() {
 
+  Serial.begin(115200);
+
+  GPSSerial.begin(GPS_BAUD, SERIAL_8N1, RXD2, TXD2);
+
+  Serial.print("Connecting to ");
+  Serial.print(SSID);
+
+  WiFi.begin(SSID, PASSWORD);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.println("Conecting...");
+  }
+
+  Serial.println("WiFi connected");
+  Serial.print("IP: ");
+  Serial.print(WiFi.localIP());
+  Serial.println("");
 }
 
 void loop() {
+  unsigned long now = millis();
 
+  if ((now - lastTimeSent) < timerDelay) return;
+
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("Wifi disconnect");
+    return;
+  }
+
+  JsonDocument locationData;
+
+  locationData["lat"] = NULL;
+  locationData["lng"] = NULL;
+  
+
+  while (GPSSerial.available() > 0) {
+    gps.encode(GPSSerial.read());
+  }
+
+  if(gps.location.isValid()) {
+    locationData["lat"] = gps.location.lat();
+    locationData["lng"] = gps.location.lng();
+  }
+  
+
+
+  HTTPClient http;
+
+  String sendPath = "/location";
+
+  String serverPath = api(sendPath);
+
+  char result[100];
+
+  serializeJson(locationData, result);
+
+  http.begin(serverPath.c_str());
+
+  http.addHeader("Content-Type", "application/json");
+
+  Serial.println(result);
+  int httpResponseCode = http.POST(result);
+
+  if (httpResponseCode>0) {
+    Serial.print("HTTP Response code: ");
+    Serial.println(httpResponseCode);
+  }
+  else {
+    Serial.print("Error code: ");
+    Serial.println(httpResponseCode);
+  }
+  // Free resources
+  http.end();
+  lastTimeSent = now;
 }
