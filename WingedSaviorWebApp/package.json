@@ -2,18 +2,24 @@
   "name": "wingedsaviorwebapp",
   "version": "1.0.0",
   "description": "",
-  "main": "data.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "android": "vite build && npx cap sync && npx cap run android"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@capacitor/android": "^6.1.0",
-    "@capacitor/core": "^6.1.0"
+    "@capacitor/android": "5",
+    "@capacitor/core": "5",
+    "@capacitor/local-notifications": "^5.0.8"
   },
   "devDependencies": {
-    "@capacitor/cli": "^6.1.0"
+    "@capacitor/cli": "5",
+    "glob": "^10.4.2",
+    "vite": "^5.3.2"
   }
 }

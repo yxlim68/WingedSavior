@@ -1,89 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home - Winged Saviors</title>
-    <link href="styles.css" rel="stylesheet" type="text/css">
-</head>
-<body>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  </head>
+  <body>
     <header class="fixed-header">
-        <div class="header-content">
-                <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img" height="50px" width="auto">
-        </div>
+      <div class="header-content">
+        <img
+          src="img/logo.png"
+          alt="Winged Saviors Logo"
+          class="logo-img"
+          height="50px"
+          width="auto"
+        />
+      </div>
     </header>
 
-    <main><br>
-        <section class="features">
-            <div class="container">
-                <h2>Our Features</h2>
-                <div class="feature">
-                    <h3>New Project</h3>
-                    <p>Start your new project with measurements.</p>
-                    <button onclick="location.href='newProject.html'">New Project</button>
-                </div>
-                <div class="feature">
-                    <div class="history-icon">
-                        <a href="projectHistory.html">
-                            <img src="img/history.png" alt="History Icon">
-                        </a>
-                    </div>
-                    <div class="history-content">
-                        <h3>Project History</h3>
-                        <p>Show project history and previous data.</p>
-                        <button onclick="location.href='projectHistory.html'">Project History</button>
-                    </div>
-                </div>
-                <div class="feature">
-                    <div class="live-feed-icon">
-                        <a href="liveFeed.html">
-                            <img src="img/live-feed.png" alt="Live Feed Icon">
-                        </a>
-                    </div>
-                    <div class="live-feed-content">
-                        <h3>Live Feed</h3>
-                        <p>Monitor live feed from drones.</p>
-                        <button onclick="location.href='liveFeed.html'">Live Feed</button>
-                    </div>
-                </div>
+    <main>
+      <br />
+      <section class="features">
+        <div class="container">
+          <h2>Our Features</h2>
+          <div class="feature">
+            <h3>New Project</h3>
+            <p>Start your new project with measurements.</p>
+            <button onclick="location.href='newProject.html'">
+              New Project
+            </button>
+          </div>
+          <div class="feature">
+            <div class="history-icon">
+              <a href="projectHistory.html">
+                <img src="img/history.png" alt="History Icon" />
+              </a>
             </div>
-        </section>
+            <div class="history-content">
+              <h3>Project History</h3>
+              <p>Show project history and previous data.</p>
+              <button onclick="location.href='projectHistory.html'">
+                Project History
+              </button>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="live-feed-icon">
+              <a href="liveFeed.html">
+                <img src="img/live-feed.png" alt="Live Feed Icon" />
+              </a>
+            </div>
+            <div class="live-feed-content">
+              <h3>Live Feed</h3>
+              <p>Monitor live feed from drones.</p>
+              <button onclick="location.href='liveFeed.html'">Live Feed</button>
+              <button id="noti-test">Test Notification</button>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer>
-        <nav class="bottom-nav">
-            <ul>
-                <li>
-                    <a href="home.html" class="active">
-                        <img src="img/home.png" alt="Home"><br>
-                        <span class="nav-name">Home</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="notification.html">
-                        <img src="img/notification.png" alt="Notifications">
-                        <span class="nav-name">Notifications</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="profile.html">
-                        <img src="img/user.png" alt="Profile"><br>
-                        <span class="nav-name">Profile</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+      <nav class="bottom-nav">
+        <ul>
+          <li>
+            <a href="home.html" class="active">
+              <i class="ph ph-house" style="font-size: 32px"></i>
+              <span class="nav-name">Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="notification.html">
+              <img src="img/notification.png" alt="Notifications" />
+              <span class="nav-name">Notifications</span>
+            </a>
+          </li>
+          <li>
+            <a href="profile.html">
+              <img src="img/user.png" alt="Profile" /><br />
+              <span class="nav-name">Profile</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </footer>
 
     <script>
-        document.querySelectorAll('.bottom-nav ul li a').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.bottom-nav ul li a').forEach(link => {
-                    link.classList.remove('active');
-                });
-                this.classList.add('active');
-            });
+      document.querySelectorAll(".bottom-nav ul li a").forEach((item) => {
+        item.addEventListener("click", function () {
+          document.querySelectorAll(".bottom-nav ul li a").forEach((link) => {
+            link.classList.remove("active");
+          });
+          this.classList.add("active");
         });
+      });
     </script>
-</body>
+    <script type="module">
+      import "./jquery.min.js";
+      import { LocalNotifications } from "@capacitor/local-notifications";
+      import { api } from "./conn.js";
+
+      $(function () {
+        const $btn = $("#noti-test");
+
+        $btn.on("click", function () {
+          console.log("test notification");
+          LocalNotifications.schedule({
+            notifications: [
+              {
+                title: "Test Notification",
+                body: "This is a test notification",
+                id: 1,
+                schedule: { at: new Date(Date.now() + 2000) }, // Schedule for 5 seconds from now
+                sound: null,
+                attachments: [
+                  {
+                    id: "image",
+                    url: api("/image/146.jpeg"),
+                  },
+                ],
+                actionTypeId: "",
+                extra: {
+                  projectId: 10,
+                  notiId: 16,
+                },
+              },
+            ],
+          });
+        });
+      });
+    </script>
+  </body>
 </html>

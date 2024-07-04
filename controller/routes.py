@@ -1,6 +1,7 @@
 import base64
 import json
-from flask import Blueprint, Response, jsonify, request, Flask
+from io import BytesIO
+from flask import Blueprint, Response, jsonify, request, Flask, send_file
 
 from controller.db import db
 from drone.config import DEBUG_WEB
@@ -101,6 +102,14 @@ def create_project():
     })
 
 
+def format_results(result):
+        ssb64 = base64.b64encode(result['SS'])
+    
+        result['SS'] = ssb64.decode('utf-8')
+        result['Time'] = result['Time'].strftime('%d/%m/%Y')
+        
+        return result
+
 @routes_bp.route('/get_snapshot')
 def get_snapshot():
     image_ids = request.args.get('id')
@@ -114,16 +123,6 @@ def get_snapshot():
     
     
     _, cur = db()
-    
-    
-    
-    def format_results(result):
-        ssb64 = base64.b64encode(result['SS'])
-    
-        result['SS'] = ssb64.decode('utf-8')
-        result['Time'] = result['Time'].strftime('%d/%m/%Y')
-        
-        return result
     
     if image_ids:
         try:
@@ -198,3 +197,34 @@ def notification():
     results = cur.fetchall()
     
     return jsonify(results), 200
+
+@routes_bp.route('/image/<int:img_id>.jpeg')
+def get_image(img_id):
+    
+    if not img_id:
+        return {"message": "Please provide an image"}, 400
+    
+    # get image from database
+    print(img_id)
+    try:
+        query = "SELECT * FROM img WHERE SSID = %s"
+        _, cur = db()
+        
+        cur.execute(query, (img_id,))
+
+        res = cur.fetchone()
+        
+        if not res:
+            return Response(status=404)
+        
+        image_bytes = BytesIO(res['SS'])
+        
+        return send_file(image_bytes, mimetype="image/jpeg")
+        
+    except Exception as e:
+        print(e)
+        return {"message": "Internal server error"}, 500
+    
+@routes_bp.route("/ping")
+def ping():
+    return {"message": "Pong"}, 200
