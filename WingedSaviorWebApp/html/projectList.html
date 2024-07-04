@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project List - Winged Saviors</title>
+    <link href="styles.css" rel="stylesheet" type="text/css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+	
+<style>
+/* Project List Section */
+.project-list-section {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 1200px;
+    margin: 20px auto;
+	margin-top: 100px;
+}
+
+.project-list-section h2 {
+    color: #2F3645;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.project-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.project-table th, .project-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.project-table th {
+    background-color: #f2f2f2;
+}
+
+.project-table td button {
+    padding: 5px 10px;
+    background-color: #2F3645;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.project-table td button:hover {
+    background-color: #0056b3;
+}
+</style>
+
+<body>
+    <header class="fixed-header">
+        <div class="header-content">
+            <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img">
+            <a href="notification.html" class="notification-icon">
+                <i class="ph ph-bell"></i>
+            </a>
+        </div>
+    </header>
+
+    <main class="background-image">
+        <section class="container project-list-section">
+            <h2>Project List</h2>
+            <table class="project-table">
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Project Alpha</td>
+                        <td>Completed</td>
+                        <td><button class="button" onclick="viewProject('alpha')">View</button></td>
+                    </tr>
+                    <tr>
+                        <td>Project Beta</td>
+                        <td>In Progress</td>
+                        <td><button class="button" onclick="viewProject('beta')">View</button></td>
+                    </tr>
+                    <tr>
+                        <td>Project Gamma</td>
+                        <td>Planned</td>
+                        <td><button class="button" onclick="viewProject('gamma')">View</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <nav class="bottom-nav">
+            <ul>
+                <li>
+                    <a href="home.html">
+                        <i class="ph ph-house"></i><br>
+                        <span class="nav-name">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="liveFeed.html">
+                        <i class="ph ph-video-camera"></i><br>
+                        <span class="nav-name">Live Feed</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="projectHistory.html">
+                        <i class="ph ph-archive"></i><br>
+                        <span class="nav-name">History</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile.html">
+                        <i class="ph ph-user"></i><br>
+                        <span class="nav-name">Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </footer>
+
+    <script>
+        function viewProject(projectId) {
+            // Redirect to project details page
+            window.location.href = `projectDetails.html?project=${projectId}`;
+        }
+
+        function toggleFeature(element) {
+            const allFeatures = document.querySelectorAll('.feature');
+            allFeatures.forEach(feature => {
+                if (feature !== element) {
+                    feature.classList.remove('show');
+                }
+            });
+            element.classList.toggle('show');
+        }
+    </script>
+</body>
+</html>
