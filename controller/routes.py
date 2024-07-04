@@ -64,7 +64,7 @@ def login():
         if not res:
             return {
                 "message": "Failed"
-            }, 200
+            }, 400
         
         return {
             "message": "Success",
