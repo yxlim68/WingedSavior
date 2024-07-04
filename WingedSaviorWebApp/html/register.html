@@ -18,10 +18,10 @@
         />
       </div>
     </header>
-
+    <main class="background-image">
     <div class="register-container">
       <div class="register-box">
-        <h2>Register for Winged Saviors</h2>
+        <h2>Register for Winged Saviors</h2><br>
         <form id="registerForm">
           <label for="first-name">First Name</label>
           <input
@@ -55,6 +55,14 @@
             placeholder="Email"
             required
           />
+          <label for="organization">Organization</label>
+          <input
+            type="organization"
+            id="organization"
+            name="organization"
+            placeholder="organization"
+            required
+          />
           <label for="password">Password</label>
           <input
             type="password"
@@ -71,19 +79,15 @@
             placeholder="Confirm Password"
             required
           />
-          <button type="submit">Register</button>
+          <button type="submit" class="button">Register</button>
         </form>
         <div class="login-link">
           <p>Already have an account? <a href="login.html">Login here</a></p>
         </div>
       </div>
     </div>
-    <!-- <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script> -->
+		</body>
+	  </main>
     <script type="module">
       import { api } from "./conn.js";
       import "./jquery.min.js";
@@ -150,11 +154,7 @@
           console.error(e);
         }
 
-        // Redirect to profile.html after successful registration
-        // window.location.href = 'profile.html';
-
         return false; // Prevent form from submitting via default behavior
       }
     </script>
-  </body>
 </html>
