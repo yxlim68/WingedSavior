@@ -18,14 +18,11 @@ app.register_blueprint(routes.routes_bp)
 app.register_blueprint(video_bp)
 app.register_blueprint(location_bp)
 
-
 CORS(app)
 
 def init_app():
     print(app.url_map)
-    app.run(host="0.0.0.0", port=8766, debug=True)
-    
-    
+    app.run(host="0.0.0.0", port=8766, debug=True)    
     
 
 if __name__ == '__main__':

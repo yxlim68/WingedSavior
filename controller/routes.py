@@ -4,10 +4,12 @@ from io import BytesIO
 from flask import Blueprint, Response, jsonify, request, Flask, send_file
 
 from controller.db import db
+from controller.util import log as util_log
 from drone.config import DEBUG_WEB
 
 routes_bp = Blueprint("general routes", __name__)
-        
+
+log = util_log('web')
 
 @routes_bp.route("/register", methods=['POST'])
 def register1():
@@ -20,9 +22,9 @@ def register1():
         
         _, cursor = db()
         
-        query = f"INSERT INTO users(firstname, lastname, email, username, password) VALUES('{data['firstname']}','{data['lastname']}','{data['email']}', '{data['username']}','{data['password']}')"
+        query = "INSERT INTO users(firstname, lastname, email, username, password, organization) VALUES(%s,%s,%s,%s,%s,%s)"
         
-        cursor.execute(query)
+        cursor.execute(query, (data['firstname'], data['lastname'],data['email'],data['username'],data['password'],data['organization']))
         user_id = cursor.lastrowid
         cursor.execute("commit")
         
