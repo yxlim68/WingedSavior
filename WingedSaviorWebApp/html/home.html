@@ -1,137 +1,368 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Winged Saviors</title>
-    <link href="styles.css" rel="stylesheet" type="text/css" />
+    <link href="styles.css" rel="stylesheet" type="text/css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  </head>
-  <body>
+</head>
+	
+<style>
+/* Add styles for notification popup */
+.notification-popup {
+    position: absolute;
+    top: 70px; /* Adjust as needed to position below header */
+    right: 20px; /* Adjust as needed to position relative to header */
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    display: none; /* Hide by default */
+    z-index: 1000; /* Ensure it's above other content */
+}
+
+.notification-popup p {
+    margin: 0;
+}
+
+/* Show notification popup on hover or click */
+.notification-icon:hover + .notification-popup,
+.notification-icon:focus + .notification-popup {
+    display: block;
+}
+
+/* Media query adjustments as needed */
+@media (max-width: 768px) {
+    /* Adjust styles for smaller screens if necessary */
+}
+
+/* Feature Styles */
+.features {
+    background-color: #fff;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.features h2 {
+    color: #2F3645;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.feature {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.feature:hover {
+    transform: translateY(-5px);
+}
+
+.feature-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.feature-header h3 {
+    color: #2F3645;
+    font-size: 1.5em;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.feature-header h3 i {
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+}
+
+.feature-icon {
+    height: 50px;
+    width: 50px;
+}
+
+.feature-content {
+    display: none;
+    width: 100%;
+    text-align: left;
+    margin-top: 10px;
+}
+
+/* Dropdown Toggle Styles */
+.feature.show .feature-content {
+    display: block;
+}
+
+.feature.show .feature-header h3 i {
+    transform: rotate(180deg);
+}
+
+.greeting p {
+	margin-top: 100px;
+	color: #2F3645;
+	margin-bottom: 10px;
+}	
+	
+/* Header Styles */
+.fixed-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #2F3645;
+    color: white;
+    padding: 10px 20px;
+    text-align: right; /* Aligning notification to the right */
+    z-index: 1000;
+    box-shadow: 0 10px 5px rgba(0, 0, 0, 0.1);
+}
+
+.fixed-header .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fixed-header .logo-img {
+    height: 50px;
+    width: auto;
+}
+
+.notification-icon {
+    color: white;
+    font-size: 24px;
+}
+
+/* Bottom Navigation Styles */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #2F3645;
+    padding: 10px 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.bottom-nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+.bottom-nav ul li {
+    flex: 1;
+    text-align: center;
+}
+
+.bottom-nav ul li a {
+    display: block;
+    padding: 5px;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+.bottom-nav ul li a i {
+    font-size: 22px;
+    transition: color 0.3s;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .profile-box {
+        width: 90%;
+    }
+
+    .fixed-header {
+        padding: 5px 0;
+    }
+
+    .fixed-header .header-content {
+        flex-direction: column;
+    }
+
+    .fixed-header .logo-img {
+        margin: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .profile-box {
+        width: 80%;
+    }
+}
+</style>	
+	
+<body>
     <header class="fixed-header">
-      <div class="header-content">
-        <img
-          src="img/logo.png"
-          alt="Winged Saviors Logo"
-          class="logo-img"
-          height="50px"
-          width="auto"
-        />
-      </div>
+        <div class="header-content">
+            <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img">
+            <div class="notification-icon" onclick="toggleNotification()">
+                <i class="ph ph-bell"></i>
+                <div class="notification-popup" id="notificationPopup">
+                    <p>New notification: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <main>
-      <br />
-      <section class="features">
-        <div class="container">
-          <h2>Our Features</h2>
-          <div class="feature">
-            <h3>New Project</h3>
-            <p>Start your new project with measurements.</p>
-            <button onclick="location.href='newProject.html'">
-              New Project
-            </button>
-          </div>
-          <div class="feature">
-            <div class="history-icon">
-              <a href="projectHistory.html">
-                <img src="img/history.png" alt="History Icon" />
-              </a>
+    <main class="background-image">
+	<!-- Greeting Section -->
+	<section class="greeting">
+		<p><h1>Welcome, *User</h1></p>
+	</section>	
+        <section class="slider">
+            <div class="slide">
+                <img src="img/droneBg.jpg" alt="Slide 1" height="auto" width="80%">
+                <div class="slide-content">
+                    <h3>Explore the World from Above</h3>
+                    <p>Join us in our mission to make search and rescue more efficient.</p>
+                    <button onclick="location.href='getStarted.html'" class="button">Get Started</button>
+                </div>
             </div>
-            <div class="history-content">
-              <h3>Project History</h3>
-              <p>Show project history and previous data.</p>
-              <button onclick="location.href='projectHistory.html'">
-                Project History
-              </button>
+            <div class="slide">
+                <img src="img/droneBg2.jpg" alt="Slide 2">
+                <div class="slide-content">
+                    <h3>Advanced Drone Technology</h3>
+                    <p>Leveraging cutting-edge technology for critical missions.</p>
+                    <button onclick="location.href='learnMore.html'" class="button">Learn More</button>
+                </div>
             </div>
-          </div>
-          <div class="feature">
-            <div class="live-feed-icon">
-              <a href="liveFeed.html">
-                <img src="img/live-feed.png" alt="Live Feed Icon" />
-              </a>
+            <div class="slide">
+                <img src="img/droneBg3.jpeg" alt="Slide 3">
+                <div class="slide-content">
+                    <h3>Join Our Team</h3>
+                    <p>Become a part of a dedicated and skilled team.</p>
+                    <button onclick="location.href='joinUs.html'" class="button">Join Us</button>
+                </div>
             </div>
-            <div class="live-feed-content">
-              <h3>Live Feed</h3>
-              <p>Monitor live feed from drones.</p>
-              <button onclick="location.href='liveFeed.html'">Live Feed</button>
-              <button id="noti-test">Test Notification</button>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+
+	<section class="features container">
+		<h2>Our Features</h2>
+		<div class="feature" onclick="toggleFeature(this)">
+			<div class="feature-header">
+				<a href="newProject.html">
+					<img src="img/file-plus.png" alt="Create New Project Icon" class="feature-icon">
+				</a>
+				<h3>Create Project<i class="ph ph-caret-down"></i></h3>
+			</div>
+			<div class="feature-content">
+				<p>Start your new project with measurements.</p>
+				<button onclick="location.href='newProject.html'" class="button">Create Project</button>
+			</div>
+		</div>
+		<div class="feature" onclick="toggleFeature(this)">
+			<div class="feature-header">
+				<a href="projectList.html">
+					<img src="img/list-checks.png" alt="Project List Icon" class="feature-icon">
+				</a>
+				<h3>Project List<i class="ph ph-caret-down"></i></h3>
+			</div>
+			<div class="feature-content">
+				<p>Check your created projects here.</p>
+				<button onclick="location.href='projectList.html'" class="button">Project List</button>
+			</div>
+		</div>
+	</section>
+
+
     </main>
 
     <footer>
-      <nav class="bottom-nav">
-        <ul>
-          <li>
-            <a href="home.html" class="active">
-              <i class="ph ph-house" style="font-size: 32px"></i>
-              <span class="nav-name">Home</span>
-            </a>
-          </li>
-          <li>
-            <a href="notification.html">
-              <img src="img/notification.png" alt="Notifications" />
-              <span class="nav-name">Notifications</span>
-            </a>
-          </li>
-          <li>
-            <a href="profile.html">
-              <img src="img/user.png" alt="Profile" /><br />
-              <span class="nav-name">Profile</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
+        <nav class="bottom-nav">
+            <ul>
+                <li>
+                    <a href="home.html">
+                        <i class="ph ph-house"></i><br>
+                        <span class="nav-name">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="liveFeed.html">
+                        <i class="ph ph-video-camera"></i><br>
+                        <span class="nav-name">Live Feed</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="projectHistory.html">
+                        <i class="ph ph-archive"></i><br>
+                        <span class="nav-name">History</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile.html">
+                        <i class="ph ph-user"></i><br>
+                        <span class="nav-name">Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </footer>
 
     <script>
-      document.querySelectorAll(".bottom-nav ul li a").forEach((item) => {
-        item.addEventListener("click", function () {
-          document.querySelectorAll(".bottom-nav ul li a").forEach((link) => {
-            link.classList.remove("active");
-          });
-          this.classList.add("active");
-        });
-      });
-    </script>
-    <script type="module">
-      import "./jquery.min.js";
-      import { LocalNotifications } from "@capacitor/local-notifications";
-      import { api } from "./conn.js";
+        let currentIndex = 0;
+        const slides = document.querySelectorAll('.slide');
 
-      $(function () {
-        const $btn = $("#noti-test");
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.style.display = i === index ? 'block' : 'none';
+            });
+        }
 
-        $btn.on("click", function () {
-          console.log("test notification");
-          LocalNotifications.schedule({
-            notifications: [
-              {
-                title: "Test Notification",
-                body: "This is a test notification",
-                id: 1,
-                schedule: { at: new Date(Date.now() + 2000) }, // Schedule for 5 seconds from now
-                sound: null,
-                attachments: [
-                  {
-                    id: "image",
-                    url: api("/image/146.jpeg"),
-                  },
-                ],
-                actionTypeId: "",
-                extra: {
-                  projectId: 10,
-                  notiId: 16,
-                },
-              },
-            ],
-          });
-        });
-      });
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % slides.length;
+            showSlide(currentIndex);
+        }
+
+        setInterval(nextSlide, 10000); // Change slide every 10 seconds
+        showSlide(currentIndex);
+		
+		function toggleFeature(element) {
+			const allFeatures = document.querySelectorAll('.feature');
+			allFeatures.forEach(feature => {
+				if (feature !== element) {
+					feature.classList.remove('show');
+				}
+			});
+			element.classList.toggle('show');
+		}
+		
+				// Toggle notification popup visibility
+		function toggleNotification() {
+			const popup = document.getElementById('notificationPopup');
+			popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+		}
+
     </script>
-  </body>
+</body>
 </html>
