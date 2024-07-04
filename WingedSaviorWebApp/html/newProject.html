@@ -80,25 +80,45 @@
         </ul>
       </nav>
     </footer>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const form = document.getElementById("new-project-form");
-        form.addEventListener("submit", function (event) {
-          event.preventDefault();
 
-          const name = document.getElementById("project-name").value;
-          const coordinates = document.getElementById(
-            "project-coordinates"
-          ).value;
-          const detection = document.getElementById("drone-detection").value;
+    <script type="module">
+      import { api } from "./conn.js";
+      import "./jquery.min.js";
+      $(function () {
+        const $form = $("#new-project-form");
+        const $name = $("#project-name");
+        const $coordinate = $("#project-coordinates");
+        const $detection = $("#drone-detection");
 
-          const newProject = { name, coordinates, detection };
+        $form.on("submit", async function (e) {
+          e.preventDefault();
 
-          let projects = JSON.parse(localStorage.getItem("projects")) || [];
-          projects.push(newProject);
-          localStorage.setItem("projects", JSON.stringify(projects));
+          const name = $name.prop("value");
+          const coordinate = $coordinate.prop("value");
+          const detection = $detection.prop("value");
 
-          window.location.href = "projectList.html";
+          try {
+            // send to backend
+            const res = await fetch(api("/create_project"), {
+              method: "post",
+              headers: {
+                "Content-Type": "application/json",
+                accept: "application/json",
+              },
+              body: JSON.stringify({ name, coordinate, detection }),
+            });
+
+            const data = await res.json();
+            const projectId = data.project_id;
+
+            localStorage.setItem("project", projectId);
+
+            // redirect to project page
+            window.location.href = `project.html`;
+          } catch (e) {
+            alert("Failed to create project\n\n" + e);
+            console.error(e);
+          }
         });
       });
     </script>
