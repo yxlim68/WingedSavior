@@ -303,6 +303,11 @@
           window.location.href = "login.html";
         }
 
+        $(".logout-button").on("click", function () {
+          localStorage.removeItem("user");
+          alert("Logout Success");
+          window.location.href = "login.html";
+        });
         // parse user data
         const userData = JSON.parse(user);
 
@@ -320,11 +325,6 @@
         if (username) {
           $("#username-display").text(username);
         }
-
-        $(".logout-button").on("click", function () {
-          localStorage.removeItem("user");
-          window.location.href = "login.html";
-        });
       };
     </script>
   </body>
