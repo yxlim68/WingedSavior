@@ -238,7 +238,7 @@ footer {
     <main class="background-image">
 	<!-- Greeting Section -->
 	<section class="greeting">
-		<p><h1>Welcome, *User</h1></p>
+		<p><h1>Welcome, <span id="username-display">*User</span></h1></p>
 	</section>	
         <section class="slider">
             <div class="slide">
@@ -362,7 +362,14 @@ footer {
 			const popup = document.getElementById('notificationPopup');
 			popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
 		}
+    </script>
+    <script type="module">
+        import './jquery.min.js';
+        $(function() {
+            const userData = JSON.parse(localStorage.getItem('user'))
 
+            $('#username-display').text(`${userData.firstname} ${userData.lastname}`)
+        })
     </script>
 </body>
 </html>
