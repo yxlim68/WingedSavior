@@ -225,6 +225,7 @@ def get_image(img_id):
         print(e)
         return {"message": "Internal server error"}, 500
     
-@routes_bp.route("/ping")
+@routes_bp.route("/ping", methods=["GET", "POST"])
 def ping():
+    print(request.json)
     return {"message": "Pong"}, 200
