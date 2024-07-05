@@ -23,6 +23,7 @@ def location():
     data = request.json
     current_location = data
     update_location(current_location)
+    print(data)
     
     return {}, 200
     
