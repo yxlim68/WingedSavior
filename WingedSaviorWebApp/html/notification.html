@@ -20,6 +20,8 @@
       property="og:url"
       content="https://www.wingedsaviors.com/notifications.html"
     />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="alert.css" />
   </head>
   <body>
     <header class="fixed-header">
@@ -29,27 +31,12 @@
     </header>
     <main>
       <br /><br /><br />
-      <section class="notifications container">
+      <section
+        class="notifications container"
+        style="margin-top: 20px; background-color: #fff"
+      >
         <h2>Notifications</h2>
-        <div class="alert">
-          <p>
-            <strong>Alert:</strong> New object detected: Tree at X: 100, Y: 200,
-            Z: 50.
-          </p>
-        </div>
-        <div class="alert">
-          <p>
-            <strong>Alert:</strong> New object detected: Building at X: 150, Y:
-            250, Z: 70.
-            <!-- <img src="data:image/jpeg;base64," alt=""> -->
-          </p>
-        </div>
-        <div class="alert">
-          <p>
-            <strong>Alert:</strong> New object detected: Car at X: 200, Y: 300,
-            Z: 100.
-          </p>
-        </div>
+        <div class="alerts"></div>
       </section>
     </main>
     <footer>
@@ -82,6 +69,14 @@
         </ul>
       </nav>
     </footer>
+
+    <script>
+      function toggleNotification(id) {
+        const noti = document.querySelector(`[data-id="${id}"]`);
+
+        noti.classList.toggle("open");
+      }
+    </script>
 
     <script type="module">
       import {
@@ -132,11 +127,12 @@
         });
 
         function updateNotificationView() {
-          const $container = $(".notifications.container");
+          const $container = $(".alerts");
           const $alerts = $(".alert", $container);
           const ids = $alerts.map((i, d) => $(d).data("id")).toArray();
           for (const noti of notifications) {
             if (ids.includes(noti.id)) continue;
+            const index = notifications.findIndex((v) => v.id === noti.id);
 
             const imageData = loadedImages.find((i) => i.SSID === noti.img_id);
 
@@ -144,14 +140,15 @@
               noti.id,
               "Person",
               imageData.SS,
-              imageData.location
+              imageData.location,
+              index + 1
             );
 
             $container.append(alert);
           }
         }
 
-        function createAlert(id, type, image, loc) {
+        function createAlert(id, type, image, loc, index) {
           let location = {
             lat: null,
             lng: null,
@@ -162,11 +159,37 @@
             location.lng = parsed.lng;
           }
           console.log(location);
+          const locString =
+            location.lat === null
+              ? "UNKNOWN"
+              : `${location.lat}, ${location.lng}`;
           const alert = $(`
           <div class="alert" data-id="${id}">
+            <div class="header" onclick="toggleNotification(${id})">
+              <span class="counter">${index}</span>
+              <span class="location">${locString}</span>
+              <i class="dropdown-icon ph ph-caret-right"></i>
+            </div>
+            <div class="content">
+              <div class="row">
+                <span class="label">
+                  <i class="ph ph-map-pin"></i> Location:
+                </span>
+                <span class="value">${locString}</span>
+              </div>
+              <div class="row">
+                <span class="label">
+                  <i class="ph ph-bell-simple-ringing"></i> Object
+                  Detected</span
+                >
+                <img class="image" src="data:image/jpeg;base64,${image}" />
+              </div>
+            </div>
+          </div>
+          <!-- <div class="alert" data-id="${id}">
             <strong>Alert:</strong> New object detected: ${type} at  lat: ${location.lat}, LNG: ${location.lng}
              <img src="data:image/jpeg;base64,${image}" alt="">
-          </div>
+          </div> -->
           `);
 
           return alert;
