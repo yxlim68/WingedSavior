@@ -140,17 +140,31 @@
 
             const imageData = loadedImages.find((i) => i.SSID === noti.img_id);
 
-            const alert = createAlert(noti.id, "Person", imageData.SS);
+            const alert = createAlert(
+              noti.id,
+              "Person",
+              imageData.SS,
+              imageData.location
+            );
 
             $container.append(alert);
           }
         }
 
-        function createAlert(id, type, image) {
+        function createAlert(id, type, image, loc) {
+          let location = {
+            lat: null,
+            lng: null,
+          };
+          if (loc) {
+            const parsed = JSON.parse(loc);
+            location.lat = parsed.lat;
+            location.lng = parsed.lng;
+          }
+          console.log(location);
           const alert = $(`
           <div class="alert" data-id="${id}">
-            <strong>Alert:</strong> New object detected: ${type} at X: 150, Y:
-            250, Z: 70.
+            <strong>Alert:</strong> New object detected: ${type} at  lat: ${location.lat}, LNG: ${location.lng}
              <img src="data:image/jpeg;base64,${image}" alt="">
           </div>
           `);
