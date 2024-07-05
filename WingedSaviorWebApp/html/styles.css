@@ -289,42 +289,6 @@ a:hover {
   margin-top: 1em;
 }
 
-/* Splash Screen Styles */
-.splash-screen {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #007bff;
-  color: white;
-  text-align: center;
-}
-
-.splash-screen h1 {
-  font-size: 3em;
-  margin-top: 20px;
-  animation: fadeInOut 5s ease-in-out;
-}
-
-.splash-screen img {
-  height: 150px;
-  width: auto;
-  animation: fadeInOut 5s ease-in-out;
-}
-
-@keyframes fadeInOut {
-  0% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
 /* Feature Styles */
 .features {
   background-color: #fff;
