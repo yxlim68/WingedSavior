@@ -109,6 +109,7 @@ def format_results(result):
     
         result['SS'] = ssb64.decode('utf-8')
         result['Time'] = result['Time'].strftime('%d/%m/%Y')
+        result['location'] = result['location'].decode('utf-8') if result['location'] is not None else None
         
         return result
 
