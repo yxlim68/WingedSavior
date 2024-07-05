@@ -136,7 +136,9 @@ def get_snapshot():
             
             query_ids = "(" + ",".join(ids) + ")"
             
-            print(str(query_ids))
+            if query_ids == '()':
+                return [], 200
+            
             
             query = f'SELECT * FROM img WHERE SSID in {query_ids}'
             cur.execute(query)
@@ -144,7 +146,6 @@ def get_snapshot():
             results = cur.fetchall()
             
             results = map(format_results, results)
-            
             
             
             return jsonify(list(results)), 200
@@ -159,7 +160,6 @@ def get_snapshot():
     
     query = "SELECT * FROM img WHERE project_id = %s"
     cur.execute(query, (project_id,))
-    
     results = list(map(format_results, cur.fetchall()))
     
     return jsonify(results), 200
