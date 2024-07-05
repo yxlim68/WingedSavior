@@ -3,8 +3,8 @@
 #include <HTTPClient.h>
 #include <TinyGPS++.h>
 
-const char *SSID = "PSIS WiFi";
-const char *PASSWORD = "";
+const char *SSID = "Telur";
+const char *PASSWORD = "123456789";
 
 #define GPS_BAUD 9600
 #define RXD2 16
@@ -16,7 +16,7 @@ TinyGPSPlus gps;
 unsigned long timerDelay = 1000; // send wifi data every 1 second
 unsigned long lastTimeSent = 0;
 
-const String serverName = "http://192.168.200.65:8766";
+const String serverName = "http://192.168.213.34:8766";
 
 String api(String path)
 {
@@ -57,13 +57,14 @@ void loop()
   if (WiFi.status() != WL_CONNECTED)
   {
     Serial.println("Wifi disconnect");
+    delay(500);
     return;
   }
 
   JsonDocument locationData;
 
-  locationData["lat"] = NULL;
-  locationData["lng"] = NULL;
+  locationData["lat"] = 0;
+  locationData["lng"] = 0;
 
   while (GPSSerial.available() > 0)
   {
@@ -76,15 +77,14 @@ void loop()
     locationData["lng"] = gps.location.lng();
   }
 
+  char result[100];
+  serializeJson(locationData, result);
+
   HTTPClient http;
 
   String sendPath = "/location";
 
   String serverPath = api(sendPath);
-
-  char result[100];
-
-  serializeJson(locationData, result);
 
   http.begin(serverPath.c_str());
 
