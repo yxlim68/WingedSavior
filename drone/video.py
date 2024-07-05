@@ -64,6 +64,8 @@ def video_feed():
                 boxes = results[0].boxes
                 print(tracked_objects)
                 for box in boxes:
+                    if not box:
+                        continue
                     if box.id in tracked_objects:
                         continue
                     
