@@ -232,3 +232,20 @@ def get_image(img_id):
 def ping():
     print(request.json)
     return {"message": "Pong"}, 200
+
+@routes_bp.route('/project_list')
+def project_list():
+    try:
+        
+        query = "SELECT * FROM project"
+        
+        _, cur = db()
+        
+        cur.execute(query)
+        
+        res = cur.fetchall()
+        
+        return res, 200
+    except Exception as e:
+        print(e)
+        return {"error": e}, 500

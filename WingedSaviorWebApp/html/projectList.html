@@ -70,7 +70,7 @@
     </header>
 
     <main class="background-image">
-      <section class="container project-list-section">
+      <section class="container project-list-section" style="overflow: auto">
         <h2>Project List</h2>
         <table class="project-table">
           <thead>
@@ -80,37 +80,19 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>Project Alpha</td>
-              <td>Completed</td>
-              <td>
-                <button class="button" onclick="viewProject('alpha')">
-                  View
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Project Beta</td>
-              <td>In Progress</td>
-              <td>
-                <button class="button" onclick="viewProject('beta')">
-                  View
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Project Gamma</td>
-              <td>Planned</td>
-              <td>
-                <button class="button" onclick="viewProject('gamma')">
-                  View
-                </button>
-              </td>
-            </tr>
-          </tbody>
+          <tbody class="project-list-container"></tbody>
         </table>
       </section>
+
+      <style>
+        table,
+        thead,
+        tbody,
+        th,
+        td {
+          box-sizing: border-box;
+        }
+      </style>
     </main>
 
     <footer>
@@ -159,6 +141,38 @@
         });
         element.classList.toggle("show");
       }
+    </script>
+
+    <script type="module">
+      import "./jquery.min.js";
+      import { api } from "./conn.js";
+      $(async function () {
+        try {
+          const $container = $(".project-list-container");
+
+          // get project list
+          const res = await fetch(api("/project_list"));
+
+          const data = await res.json();
+
+          for (const project of data) {
+            const $projectRow = $(`<tr>
+              <td>${project.name}</td>
+              <td>UNKNOWN</td>
+              <td>
+                <button class="button" onclick="viewProject(${project.id})">
+                  View
+                </button>
+              </td>
+            </tr>`);
+            $container.append($projectRow);
+          }
+
+          console.log(data);
+        } catch (e) {
+          console.error(e);
+        }
+      });
     </script>
   </body>
 </html>
