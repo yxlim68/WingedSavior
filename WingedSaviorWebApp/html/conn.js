@@ -27,11 +27,15 @@ export async function checkProjectExist(projectId) {
 
 export async function requiredProject(cb) {
   const params = new URLSearchParams(window.location.search);
-  const projectId = params.get("project");
+  let projectId = params.get("project");
+
+  const projectId2 = localStorage.getItem("project");
 
   // TODO: redirect user to project list page
 
-  if (!projectId) alert("No valid project found");
+  if (!projectId && !projectId2) alert("No valid project found");
+
+  if (!projectId) projectId = projectId2;
 
   const exist = await checkProjectExist(projectId);
   if (!exist) {
