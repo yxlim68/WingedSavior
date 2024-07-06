@@ -12,6 +12,7 @@ import platform
 import subprocess
 import sys
 import hashlib
+import random
 
 # Assuming a frame size of 960x720 (adjust according to your Tello camera resolution)
 FRAME_WIDTH = 960
@@ -79,6 +80,9 @@ def send_notification(message):
         timeout=5  # Duration in seconds
     )
 
+# Simulated obstacle sensor data
+def get_obstacle_distance():
+    return random.randint(2, 100)  # Simulating an obstacle distance in cm
 
 # Snap function to save image and save to database
 def snap(frame, confidence, x, y, w, h):
@@ -134,12 +138,69 @@ def save_to_database(confidence, image_bytes):
     except connector.Error as err:
         print(f"Error: {err}")
 
-def fly(tello):
-    tello.move_up(50)  # Move up by 50 cm
+def check_and_move(tello, move_func, value):
+    max_retries = 3
+    for _ in range(max_retries):
+        obstacle_distance = get_obstacle_distance()
+        if obstacle_distance < 10:  # Obstacle detected within 10 cm
+            print(f"Obstacle detected at {obstacle_distance} cm! Avoiding...")
+            tello.move_up(30)  # Move up to avoid obstacle
+            move_func(value)
+            tello.move_down(30)  # Move back down after avoidance
+        else:
+            response = move_func(value)
+            if response == 'ok':
+                return
+            else:
+                print(f"Movement failed with response: {response}. Retrying...")
+    print("Max retries reached. Landing the drone for safety.")
+    tello.land()
+    sys.exit(1)
+
+def fly(tello, start_time, movements):
+    planned_movements = [
+        ('move_forward', 50),
+        ('rotate_clockwise', 90),
+        ('move_forward', 50),
+        ('rotate_clockwise', 90),
+        ('move_forward', 50),
+        ('rotate_clockwise', 90),
+        ('move_forward', 50),
+        ('rotate_clockwise', 90),
+    ]
+
     while True:
-        tello.move_forward(100)
-        tello.rotate_clockwise(90)
-        time.sleep(1)
+        for move, value in planned_movements:
+            if move == 'move_forward':
+                check_and_move(tello, tello.move_forward, value)
+                movements.append(('move_back', value))
+            elif move == 'rotate_clockwise':
+                response = tello.rotate_clockwise(value)
+                if response == 'ok':
+                    movements.append(('rotate_counter_clockwise', value))
+                else:
+                    print(f"Rotation failed with response: {response}. Retrying...")
+                    tello.land()
+                    sys.exit(1)
+
+            elapsed_time = time.time() - start_time
+            print(f"Total time flying: {elapsed_time:.2f} seconds")
+            time.sleep(1)
+
+def reverse_movements(tello, movements):
+    for move, value in reversed(movements):
+        if move == 'move_forward':
+            tello.move_back(value)
+        elif move == 'move_back':
+            tello.move_forward(value)
+        elif move == 'move_up':
+            tello.move_down(value)
+        elif move == 'move_down':
+            tello.move_up(value)
+        elif move == 'rotate_clockwise':
+            tello.rotate_counter_clockwise(value)
+        elif move == 'rotate_counter_clockwise':
+            tello.rotate_clockwise(value)
 
 def get_location(max_retries=3):
     url = 'https://api64.ipify.org?format=json'
@@ -165,54 +226,62 @@ if __name__ == '__main__':
     print("Battery:", tello.get_battery())
     tello.streamon()
 
-    fly_thread = threading.Thread(target=fly, args=(tello,), daemon=True)
+    start_time = time.time()
+    movements = []
+
+    fly_thread = threading.Thread(target=fly, args=(tello, start_time, movements), daemon=True)
     fly_thread.start()
 
     seen_person_hashes = set()
     last_notification_time = time.time()  # Track the last notification time
 
-    while True:
-        result_frame = tello.get_frame_read()
-        frame = result_frame.frame
+    try:
+        while True:
+            result_frame = tello.get_frame_read()
+            frame = result_frame.frame
 
-        # Apply white balance
-        frame = white_balance(frame)
-        # Adjust color balance (optional, fine-tune as needed)
-        frame = adjust_color_balance(frame, red_gain=1.1, green_gain=1.1, blue_gain=1.0)
-        # Apply gamma correction
-        frame = gamma_correction(frame, gamma=1.2)
-        # Enhance contrast
-        frame = enhance_contrast(frame)
+            # Apply white balance
+            frame = white_balance(frame)
+            # Adjust color balance (optional, fine-tune as needed)
+            frame = adjust_color_balance(frame, red_gain=1.1, green_gain=1.1, blue_gain=1.0)
+            # Apply gamma correction
+            frame = gamma_correction(frame, gamma=1.2)
+            # Enhance contrast
+            frame = enhance_contrast(frame)
 
-        results = model(frame)
+            results = model(frame)
 
-        predict_image = results[0].plot()
+            predict_image = results[0].plot()
 
-        current_time = time.time()
+            current_time = time.time()
 
-        # Check if any human is detected
-        for result in results[0].boxes:
-            if result.cls == 0:  # class 0 is typically 'person' in COCO dataset
-                confidence = result.conf.item()  # Convert Tensor to Python float
-                x1, y1, x2, y2 = map(int, result.xyxy[0])  # Get bounding box coordinates
-                x, y, w, h = x1, y1, x2 - x1, y2 - y1  # Convert to (x, y, w, h)
+            cv2.imshow("Drone Camera", frame)
+            cv2.imshow("Prediction", predict_image)
 
-                # Generate hash of bounding box coordinates
-                bbox_hash = hashlib.md5(f"{x1}{y1}{x2}{y2}".encode()).hexdigest()
+            # Check if any human is detected
+            for result in results[0].boxes:
+                if result.cls == 0:  # class 0 is typically 'person' in COCO dataset
+                    confidence = result.conf.item()  # Convert Tensor to Python float
+                    x1, y1, x2, y2 = map(int, result.xyxy[0])  # Get bounding box coordinates
+                    x, y, w, h = x1, y1, x2 - x1, y2 - y1  # Convert to (x, y, w, h)
 
-                # Check if this person has been seen before and if the last notification was more than a minute ago
-                if bbox_hash not in seen_person_hashes and (current_time - last_notification_time) > 10:
-                    seen_person_hashes.add(bbox_hash)
-                    last_notification_time = current_time
-                    send_notification(f"Human detected with confidence {confidence:.2f}")
-                    snap(frame, confidence, x, y, w, h)  # Take a snapshot
+                    # Generate hash of bounding box coordinates
+                    bbox_hash = hashlib.md5(f"{x1}{y1}{x2}{y2}".encode()).hexdigest()
 
-        cv2.imshow("Drone Camera", frame)
-        cv2.imshow("Prediction", predict_image)
+                    # Check if this person has been seen before and if the last notification was more than a minute ago
+                    if bbox_hash not in seen_person_hashes and (current_time - last_notification_time) > 10:
+                        seen_person_hashes.add(bbox_hash)
+                        last_notification_time = current_time
+                        send_notification(f"Human detected with confidence {confidence:.2f}")
+                        snap(frame, confidence, x, y, w, h)  # Take a snapshot
 
-        if cv2.waitKey(1) & 0xFF == ord("q"):
-            break
+            if cv2.waitKey(1) & 0xFF == ord("q"):
+                break
+
+    except KeyboardInterrupt:
+        print("Stopping drone...")
+        stop_xampp()
+        reverse_movements(tello, movements)  # Return to start position
 
     cv2.destroyAllWindows()
     tello.land()
-    stop_xampp()

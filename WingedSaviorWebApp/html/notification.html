@@ -82,12 +82,17 @@
       } from "./notification.js";
       import { requiredProject } from "./conn.js";
       import "./jquery.min.js";
-
+    
       $(function () {
         let notifications = [];
         let loadedImages = [];
         let loadNoti = false;
-
+    
+        // Request notification permission
+        if (Notification.permission !== "granted") {
+          Notification.requestPermission();
+        }
+    
         requiredProject(async (projectId) => {
           initNotification(projectId, async (notis) => {
             console.log(notis);
@@ -99,7 +104,7 @@
               updateNotificationView();
               return;
             }
-
+    
             // update subsequent request
             let loadedIds = notifications.reduce(
               (acc, c) => [...acc, c.id],
@@ -109,47 +114,59 @@
               (noti) => !loadedIds.includes(noti.id)
             );
             console.log(unloadedNotis);
-
+    
             if (unloadedNotis.length === 0) return;
-
+    
             notifications = notis;
             loadedImages = [
               ...loadedImages,
               ...(await getAllNotificationImages(unloadedNotis)),
             ];
-
+    
             console.log(loadedImages);
             updateNotificationView();
+            showPushNotifications(unloadedNotis);
           });
         });
-
+    
         function updateNotificationView() {
           const $container = $(".notifications.container");
           const $alerts = $(".alert", $container);
           const ids = $alerts.map((i, d) => $(d).data("id")).toArray();
           for (const noti of notifications) {
             if (ids.includes(noti.id)) continue;
-
+    
             const imageData = loadedImages.find((i) => i.SSID === noti.img_id);
-
+    
             const alert = createAlert(noti.id, "Person", imageData.SS);
-
+    
             $container.append(alert);
           }
         }
-
+    
         function createAlert(id, type, image) {
           const alert = $(`
-          <div class="alert" data-id="${id}">
-            <strong>Alert:</strong> New object detected: ${type} at X: 150, Y:
-            250, Z: 70.
-             <img src="data:image/jpeg;base64,${image}" alt="">
-          </div>
+            <div class="alert" data-id="${id}">
+              <strong>Alert:</strong> New object detected: ${type} at X: 150, Y:
+              250, Z: 70.
+              <img src="data:image/jpeg;base64,${image}" alt="">
+            </div>
           `);
-
+    
           return alert;
         }
+    
+        function showPushNotifications(notis) {
+          for (const noti of notis) {
+            const imageData = loadedImages.find((i) => i.SSID === noti.img_id);
+            const notificationOptions = {
+              body: `New object detected: Person at X: 150, Y: 250, Z: 70.`,
+              icon: `data:image/jpeg;base64,${imageData.SS}`
+            };
+            new Notification("Alert", notificationOptions);
+          }
+        }
       });
-    </script>
+    </script>    
   </body>
 </html>

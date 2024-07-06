@@ -4,6 +4,7 @@ from io import BytesIO
 from flask import Blueprint, Response, jsonify, request, Flask, send_file
 
 from controller.db import db
+from controller.util import log
 from drone.config import DEBUG_WEB
 
 routes_bp = Blueprint("general routes", __name__)
