@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Controller</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="video.css" />
+  </head>
+  <body>
+    <style>
+      @media screen and (orientation: potrait) {
+        #potrait-warning {
+          display: block;
+        }
+      }
+    </style>
+    <div id="potrait-warning" style="display: none">please use landscape</div>
+    <div id="controller-page">
+      <img src="img/Aidil.jpg" alt="" id="video-src" />
+      <div class="controllers">
+        <div class="top-bar">
+          <div class="left-actions">
+            <button id="stop"><i class="ph-fill ph-stop"></i></button>
+            <button id="play"><i class="ph-fill ph-play"></i></button>
+          </div>
+          <div class="statuses">
+            <span class="status">
+              <i class="ph-fill ph-battery-full"></i>
+              <span id="battery-label">69 %</span>
+            </span>
+            <span class="status">
+              <i class="ph-fill ph-airplane-in-flight"></i>
+              <span id="altitude-label">2.0 m</span>
+            </span>
+            <div class="status">
+              <i class="ph-fill ph-map-pin"></i>
+              <span id="location-label">100.00, 100.00</span>
+            </div>
+          </div>
+          <div class="right-actions">
+            <button id="setting-btn"><i class="ph-fill ph-gear"></i></button>
+          </div>
+        </div>
+        <div class="actions">
+          <div class="left">
+            <button id="up"><i class="ph ph-arrow-fat-line-up"></i></button>
+            <button id="down">
+              <i class="ph-bold ph-arrow-fat-line-down"></i>
+            </button>
+            <button id="rotate-left">
+              <i class="ph ph-arrow-counter-clockwise"></i>
+            </button>
+            <button id="rotate-right">
+              <i class="ph ph-arrow-clockwise"></i>
+            </button>
+          </div>
+          <div class="right">
+            <button id="forward"><i class="ph-fill ph-caret-up"></i></button>
+            <button id="backward"><i class="ph-fill ph-caret-down"></i></button>
+            <button id="strafe-left">
+              <i class="ph-fill ph-caret-left"></i>
+            </button>
+            <button id="strafe-right">
+              <i class="ph-fill ph-caret-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
