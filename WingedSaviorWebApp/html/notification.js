@@ -1,5 +1,4 @@
 import { api } from "./conn.js";
-import { LocalNotifications } from "@capacitor/local-notifications";
 
 export const NOTIFICATION_INTERVAL = 2500; // ms
 
