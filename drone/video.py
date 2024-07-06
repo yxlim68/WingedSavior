@@ -1,9 +1,13 @@
+import datetime
 import cv2
 from flask import Blueprint, Response, request
 from controller.db import db
 from drone.config import DEBUG_VIDEO
 from drone.detection import detect_person
 from drone.yolo import model
+
+# maximum amount of time to to consider using the location as the current location
+MAX_LOCATION_LIFE = 10000 # ms
 
 video_bp = Blueprint("Video BP", __name__)
 
@@ -14,6 +18,7 @@ if DEBUG_VIDEO:
 def video_feed():
     
     project_id = request.args.get('project')
+    
         
     if not project_id:
         return {"message": "Please provide project id"}, 400
@@ -59,6 +64,8 @@ def video_feed():
                 boxes = results[0].boxes
                 print(tracked_objects)
                 for box in boxes:
+                    if not box:
+                        continue
                     if box.id in tracked_objects:
                         continue
                     
@@ -80,17 +87,18 @@ def video_feed():
 
 def upload_image( project_id: int, id: int, image_bytes, conf: float):
     
-    img_query = "INSERT INTO img (project_id, SS, Confidence) VALUES (%s,%s, %s)"
+    current_location = get_location()
+    
+    img_query = "INSERT INTO img (project_id, SS, Confidence, location) VALUES (%s,%s, %s, %s)"
     noti_query = "INSERT INTO notification (project_id, img_id) VALUES (%s,%s)"
     
     try:
         _, cur = db()
         
         print("updating db")
-        cur.execute(img_query, (project_id, image_bytes, conf))
-        
+        cur.execute(img_query, (project_id, image_bytes, conf,  current_location if current_location is not None else None))
+
         img_id = cur.lastrowid
-        
         
         cur.execute(noti_query, (project_id, img_id))
         
@@ -98,3 +106,26 @@ def upload_image( project_id: int, id: int, image_bytes, conf: float):
         
     except Exception as e:
         print(e)
+        
+def get_location():
+    _, cur = db()
+    
+    query = "SELECT location, time from location"
+
+    cur.execute(query)
+    
+    res = cur.fetchone()
+    
+    if not res:
+        return None
+    
+    current_time = datetime.datetime.now()
+    
+    loc_time = res['time']
+    
+    time_diff = (current_time - loc_time).total_seconds() * 1000
+    
+    if time_diff > MAX_LOCATION_LIFE:
+        return None
+    
+    return res['location']

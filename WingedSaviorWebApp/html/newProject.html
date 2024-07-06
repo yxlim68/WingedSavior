@@ -3,8 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>New Project - Winged Saviors</title>
+    <title>Create Project - Winged Saviors</title>
     <link href="styles.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
   </head>
   <body>
     <header class="fixed-header">
@@ -22,7 +23,7 @@
       <br /><br /><br />
       <section class="features container">
         <h2>Create a New Project</h2>
-        <form id="new-project-form" class="form-container">
+        <form id="new-project-form" class="features" method="post">
           <div class="form-group">
             <label for="project-name">Project Name:</label>
             <input type="text" id="project-name" name="project-name" required />
@@ -45,32 +46,41 @@
               required
             />
           </div>
-          <button type="submit">Create Project</button>
+          <button type="submit" class="button">Create Project</button>
         </form>
       </section>
     </main>
-    <footer class="bottom-nav">
-      <ul>
-        <li>
-          <a href="home.html" class="active">
-            <img src="img/home.png" alt="Home" /><br />
-            <span class="nav-name">Home</span>
-          </a>
-        </li>
-        <li>
-          <a href="notification.html">
-            <img src="img/notification.png" alt="Notifications" />
-            <span class="nav-name">Notifications</span>
-          </a>
-        </li>
-        <li>
-          <a href="profile.html">
-            <img src="img/user.png" alt="Profile" /><br />
-            <span class="nav-name">Profile</span>
-          </a>
-        </li>
-      </ul>
+    <footer>
+      <nav class="bottom-nav">
+        <ul>
+          <li>
+            <a href="home.html">
+              <i class="ph ph-house"></i><br />
+              <span class="nav-name">Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="video.html">
+              <i class="ph ph-video-camera"></i><br />
+              <span class="nav-name">Live Feed</span>
+            </a>
+          </li>
+          <li>
+            <a href="projectHistory.html">
+              <i class="ph ph-archive"></i><br />
+              <span class="nav-name">History</span>
+            </a>
+          </li>
+          <li>
+            <a href="profile.html">
+              <i class="ph ph-user"></i><br />
+              <span class="nav-name">Profile</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </footer>
+
     <script type="module">
       import { api } from "./conn.js";
       import "./jquery.min.js";
@@ -101,8 +111,10 @@
             const data = await res.json();
             const projectId = data.project_id;
 
+            localStorage.setItem("project", projectId);
+
             // redirect to project page
-            window.location.href = `project.html?project=${projectId}`;
+            window.location.href = `project.html`;
           } catch (e) {
             alert("Failed to create project\n\n" + e);
             console.error(e);

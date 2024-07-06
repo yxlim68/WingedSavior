@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>firstPage - Winged Saviors</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+  </head>
+	
+<style>
+/* Base Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f4f8;
+  margin: 0;
+  padding: 0;
+}
+
+/* Main Background Image */
+.background-image {
+  height: 95vh; /* Adjusted height */
+  background-image: url('img/droneBg3.jpeg'); /* Update with your image path */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* Padding to ensure spacing from edges */
+  position: relative; /* Ensure relative positioning for absolute children */
+}
+
+.content-container {
+  text-align: center;
+  margin-bottom: 20px;
+  z-index: 1; /* Ensure content is above the background image */
+}
+
+.content-container h1 {
+  color: white;
+  font-size: 2em;
+  margin: 0;
+}
+
+.button-container {
+  position: absolute;
+  bottom: 20px; /* Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1; /* Ensure buttons are above the background */
+}
+
+.button {
+  background-color: #2f3645;
+  color: white;
+  border: none;
+  padding: 1em 2em; /* Adjust padding as needed */
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  text-align: center;
+	margin-bottom: 30px;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+</style>
+	
+  <body>
+    <header class="fixed-header">
+      <div class="header-content">
+        <img
+          src="img/logo.png"
+          alt="Winged Saviors Logo"
+          class="logo"
+          height="50px"
+          width="auto"
+        />
+      </div>
+    </header>
+
+    <main class="background-image">
+      <div class="content-container">
+        <h1>Search and Rescue from a new perspective</h1>
+      </div>
+      <div class="button-container">
+        <a href="login.html" class="button">Login</a>
+        <a href="register.html" class="button">Register</a>
+      </div>
+    </main>
+  </body>
+</html>

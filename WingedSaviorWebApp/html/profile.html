@@ -1,56 +1,331 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Winged Saviors - Profile</title>
-    <link href="styles.css" rel="stylesheet" type="text/css">
-</head>
-<body>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  </head>
+
+  <style>
+    /* Base Styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Background Image */
+    .background-image {
+      background-image: url("img/profile-bg.jpg"); /* Update with your image path */
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* Profile Container */
+    .profile-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 20px;
+    }
+
+    /* Profile Box */
+    .profile-box {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      padding: 2em;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .profile-box img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-bottom: 1em;
+      object-fit: cover;
+    }
+
+    .profile-box h2 {
+      font-size: 1.5em;
+      margin-bottom: 0.5em;
+      color: #2f3645;
+    }
+
+    .profile-box p {
+      margin-bottom: 1em;
+      color: #333;
+    }
+
+    /* Profile Actions */
+    .profile-actions {
+      margin-top: 1em;
+    }
+
+    .settings-button,
+    .logout-button {
+      background-color: #2f3645;
+      color: white;
+      border: none;
+      padding: 0.5em 1em;
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 30px;
+      transition: background-color 0.3s ease;
+      margin-bottom: 10px;
+    }
+
+    .logout-button {
+      background-color: #dc2626;
+    }
+
+    .settings-button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Feedback Link */
+    .feedback-link {
+      margin-top: 1em;
+    }
+
+    .feedback-link a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .feedback-link a:hover {
+      text-decoration: underline;
+    }
+
+    /* Header Styles */
+    .fixed-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #2f3645;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      z-index: 1000;
+      box-shadow: 0 10px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .fixed-header .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .fixed-header .logo-img {
+      height: 50px;
+      width: auto;
+    }
+
+    .notification-icon {
+      color: white;
+      font-size: 24px;
+    }
+
+    /* Bottom Navigation Styles */
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #2f3645;
+      padding: 10px 0;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    .bottom-nav ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .bottom-nav ul li {
+      flex: 1;
+      text-align: center;
+    }
+
+    .bottom-nav ul li a {
+      display: block;
+      padding: 5px;
+      color: white;
+      text-decoration: none;
+      transition: background-color 0.5s, color 0.5s;
+    }
+
+    .bottom-nav ul li a i {
+      font-size: 22px;
+      transition: color 0.3s;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      .profile-box {
+        width: 90%;
+      }
+
+      .fixed-header {
+        padding: 5px 0;
+      }
+
+      .fixed-header .header-content {
+        flex-direction: column;
+      }
+
+      .fixed-header .logo-img {
+        margin: 0;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .profile-box {
+        width: 80%;
+      }
+    }
+  </style>
+
+  <body>
     <header class="fixed-header">
-        <div class="header-content">
-            <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img" height="50px" width="auto">
-        </div>
+      <div class="header-content">
+        <img
+          src="img/logo.png"
+          alt="Winged Saviors Logo"
+          class="logo-img"
+          height="50px"
+          width="auto"
+        />
+        <a href="notification.html" class="notification-icon">
+          <i class="ph ph-bell"></i>
+        </a>
+      </div>
     </header>
 
-    <main class="profile-container">
-        <div class="profile-box">
-            <img src="img/user-avatar.png" alt="User Avatar">
-            <h2>User's Name</h2>
-            <p>Email: user@example.com</p>
-            <p>Username: username</p>
-            <p>Member Since: Jun 2024</p>
-            <p>Location: City, Country</p>
-            <div class="profile-actions">
-                <button class="settings-button">Settings</button>
-            </div>
-            <div class="feedback-link">
-                <p>Have feedback? <a href="#">Leave feedback</a></p>
-            </div>
+    <main
+      class="background-image profile-container"
+      style="box-sizing: border-box"
+    >
+      <div class="profile-box">
+        <img
+          id="profile-pic-display"
+          src="img/default-avatar.svg"
+          alt="User Avatar"
+          class="profile-avatar"
+        />
+        <h2 id="name-display">User's Name</h2>
+        <p>Email: <span id="email-display">user@example.com</span></p>
+        <p>Username: <span id="username-display">username</span></p>
+        <!-- <p>Member Since: Jun 2024</p> -->
+        <!-- <p>Location: <span id="location-display">City, Country</span></p> -->
+        <div class="profile-actions">
+          <button
+            class="settings-button"
+            onclick="location.href='setting.html'"
+          >
+            Settings
+          </button>
+          <button class="logout-button">Logout</button>
         </div>
+        <div class="feedback-link">
+          <p>Have feedback? <a href="#">Leave feedback</a></p>
+        </div>
+      </div>
     </main>
 
-    <footer class="bottom-nav">
+    <footer>
+      <nav class="bottom-nav">
         <ul>
-            <li>
-                <a href="home.html" class="active">
-                    <img src="img/home.png" alt="Home"><br>
-                    <span class="nav-name">Home</span>
-                </a>
-            </li>
-            <li>
-                <a href="notification.html">
-                    <img src="img/notification.png" alt="Notifications">
-                    <span class="nav-name">Notifications</span>
-                </a>
-            </li>
-            <li>
-                <a href="profile.html">
-                    <img src="img/user.png" alt="Profile"><br>
-                    <span class="nav-name">Profile</span>
-                </a>
-            </li>
+          <li>
+            <a href="home.html">
+              <i class="ph ph-house"></i><br />
+              <span class="nav-name">Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="video.html">
+              <i class="ph ph-video-camera"></i><br />
+              <span class="nav-name">Live Feed</span>
+            </a>
+          </li>
+          <li>
+            <a href="projectHistory.html">
+              <i class="ph ph-archive"></i><br />
+              <span class="nav-name">History</span>
+            </a>
+          </li>
+          <li>
+            <a href="profile.html">
+              <i class="ph ph-user"></i><br />
+              <span class="nav-name">Profile</span>
+            </a>
+          </li>
         </ul>
+      </nav>
     </footer>
-</body>
+
+    <script type="module">
+      import "./jquery.min.js";
+      import { api } from "./conn.js";
+
+      // Load profile data from localStorage
+      window.onload = function () {
+        const user = localStorage.getItem("user");
+
+        if (!user) {
+          alert("Invalid user");
+          window.location.href = "login.html";
+        }
+
+        $(".logout-button").on("click", function () {
+          localStorage.removeItem("user");
+          alert("Logout Success");
+          window.location.href = "login.html";
+        });
+        // parse user data
+        const userData = JSON.parse(user);
+
+        const name = `${userData.firstname}  ${userData.lastname}`;
+        const email = userData.email;
+        const username = userData.username;
+
+        if (name) {
+          $("#name-display").text(name);
+        }
+        if (email) {
+          $("#email-display").text(email);
+        }
+
+        if (username) {
+          $("#username-display").text(username);
+        }
+      };
+    </script>
+  </body>
 </html>

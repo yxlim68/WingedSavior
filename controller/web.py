@@ -9,23 +9,20 @@ from controller.util import log
 
 import controller.routes as routes
 from drone.video import video_bp
+from drone.location import location_bp
 
 from flask_cors import CORS
 
 app = Flask(__name__)
 app.register_blueprint(routes.routes_bp)
 app.register_blueprint(video_bp)
-
+app.register_blueprint(location_bp)
 
 CORS(app)
 
-
-
-
 def init_app():
-    app.run(host="0.0.0.0", port=8766, debug=True)
-    
-    
+    print(app.url_map)
+    app.run(host="0.0.0.0", port=8766, debug=True)    
     
 
 if __name__ == '__main__':
