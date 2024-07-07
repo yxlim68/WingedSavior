@@ -31,7 +31,7 @@ def init_components():
 
 def init_app():
     print(app.url_map)
-    app.run(host="0.0.0.0", port=8766, debug=True)    
+    app.run(host="0.0.0.0", port=8766)    
 
     
 

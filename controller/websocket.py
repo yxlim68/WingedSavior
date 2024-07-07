@@ -64,6 +64,13 @@ def get_local_ip():
 
 async def websocket_main():
     server = await websockets.serve(websocket_handler, host="0.0.0.0", port=8765)
+    
+    drone_thread = threading.Thread(target=lambda: asyncio.run(handle_drone_state()), daemon=True)
+    drone_thread.start()
+    status_thread = threading.Thread(target=lambda: asyncio.run(handle_status()), daemon=True)
+    status_thread.start()
+    response_thread = threading.Thread(target=lambda: asyncio.run(handle_response()), daemon=True)
+    response_thread.start()
 
     print("Server started at:")
     local_ip = get_local_ip()
@@ -343,12 +350,7 @@ async def handle_response():
 
 if __name__ == '__main__':
     
-    drone_thread = threading.Thread(target=lambda: asyncio.run(handle_drone_state()), daemon=True)
-    drone_thread.start()
-    status_thread = threading.Thread(target=lambda: asyncio.run(handle_status()), daemon=True)
-    status_thread.start()
-    response_thread = threading.Thread(target=lambda: asyncio.run(handle_response()), daemon=True)
-    response_thread.start()
+    
     
     
     asyncio.run(websocket_main())
