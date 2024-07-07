@@ -23,6 +23,7 @@
           <div class="left-actions">
             <button id="stop"><i class="ph-fill ph-stop"></i></button>
             <button id="play"><i class="ph-fill ph-play"></i></button>
+            <button id="connect"><i class="ph-fill ph-plugs"></i></button>
           </div>
           <div class="statuses">
             <span class="status">
@@ -39,6 +40,9 @@
             </div>
           </div>
           <div class="right-actions">
+            <button id="notification">
+              <i class="ph-fill ph-bell-simple"></i>
+            </button>
             <button id="setting-btn"><i class="ph-fill ph-gear"></i></button>
           </div>
         </div>
@@ -68,5 +72,84 @@
         </div>
       </div>
     </div>
+
+    <script src="jquery.min.js"></script>
+
+    <script type="module">
+      import { ws } from "./conn.js";
+
+      // load project
+      const projectId = localStorage.getItem("project");
+
+      $(function () {
+        const $movements = $(
+          "#up,#down,#rotate-left,#rotate-right,#forward,#backward,#strafe-left,#strafe-right"
+        );
+
+        let socket;
+        let isConnected = false;
+        let status = null;
+
+        const listeners = {};
+
+        try {
+          socket = new WebSocket(ws());
+          socket.addEventListener("open", function () {
+            console.log("Ws server connected");
+            isConnected = false;
+          });
+          socket.addEventListener("message", handleMessageEvent);
+          socket.addEventListener("close", function () {
+            isConnected = false;
+          });
+        } catch (err) {
+          console.error(err);
+        }
+
+        function listen(event, cb) {
+          listeners[event] = listeners[event]
+            ? [...listeners[event], cb]
+            : [cb];
+        }
+
+        function handleMessageEvent(e) {
+          const [event, ...data] = e.data.split(" ");
+          console.log(data.join(" "));
+
+          if (listeners[event]) {
+            for (const cb of listeners[event]) cb(data.join(" "));
+          }
+        }
+
+        listen("status", function (e) {
+          status = JSON.parse(e);
+          updateStatus();
+        });
+
+        function updateStatus() {
+          let { location } = status;
+
+          updateLocation(location);
+        }
+
+        function updateLocation(location) {
+          const $locLabel = $("#location-label");
+          let locLabel;
+          if (location === null) locLabel = "Unavailable";
+          else locLabel = `${location.lat}, ${location.lng}`;
+          $locLabel.text(locLabel);
+        }
+
+        $("#connect").on("click", function () {
+          socket.send("connect");
+        });
+        $("#play").on("click", function () {
+          socket.send("takeoff");
+        });
+        $("#stop").on("click", function () {
+          socket.send("land");
+        });
+      });
+    </script>
   </body>
 </html>

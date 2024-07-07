@@ -1,17 +1,24 @@
-export const DEBUG_VIDEO = true;
+export const DEBUG_VIDEO = false;
 export const DEBUG_ANDROID = false;
 
 export let BACKEND_URL;
 if (DEBUG_VIDEO) {
-  BACKEND_URL = "http://127.0.0.1:8766";
+  BACKEND_URL = "127.0.0.1";
 } else if (DEBUG_ANDROID) {
-  BACKEND_URL = "http://10.0.2.2:8766";
+  BACKEND_URL = "10.0.2.2";
 } else {
-  BACKEND_URL = "http://192.168.200.65:8766";
+  BACKEND_URL = "192.168.11.34";
+}
+
+export const WEB_PORT = "8766";
+export const WS_PORT = "8765";
+
+export function ws() {
+  return `ws://${BACKEND_URL}:${WS_PORT}`;
 }
 
 export function api(path) {
-  return BACKEND_URL + path;
+  return `http://${BACKEND_URL}:${WEB_PORT}${path}`;
 }
 
 export async function checkProjectExist(projectId) {
