@@ -4,10 +4,10 @@ from flask import Blueprint, Response, request
 from controller.db import db
 from drone.config import DEBUG_VIDEO
 from drone.detection import detect_person
+from drone.location import get_location
 from drone.yolo import model
 
-# maximum amount of time to to consider using the location as the current location
-MAX_LOCATION_LIFE = 10000 # ms
+
 
 video_bp = Blueprint("Video BP", __name__)
 
@@ -107,25 +107,4 @@ def upload_image( project_id: int, id: int, image_bytes, conf: float):
     except Exception as e:
         print(e)
         
-def get_location():
-    _, cur = db()
-    
-    query = "SELECT location, time from location"
 
-    cur.execute(query)
-    
-    res = cur.fetchone()
-    
-    if not res:
-        return None
-    
-    current_time = datetime.datetime.now()
-    
-    loc_time = res['time']
-    
-    time_diff = (current_time - loc_time).total_seconds() * 1000
-    
-    if time_diff > MAX_LOCATION_LIFE:
-        return None
-    
-    return res['location']
