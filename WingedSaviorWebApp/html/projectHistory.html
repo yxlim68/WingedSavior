@@ -1,84 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project History - Winged Saviors</title>
-    <link href="styles.css" rel="stylesheet" type="text/css" />
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  </head>
-  <body>
-    <header class="fixed-header">
-      <div class="header-content">
-        <img
-          src="img/logo.png"
-          alt="Winged Saviors Logo"
-          class="logo-img"
-          width="100px"
-          height="auto"
-        />
-      </div>
-    </header>
+    <link href="styles.css" rel="stylesheet" type="text/css">
+	<script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+<header class="fixed-header">
+    <div class="header-content">
+        <a href="home.html" class="back-button">
+            <i class="ph ph-arrow-left"></i></a>
+        <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img">
+        <div class="notification-container">
+            <a href="#" class="notification-icon" onclick="togglePopup(event)">
+                <i class="ph ph-bell"></i>
+            </a>
+            <div class="notification-popup" id="notificationPopup">
+                <!-- Notification content goes here -->
+                <p>This is a notification popup!</p>
+            </div>
+        </div>
+    </div>
+</header>
     <main>
-      <section class="project-history container">
-        <h2>Project History</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Project Name</th>
-              <th>Project Coordinates (cm)</th>
-              <th>Drone Detection</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Drone Survey 1</td>
-              <td>X: 100, Y: 200, Z: 50</td>
-              <td>Object Detected: Tree</td>
-            </tr>
-            <tr>
-              <td>Drone Mapping 2</td>
-              <td>X: 150, Y: 250, Z: 70</td>
-              <td>Object Detected: Building</td>
-            </tr>
-            <tr>
-              <td>Drone Analysis 3</td>
-              <td>X: 200, Y: 300, Z: 100</td>
-              <td>Object Detected: Car</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+        <section class="project-history container">
+            <h2>Project History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Project Coordinates (cm)</th>
+                        <th>Drone Detection</th>
+						<th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Drone Survey 1</td>
+                        <td>X: 100, Y: 200, Z: 50</td>
+                        <td>Object Detected: Tree</td>
+                    </tr>
+                    <tr>
+                        <td>Drone Mapping 2</td>
+                        <td>X: 150, Y: 250, Z: 70</td>
+                        <td>Object Detected: Building</td>
+                    </tr>
+                    <tr>
+                        <td>Drone Analysis 3</td>
+                        <td>X: 200, Y: 300, Z: 100</td>
+                        <td>Object Detected: Car</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
     </main>
     <footer>
-      <nav class="bottom-nav">
-        <ul>
-          <li>
-            <a href="home.html">
-              <i class="ph ph-house"></i><br />
-              <span class="nav-name">Home</span>
-            </a>
-          </li>
-          <li>
-            <a href="video.html">
-              <i class="ph ph-video-camera"></i><br />
-              <span class="nav-name">Live Feed</span>
-            </a>
-          </li>
-          <li>
-            <a href="projectHistory.html">
-              <i class="ph ph-archive"></i><br />
-              <span class="nav-name">History</span>
-            </a>
-          </li>
-          <li>
-            <a href="profile.html">
-              <i class="ph ph-user"></i><br />
-              <span class="nav-name">Profile</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
+        <nav class="bottom-nav">
+            <ul>
+                <li>
+                    <a href="home.html">
+                        <i class="ph ph-house"></i><br>
+                        <span class="nav-name">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="liveFeed.html">
+                        <i class="ph ph-video-camera"></i><br>
+                        <span class="nav-name">Live Feed</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="projectHistory.html">
+                        <i class="ph ph-archive"></i><br>
+                        <span class="nav-name">History</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile.html">
+                        <i class="ph ph-user"></i><br>
+                        <span class="nav-name">Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </footer>
-  </body>
+</body>
 </html>
+
+<script>
+		// Toggle notification popup visibility
+		function togglePopup(event) {
+			event.preventDefault();
+			var popup = document.getElementById('notificationPopup');
+			popup.classList.toggle('show');
+		}
+</script>
