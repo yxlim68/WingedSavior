@@ -10,8 +10,8 @@ html {
   min-height: 100vh;
 }
 
-[class^=ph-],
-.ph {
+button > [class^=ph-],
+button > .ph {
   vertical-align: middle;
 }
 
@@ -158,4 +158,45 @@ button:hover, button:focus {
 }
 .modals #video-err button {
   color: #16a34a;
+}
+.modals .main-modal {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: #f1f5f9;
+  color: #1e293b;
+  font-size: 18px;
+}
+.modals #connect-modal {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.modals #connect-error-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.modals #connect-error-modal #retry-server-btn {
+  display: block;
+  font-size: 16px;
+  padding: 8px 12px;
+  color: #16a34a;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin {
+  display: inline-block;
+  animation: spin 750ms ease-in-out infinite;
 }
