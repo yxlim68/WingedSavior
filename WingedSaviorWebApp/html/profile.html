@@ -143,6 +143,11 @@
         const email = userData.email;
         const username = userData.username;
 
+        if (userData.profile_image.length > 0) {
+          document.querySelector("#profile-pic-display").src =
+            "data:image/jpeg;base64," + userData.profile_image;
+        }
+
         if (name) {
           $("#name-display").text(name);
         }

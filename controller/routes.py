@@ -1,7 +1,9 @@
 import base64
 import json
 from io import BytesIO
+import cv2
 from flask import Blueprint, Response, jsonify, request, Flask, send_file
+import numpy as np
 
 from controller.db import db
 from controller.util import log as util_log
@@ -60,6 +62,7 @@ def login():
         cursor.execute(query)
         
         res = cursor.fetchone()
+        res['profile_image'] = base64.b64encode(res['profile_image']).decode('utf-8')
         
         if not res:
             return {
@@ -249,3 +252,67 @@ def project_list():
     except Exception as e:
         print(e)
         return {"error": e}, 500
+    
+@routes_bp.route("/update_user", methods=["POST"])
+def update_user():
+    if request.method != 'POST':
+        return {}, 405
+    
+    
+    id = request.form.get('id')
+    firstname = request.form.get('firstname')
+    lastname = request.form.get('lastname')
+    email = request.form.get('email')
+    organization = request.form.get('organization')
+    username = request.form.get('username')
+    password = request.form.get('password')
+    
+    profile_pic = request.files.get('profile-pic')
+    profile_bytes = profile_pic.read()
+    
+    log('pw', password)
+    
+    
+    
+    if len(profile_bytes) > 0:
+        # thre is picture
+        # update picture first
+        profile_bytes = np.frombuffer(profile_bytes, np.uint8)
+        image = cv2.imdecode(profile_bytes, cv2.IMREAD_COLOR)
+        
+        # Convert to JPEG if necessary
+        if profile_pic.content_type != 'image/jpeg':
+            _, jpeg_data = cv2.imencode('.jpg', image)
+            jpeg_data = jpeg_data.tobytes()
+        else:
+            jpeg_data = profile_bytes.tobytes()
+        _, cur = db()
+            
+        cur.execute("UPDATE users SET profile_image = %s WHERE id = %s", (jpeg_data, id))
+        cur.execute("commit")
+        
+        
+    _, cur = db()
+    # update all user data
+    query = f"UPDATE users SET firstname = %s, lastname = %s, email = %s, organization = %s, username = %s{', password = %s' if password is not None and len(password) > 0 else ''} WHERE id = %s"
+    log(query)
+    if password is not None and len(password) > 0:
+        cur.execute(query, (firstname, lastname, email, organization, username, password, id))
+    else:
+        cur.execute(query, (firstname, lastname, email, organization, username, id))
+        
+    cur.execute("commit")
+    
+    # user data
+    cur.execute("SELECT * FROM users WHERE id = %s", (id,))
+    res = cur.fetchone()
+    
+    res = format_user(res)
+        
+    log(res)
+    
+    return res, 200
+
+def format_user(res):
+    res['profile_image'] = base64.b64encode(res['profile_image']).decode('utf-8')
+    return res 

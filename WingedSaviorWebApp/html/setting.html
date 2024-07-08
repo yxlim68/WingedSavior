@@ -1,151 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Winged Saviors - Settings</title>
-    <link href="styles.css" rel="stylesheet" type="text/css">
+    <link href="styles.css" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-</head>
-<body>
-<header class="fixed-header">
-    <div class="header-content">
+  </head>
+  <body>
+    <header class="fixed-header">
+      <div class="header-content">
         <a href="profile.html" class="back-button">
-            <i class="ph ph-arrow-left"></i></a>
-        <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img">
+          <i class="ph ph-arrow-left"></i
+        ></a>
+        <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img" />
         <div class="notification-container">
-            <a href="#" class="notification-icon" onclick="togglePopup(event)">
-                <i class="ph ph-bell"></i>
-            </a>
-            <div class="notification-popup" id="notificationPopup">
-                <!-- Notification content goes here -->
-                <p>This is a notification popup!</p>
-            </div>
+          <a href="#" class="notification-icon" onclick="togglePopup(event)">
+            <i class="ph ph-bell"></i>
+          </a>
+          <div class="notification-popup" id="notificationPopup">
+            <!-- Notification content goes here -->
+            <p>This is a notification popup!</p>
+          </div>
         </div>
-    </div>
-</header>
+      </div>
+    </header>
 
     <main class="settings-container">
-        <div class="settings-box">
-            <h2>Profile Settings</h2><br>
-            <form id="settings-form">
-                <div class="profile-pic-section">
-                    <label for="profile-pic" class="profile-pic-label">
-                        <img id="profile-pic-preview" src="img/default-avatar.png" class="profile-pic">
-                        <div class="upload-button">
-                            <i class="ph ph-upload"></i>
-                        </div>
-                    </label>
-                    <input type="file" id="profile-pic" name="profile-pic" accept="image/*">
-                </div><br>
-                <label for="name">First Name</label>
-                <input type="text" id="firstname" name="name" required>
-                <label for="name">Last Name</label>
-                <input type="text" id="lastname" name="name" required>
-                <label for="name">Username</label>
-                <input type="text" id="username" name="name" required>
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-                <label for="name">Organization</label>
-                <input type="text" id="organization" name="name" required>
-                <label for="location">Location</label>
-                <input type="text" id="location" name="location"><br><br>
-                <button type="submit" class="button">Update Profile</button><br><br>
-            </form>
-        </div>
+      <div class="settings-box">
+        <h2>Profile Settings</h2>
+        <br />
+        <form id="settings-form">
+          <div class="profile-pic-section">
+            <label for="profile-pic" class="profile-pic-label">
+              <img
+                id="profile-pic-preview"
+                src="img/default-avatar.svg"
+                class="profile-pic"
+              />
+              <div class="upload-button">
+                <i class="ph ph-upload"></i>
+              </div>
+            </label>
+            <input
+              type="file"
+              id="profile-pic"
+              name="profile-pic"
+              accept="image/*"
+            />
+          </div>
+          <br />
+          <input type="hidden" name="id" id="userid" value="" />
+          <label for="firstname">First Name</label>
+          <input type="text" id="firstname" name="firstname" required />
+          <label for="lastname">Last Name</label>
+          <input type="text" id="lastname" name="lastname" required />
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required />
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+          <label for="organization">Organization</label>
+          <input type="text" id="organization" name="organization" required />
+          <label for="passsword">Password</label>
+          <input type="text" id="passowrd" name="password" />
+          <br /><br />
+          <button type="submit" class="button">Update Profile</button
+          ><br /><br />
+        </form>
+      </div>
     </main>
 
     <footer>
-        <nav class="bottom-nav">
-            <ul>
-                <li>
-                    <a href="home.html">
-                        <i class="ph ph-house"></i><br>
-                        <span class="nav-name">Home</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="liveFeed.html">
-                        <i class="ph ph-video-camera"></i><br>
-                        <span class="nav-name">Live Feed</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="projectHistory.html">
-                        <i class="ph ph-archive"></i><br>
-                        <span class="nav-name">History</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="profile.html">
-                        <i class="ph ph-user"></i><br>
-                        <span class="nav-name">Profile</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+      <nav class="bottom-nav">
+        <ul>
+          <li>
+            <a href="home.html">
+              <i class="ph ph-house"></i><br />
+              <span class="nav-name">Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="liveFeed.html">
+              <i class="ph ph-video-camera"></i><br />
+              <span class="nav-name">Live Feed</span>
+            </a>
+          </li>
+          <li>
+            <a href="projectHistory.html">
+              <i class="ph ph-archive"></i><br />
+              <span class="nav-name">History</span>
+            </a>
+          </li>
+          <li>
+            <a href="profile.html">
+              <i class="ph ph-user"></i><br />
+              <span class="nav-name">Profile</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </footer>
 
     <script>
-        // Load current profile data into the form fields on settings page
-        window.onload = function() {
-            const name = localStorage.getItem('name');
-            const email = localStorage.getItem('email');
-            const location = localStorage.getItem('location');
-            const profilePic = localStorage.getItem('profilePic');
-    
-            if (name) {
-                document.getElementById('name').value = name;
-            }
-            if (email) {
-                document.getElementById('email').value = email;
-            }
-            if (location) {
-                document.getElementById('location').value = location;
-            }
-            if (profilePic) {
-                document.getElementById('profile-pic-preview').src = profilePic;
-            }
-        };
-    
-        // Handle profile picture preview
-        document.getElementById('profile-pic').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            const preview = document.getElementById('profile-pic-preview');
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            } else {
-                preview.src = 'img/default-avatar.png';
-            }
+      // Load current profile data into the form fields on settings page
+      window.onload = function () {
+        const name = localStorage.getItem("name");
+        const email = localStorage.getItem("email");
+        const location = localStorage.getItem("location");
+        const profilePic = localStorage.getItem("profilePic");
+
+        if (name) {
+          document.getElementById("name").value = name;
+        }
+        if (email) {
+          document.getElementById("email").value = email;
+        }
+        if (location) {
+          document.getElementById("location").value = location;
+        }
+        if (profilePic) {
+          document.getElementById("profile-pic-preview").src = profilePic;
+        }
+      };
+
+      // Handle profile picture preview
+      document
+        .getElementById("profile-pic")
+        .addEventListener("change", function (event) {
+          const file = event.target.files[0];
+          const preview = document.getElementById("profile-pic-preview");
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              preview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+          } else {
+            preview.src = "img/default-avatar.png";
+          }
         });
-    
-        // Save profile data and navigate back to profile page
-        document.getElementById('settings-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const location = document.getElementById('location').value;
-            const profilePic = document.getElementById('profile-pic-preview').src;
-    
-            // Save to localStorage
-            localStorage.setItem('name', name);
-            localStorage.setItem('email', email);
-            localStorage.setItem('location', location);
-            localStorage.setItem('profilePic', profilePic);
-    
-            window.location.href = 'profile.html';
-        });
-    
-        // Navigate back to profile page without saving
-        document.getElementById('back-button').addEventListener('click', function() {
-            window.location.href = 'profile.html';
+
+      // Navigate back to profile page without saving
+      document
+        .querySelector(".back-button")
+        .addEventListener("click", function () {
+          window.location.href = "profile.html";
         });
     </script>
-    
-    
-</body>
+
+    <script type="module">
+      import { api } from "./conn.js";
+      document.addEventListener("DOMContentLoaded", function () {
+        // load user data
+        const data = localStorage.getItem("user");
+
+        if (!data) {
+          alert("Invalid Data");
+          window.location.href = "login.html";
+          return;
+        }
+
+        const user = JSON.parse(data);
+
+        document.querySelector("#userid").value = user.id;
+        document.querySelector("#firstname").value = user.firstname;
+        document.querySelector("#lastname").value = user.lastname;
+        document.querySelector("#username").value = user.username;
+        document.querySelector("#email").value = user.email;
+        document.querySelector("#organization").value = user.organization;
+        if (user.profile_image.length > 0) {
+          document.querySelector("#profile-pic-preview").src =
+            "data:image/jpeg;base64," + user.profile_image;
+        }
+        console.log(user);
+      });
+      document
+        .querySelector("#settings-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          console.log(e.currentTarget);
+          const formData = new FormData(e.currentTarget);
+
+          const profileFile = document.querySelector("#profile-pic").files[0];
+          console.log(profileFile);
+
+          fetch(api("/update_user"), {
+            method: "POST",
+            body: formData,
+          })
+            .then((res) => res.json())
+            .then((res) => {
+              console.log(res);
+            })
+            .catch((err) => {
+              alert("Update failed");
+              console.error(err);
+            });
+        });
+
+      console.log("balls");
+    </script>
+  </body>
 </html>
