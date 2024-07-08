@@ -46,7 +46,9 @@
           </div>
           <div class="right-actions">
             <button id="notification">
-              <i class="ph-fill ph-bell-simple"></i>
+              <a href="notification.html">
+                <i class="ph-fill ph-bell-simple"></i>
+              </a>
             </button>
             <button id="setting-btn"><i class="ph-fill ph-gear"></i></button>
           </div>
@@ -143,7 +145,10 @@
 
           $("#connect").on("click", function () {
             console.log("connect");
-            socket.send("connect");
+            let res = sendMessage("connect");
+            if (res) {
+              console.error(res);
+            }
           });
           $("#play").on("click", function () {
             socket.send("takeoff");
@@ -264,6 +269,13 @@
           } catch (e) {
             console.error(e);
           }
+        }
+        function sendMessage(msg) {
+          if (!isConnected) {
+            return "Not connected to server!";
+          }
+          socket.send(msg);
+          return;
         }
       });
     </script>
