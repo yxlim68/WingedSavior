@@ -1,6 +1,6 @@
-import datetime
 import time
 import cv2
+from djitellopy import TelloException
 from flask import Blueprint, Response, request
 from controller.db import db
 from controller.util import log as util_log
@@ -18,48 +18,56 @@ if DEBUG_VIDEO:
 
 @video_bp.route("/video_feed")
 def video_feed():
-    global latest_frame, project
+    global latest_frame, project, video_start, frame_queue
     project_id = request.args.get('project')
+    check_status = request.args.get('status')
     
-        
-    if not project_id:
-        return {"message": "Please provide project id"}, 400
-    
-    if not DEBUG_VIDEO:
-        from drone.tello import tello, tello_connect_if_not
-        
-        tello_connect_if_not()
-        tello.streamon()
-        
-       
-    
-    def get_frame():
-        if DEBUG_VIDEO:
-            _, frame = cap.read()
-            return frame
-        
-        frame = tello.get_frame_read().frame
-        return cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-    
-    # keep tracked objects ids to prevent spamming database with images
-    tracked_objects = list()
+    # print(check_status)
+    if check_status is not None:
+        return {
+            "video_start": video_start,
+            "project": project }, 200
     
     project = project_id
+    
+    VIDEO_TIMEOUT = 15000
+    log = util_log('web video')
 
-    # TODO: Send predicted image to all connected clients
+    
     def generate():
+        last_try = None
+        
         while True:
-            
             if latest_frame is None:
+                if last_try is None:
+                    last_try = time.time() * 1000
+                    
+                # check for timeout
+                elapsed = time.time() * 1000 - last_try
+                
+                if elapsed > VIDEO_TIMEOUT:
+                    log('TIMEOUT!')
+                    break
+                
                 time.sleep(0.1)
                 continue
+            else:
+                last_try = None
             
             
-
+            time.sleep(0.05)
             yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + latest_frame.tobytes() + b'\r\n\r\n')
+                b'Content-Type: image/jpeg\r\n\r\n' + latest_frame.tobytes() + b'\r\n\r\n')
+            
+            
+        
 
-    return Response(generate(),  mimetype="multipart/x-mixed-replace;boundary=frame")
+    response = Response(generate(),  mimetype="multipart/x-mixed-replace;boundary=frame")
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    
+    return response
 
 
 def upload_image( project_id: int, id: int, image_bytes, conf: float):
@@ -97,12 +105,6 @@ def start_video_thread():
     
     if DEBUG_VIDEO:
         cap = cv2.VideoCapture(0)
-    
-    if not DEBUG_VIDEO:
-        from drone.tello import tello, tello_connect_if_not
-        
-        tello_connect_if_not()
-        tello.streamon()
      
     def get_frame():
         if DEBUG_VIDEO:
@@ -112,40 +114,73 @@ def start_video_thread():
         frame = tello.get_frame_read().frame
         return cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
     
+    if not DEBUG_VIDEO:
+        from drone.tello import tello, tello_connect_if_not
+        try:
+            tello_connect_if_not()
+            tello.streamon()        
+        except:
+            # do nothing if cant connect now
+            pass
+    
+    last_video = None
+    
     while True:
         # log('frame: ', latest_frame)
         # log(f'project: {project}')
-        frame = get_frame()
-        
-        results = model.track(frame, persist=True, classes=0, verbose=False)
+        try:
+            if not DEBUG_VIDEO:
+                if last_video is None:
+                    last_video = time.time() * 1000
+                    
+                # try to reconnect every 5 seconds
+                if time.time() * 1000 -  last_video > 10000:
+                    log('reconnect if not')
+                    last_video = None # reset try
+                    tello_connect_if_not()
+                    tello.streamon()
+                    
+            frame = get_frame()
+            
+            results = model.track(frame, persist=True, classes=0, verbose=False)
 
-        person_detected = detect_person(results[0])
+            person_detected = detect_person(results[0])
 
-        if person_detected:
-            output = results[0].plot() 
-        else:
-            output = frame
+            if person_detected:
+                output = results[0].plot() 
+            else:
+                output = frame
 
-        success, jpeg = cv2.imencode('.jpg', output)
-        
-        if person_detected:
-            boxes = results[0].boxes
-            print(tracked_objects)
-            for box in boxes:
-                if not box:
-                    continue
-                if box.id in tracked_objects:
-                    continue
-                
-                tracked_objects.append(box.id.item())
-                
-                # send notification
-                if project:
-                    upload_image(project, box.id, jpeg.tobytes(), box.conf.item())
+            success, jpeg = cv2.imencode('.jpg', output)
+            
+            if person_detected:
+                boxes = results[0].boxes
+                print(tracked_objects)
+                for box in boxes:
+                    if box.id is None:
+                        continue
+                    if box.id in tracked_objects:
+                        continue
+                    
+                    tracked_objects.append(box.id.item())
+                    
+                    # send notification
+                    if project:
+                        upload_image(project, box.id, jpeg.tobytes(), box.conf.item())
 
 
-        if not success:
-            print('[video_feed] Frame Dropped')
-            continue
-        latest_frame = jpeg
-        video_start = True
+            if not success:
+                print('[video_feed] Frame Dropped')
+                continue
+            
+            latest_frame = jpeg
+            video_start = True
+            
+        except TelloException as e:
+            log(e)
+            log('wait a bit')
+            latest_frame = None
+            time.sleep(1)
+        except Exception as e:
+            log(e)
+            time.sleep(1)
