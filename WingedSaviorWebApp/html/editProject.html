@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Project - Winged Saviors</title>
+    <link href="styles.css" rel="stylesheet" type="text/css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        /* Project Detail Section */
+        .project-detail-section {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+			height: 75vh;
+			overflow-y: auto;
+			max-height: 90vh;
+            margin: 100px auto 20px;
+        }
+
+        .project-detail-section h2 {
+            color: #2F3645;
+            text-align: center;
+            margin-bottom: 20px;
+			font-size: 2em;
+        }
+
+        .project-info {
+            margin-bottom: 20px;
+        }
+
+        .project-info p {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        .start-stop-container {
+            text-align: center;
+        }
+
+        .start-stop-container img {
+            cursor: pointer;
+            width: 250px;
+			border-radius: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .start-stop-container img.animate {
+            transform: scale(1.1);
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+<header class="fixed-header">
+    <div class="header-content">
+        <a href="viewProject.html" class="back-button">
+            <i class="ph ph-arrow-left"></i></a>
+        <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img">
+        <div class="notification-container">
+            <a href="#" class="notification-icon" onclick="togglePopup(event)">
+                <i class="ph ph-bell"></i>
+            </a>
+            <div class="notification-popup" id="notificationPopup">
+                <!-- Notification content goes here -->
+                <p>This is a notification popup!</p>
+            </div>
+        </div>
+    </div>
+</header>
+	<main class="background-image">
+    <section class="container project-detail-section">
+        <h2>Edit Project</h2>
+        <div class="project-info">
+            <form id="editProjectForm" class="edit-form">
+                <div>
+                    <label for="projectName">Project Name:</label>
+                    <input type="text" id="projectName" name="projectName" required>
+                </div>
+                <div>
+                    <label for="latitude">Latitude:</label>
+                    <input type="text" id="latitude" name="latitude" required>
+                </div>
+                <div>
+                    <label for="longitude">Longitude:</label>
+                    <input type="text" id="longitude" name="longitude" required>
+                </div>
+                <div>
+                    <label for="droneDetection">Drone Detection:</label>
+                    <input type="text" id="droneDetection" name="droneDetection" required>
+                </div>
+                <button type="submit" class="button" onClick="location.href='viewProject.html'">Save Changes</button>
+            </form>
+        </div>
+    </section>
+</main>
+    <footer>
+        <nav class="bottom-nav">
+            <ul>
+                <li>
+                    <a href="home.html">
+                        <i class="ph ph-house"></i><br>
+                        <span class="nav-name">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="liveFeed.html">
+                        <i class="ph ph-video-camera"></i><br>
+                        <span class="nav-name">Live Feed</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="projectHistory.html">
+                        <i class="ph ph-archive"></i><br>
+                        <span class="nav-name">History</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile.html">
+                        <i class="ph ph-user"></i><br>
+                        <span class="nav-name">Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </footer>
+
+    <script>
+        let isStarted = false;
+
+        function toggleStartStop() {
+            const startStopImage = document.getElementById('startStopImage');
+            startStopImage.classList.add('animate');
+            setTimeout(() => {
+                if (isStarted) {
+                    startStopImage.src = 'img/btnOff.png';
+                    isStarted = false;
+                } else {
+                    startStopImage.src = 'img/btnOn.png';
+                    isStarted = true;
+                }
+                startStopImage.classList.remove('animate');
+            }, 300); // duration matches the CSS animation
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('project');
+            
+            if (projectId) {
+                loadProjectDetails(projectId);
+            }
+        });
+
+        function loadProjectDetails(projectId) {
+            // Placeholder data; this would be replaced with actual data fetching logic
+            const projectDetails = {
+                alpha: {
+                    name: 'Project Alpha',
+                    coordinate: 'Latitude: 3.1390, Longitude: 101.6869',
+                    detection: 'Active'
+                },
+                beta: {
+                    name: 'Project Beta',
+                    coordinate: 'Latitude: 3.1400, Longitude: 101.6860',
+                    detection: 'Inactive'
+                },
+                gamma: {
+                    name: 'Project Gamma',
+                    coordinate: 'Latitude: 3.1410, Longitude: 101.6850',
+                    detection: 'Planned'
+                }
+            };
+
+            const project = projectDetails[projectId];
+            if (project) {
+                document.getElementById('projectName').textContent = project.name;
+                document.getElementById('projectCoordinate').textContent = project.coordinate;
+                document.getElementById('droneDetection').textContent = project.detection;
+            }
+        }
+		
+		// Toggle notification popup visibility
+		function togglePopup(event) {
+			event.preventDefault();
+			var popup = document.getElementById('notificationPopup');
+			popup.classList.toggle('show');
+		}
+    </script>
+</body>
+</html>
