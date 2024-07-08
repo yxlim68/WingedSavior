@@ -325,7 +325,7 @@ async def handle_status():
             status['drone_state'] = curr_drone_state
             
         
-        log(status)
+        # log(status)
         if client is not None:
             await client.send(f'status {json.dumps(status, sort_keys=True)}')
     
