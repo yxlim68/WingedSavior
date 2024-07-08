@@ -9,35 +9,6 @@
 </head>
 	
 <style>
-/* Add styles for notification popup */
-.notification-popup {
-    position: absolute;
-    top: 70px; /* Adjust as needed to position below header */
-    right: 20px; /* Adjust as needed to position relative to header */
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    display: none; /* Hide by default */
-    z-index: 1000; /* Ensure it's above other content */
-}
-
-.notification-popup p {
-    margin: 0;
-}
-
-/* Show notification popup on hover or click */
-.notification-icon:hover + .notification-popup,
-.notification-icon:focus + .notification-popup {
-    display: block;
-}
-
-/* Media query adjustments as needed */
-@media (max-width: 768px) {
-    /* Adjust styles for smaller screens if necessary */
-}
-
 /* Feature Styles */
 .features {
     background-color: #fff;
@@ -113,125 +84,25 @@
 }
 
 .greeting p {
-	margin-top: 100px;
+	margin-top: 90px;
 	color: #2F3645;
-	margin-bottom: 10px;
 }	
-	
-/* Header Styles */
-.fixed-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #2F3645;
-    color: white;
-    padding: 10px 20px;
-    text-align: right; /* Aligning notification to the right */
-    z-index: 1000;
-    box-shadow: 0 10px 5px rgba(0, 0, 0, 0.1);
-}
 
-.fixed-header .header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.fixed-header .logo-img {
-    height: 50px;
-    width: auto;
-}
-
-.notification-icon {
-    color: white;
-    font-size: 24px;
-}
-
-/* Bottom Navigation Styles */
-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #2F3645;
-    padding: 10px 0;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-}
-
-.bottom-nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: space-around;
-}
-
-.bottom-nav ul li {
-    flex: 1;
-    text-align: center;
-}
-
-.bottom-nav ul li a {
-    display: block;
-    padding: 5px;
-    color: white;
-    text-decoration: none;
-    transition: background-color 0.5s, color 0.5s;
-}
-
-.bottom-nav ul li a i {
-    font-size: 22px;
-    transition: color 0.3s;
-}
-
-/* Animation */
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-/* Media Queries */
-@media (max-width: 768px) {
-    .profile-box {
-        width: 90%;
-    }
-
-    .fixed-header {
-        padding: 5px 0;
-    }
-
-    .fixed-header .header-content {
-        flex-direction: column;
-    }
-
-    .fixed-header .logo-img {
-        margin: 0;
-    }
-}
-
-@media (max-width: 600px) {
-    .profile-box {
-        width: 80%;
-    }
-}
 </style>	
 	
 <body>
     <header class="fixed-header">
         <div class="header-content">
             <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img">
-            <div class="notification-icon" onclick="toggleNotification()">
-                <i class="ph ph-bell"></i>
-                <div class="notification-popup" id="notificationPopup">
-                    <p>New notification: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
-            </div>
+			<div class="notification-container">
+				<a href="#" class="notification-icon" onclick="togglePopup(event)">
+					<i class="ph ph-bell"></i>
+				</a>
+				<div class="notification-popup" id="notificationPopup">
+					<!-- Notification content goes here -->
+					<p>This is a notification popup!</p>
+				</div>
+			</div>
         </div>
     </header>
 
@@ -246,7 +117,7 @@ footer {
                 <div class="slide-content">
                     <h3>Explore the World from Above</h3>
                     <p>Join us in our mission to make search and rescue more efficient.</p>
-                    <button onclick="location.href='getStarted.html'" class="button">Get Started</button>
+                    <button onclick="location.href='newProject.html'" class="button">Get Started</button>
                 </div>
             </div>
             <div class="slide">
@@ -254,7 +125,7 @@ footer {
                 <div class="slide-content">
                     <h3>Advanced Drone Technology</h3>
                     <p>Leveraging cutting-edge technology for critical missions.</p>
-                    <button onclick="location.href='learnMore.html'" class="button">Learn More</button>
+                    <button onclick="location.href='newProject.html'" class="button">Learn More</button>
                 </div>
             </div>
             <div class="slide">
@@ -262,7 +133,7 @@ footer {
                 <div class="slide-content">
                     <h3>Join Our Team</h3>
                     <p>Become a part of a dedicated and skilled team.</p>
-                    <button onclick="location.href='joinUs.html'" class="button">Join Us</button>
+                    <button onclick="location.href='index.html'" class="button">Join Us</button>
                 </div>
             </div>
         </section>
@@ -293,9 +164,7 @@ footer {
 				<button onclick="location.href='projectList.html'" class="button">Project List</button>
 			</div>
 		</div>
-	</section>
-
-
+	</section><br><br>
     </main>
 
     <footer>
@@ -308,7 +177,7 @@ footer {
                     </a>
                 </li>
                 <li>
-                    <a href="video.html">
+                    <a href="liveFeed.html">
                         <i class="ph ph-video-camera"></i><br>
                         <span class="nav-name">Live Feed</span>
                     </a>
@@ -357,11 +226,13 @@ footer {
 			element.classList.toggle('show');
 		}
 		
-				// Toggle notification popup visibility
-		function toggleNotification() {
-			const popup = document.getElementById('notificationPopup');
-			popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+		// Toggle notification popup visibility
+		function togglePopup(event) {
+			event.preventDefault();
+			var popup = document.getElementById('notificationPopup');
+			popup.classList.toggle('show');
 		}
+
     </script>
     <script type="module">
         import './jquery.min.js';
