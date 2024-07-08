@@ -75,6 +75,14 @@
             </button>
           </div>
         </div>
+        <div class="modals">
+          <div class="toast-bottom">
+            <div id="video-err" display="none">
+              <span>Failed to load live feed</span>
+              <button id="retry-load-btn">Retry</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -85,6 +93,8 @@
 
       // load project
       const projectId = localStorage.getItem("project");
+      const VIDEO_RETRY = 3;
+      let curr_try = 0;
 
       $(function () {
         const $movements = $(
@@ -125,7 +135,6 @@
 
         function handleMessageEvent(e) {
           const [event, ...data] = e.data.split(" ");
-          console.log(data.join(" "));
 
           if (listeners[event]) {
             for (const cb of listeners[event]) cb(data.join(" "));
@@ -163,20 +172,44 @@
 
         requiredProject(async (projectId) => {
           // check video feed
+          loadVideo(projectId);
+
+          $("#retry-load-btn").on("click", function () {
+            curr_try = 0;
+            loadVideo(projectId);
+          });
+        });
+
+        async function loadVideo(projectId, retry = 3) {
           try {
+            console.log("Fetching video try: " + (curr_try + 1));
             const res = await fetch(api("/video_feed?status=true"));
             const data = await res.json();
+
+            const errModal = $("#video-err");
+
+            errModal.hide();
 
             if (data.video_start) {
               $("#video-src").prop(
                 "src",
                 api("/video_feed?project=" + projectId)
               );
+              errModal.hide();
+            } else {
+              curr_try += 1;
+
+              if (curr_try > VIDEO_RETRY) {
+                errModal.show();
+                console.warn("MAX VIDEO RETRY");
+                return;
+              }
+              setTimeout(() => loadVideo(projectId), 1000);
             }
           } catch (e) {
             console.error(e);
           }
-        });
+        }
       });
     </script>
   </body>
