@@ -22,12 +22,9 @@ def kill_process_on_port(port):
         print(f"Failed to kill process on port {port}: {e}")
 
 
-if DEBUG_VIDEO:
-    # kill_process_on_port(8889)
-    tello = Tello()
-else:
-    tello = Tello(host=TELLO_HOST)
-    
+kill_process_on_port(8889)
+tello = Tello()
+
 if DEBUG_WEBSOCKET:
     tello.RESPONSE_TIMEOUT = 1
     
@@ -36,6 +33,6 @@ def tello_connect_if_not():
     try:
         print(f'[Connect Attempt] Drone battery {tello.get_battery()} to check connection')
     except:
-        print(f'f[Connect Attempt] Drone is not connected. Attempting to connect...')
+        print(f'[Connect Attempt] Drone is not connected. Attempting to connect...')
         tello.connect()
-        print(f'f[Connect Attempt] Batter is: {tello.get_battery()}%')
+        print(f'[Connect Attempt] Batter is: {tello.get_battery()}%')
