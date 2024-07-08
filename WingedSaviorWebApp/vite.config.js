@@ -1,14 +1,19 @@
 import path from "path";
-import { glob, globSync } from "glob";
+import { globSync } from "glob";
+import { fileURLToPath } from "url";
 
+console.log(path.join(__dirname, "html", "jquery.min.js"));
+console.log(fileURLToPath(new URL("html/jquery.min.js", import.meta.url)));
 export default {
   root: path.join(__dirname, "html"),
   build: {
+    minify: false,
     outDir: path.join(__dirname, "dist"),
-    target: "esnext",
     emptyOutDir: true,
+    modulePreload: false,
+    target: "esnext",
     rollupOptions: {
-      input: globSync("html/*.html"),
+      input: globSync(["html/*.html", "html/*.js", "html/*.css"]),
     },
   },
 };
