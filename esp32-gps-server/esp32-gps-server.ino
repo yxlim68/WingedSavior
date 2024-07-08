@@ -16,7 +16,7 @@ TinyGPSPlus gps;
 unsigned long timerDelay = 1000; // send wifi data every 1 second
 unsigned long lastTimeSent = 0;
 
-const String serverName = "http://192.168.213.34:8766";
+const String serverName = "http://192.168.11.34:8766";
 
 String api(String path)
 {
