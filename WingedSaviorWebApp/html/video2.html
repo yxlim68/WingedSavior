@@ -17,7 +17,12 @@
     </style>
     <div id="potrait-warning" style="display: none">please use landscape</div>
     <div id="controller-page">
-      <img alt="" id="video-src" oncontextmenu="return false" />
+      <img
+        src="img/Aidil.jpg"
+        alt=""
+        id="video-src"
+        oncontextmenu="return false"
+      />
       <div class="controllers">
         <div class="top-bar">
           <div class="left-actions">
@@ -76,7 +81,7 @@
     <script src="jquery.min.js"></script>
 
     <script type="module">
-      import { ws } from "./conn.js";
+      import { ws, requiredProject, api } from "./conn.js";
 
       // load project
       const projectId = localStorage.getItem("project");
@@ -85,6 +90,12 @@
         const $movements = $(
           "#up,#down,#rotate-left,#rotate-right,#forward,#backward,#strafe-left,#strafe-right"
         );
+
+        // disble context menu on whole page
+        $("*").on("contextmenu", function (e) {
+          e.preventDefault();
+          return false;
+        });
 
         let socket;
         let isConnected = false;
@@ -148,6 +159,23 @@
         });
         $("#stop").on("click", function () {
           socket.send("land");
+        });
+
+        requiredProject(async (projectId) => {
+          // check video feed
+          try {
+            const res = await fetch(api("/video_feed?status=true"));
+            const data = await res.json();
+
+            if (data.video_start) {
+              $("#video-src").prop(
+                "src",
+                api("/video_feed?project=" + projectId)
+              );
+            }
+          } catch (e) {
+            console.error(e);
+          }
         });
       });
     </script>
