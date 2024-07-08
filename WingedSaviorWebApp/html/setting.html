@@ -8,15 +8,26 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
-    <header class="fixed-header">
-        <div class="header-content">
-            <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img" height="50px" width="auto">
+<header class="fixed-header">
+    <div class="header-content">
+        <a href="profile.html" class="back-button">
+            <i class="ph ph-arrow-left"></i></a>
+        <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img">
+        <div class="notification-container">
+            <a href="#" class="notification-icon" onclick="togglePopup(event)">
+                <i class="ph ph-bell"></i>
+            </a>
+            <div class="notification-popup" id="notificationPopup">
+                <!-- Notification content goes here -->
+                <p>This is a notification popup!</p>
+            </div>
         </div>
-    </header>
+    </div>
+</header>
 
     <main class="settings-container">
         <div class="settings-box">
-            <h2>Profile Settings</h2>
+            <h2>Profile Settings</h2><br>
             <form id="settings-form">
                 <div class="profile-pic-section">
                     <label for="profile-pic" class="profile-pic-label">
@@ -26,16 +37,21 @@
                         </div>
                     </label>
                     <input type="file" id="profile-pic" name="profile-pic" accept="image/*">
-                </div>
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" required>
+                </div><br>
+                <label for="name">First Name</label>
+                <input type="text" id="firstname" name="name" required>
+                <label for="name">Last Name</label>
+                <input type="text" id="lastname" name="name" required>
+                <label for="name">Username</label>
+                <input type="text" id="username" name="name" required>
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required>
+                <label for="name">Organization</label>
+                <input type="text" id="organization" name="name" required>
                 <label for="location">Location</label>
-                <input type="text" id="location" name="location">
-                <button type="submit" class="save-button">Save</button>
+                <input type="text" id="location" name="location"><br><br>
+                <button type="submit" class="button">Update Profile</button><br><br>
             </form>
-            <button id="back-button" class="back-button">Back to Profile</button>
         </div>
     </main>
 
@@ -49,13 +65,19 @@
                     </a>
                 </li>
                 <li>
-                    <a href="notification.html">
-                        <i class="ph ph-bell"></i><br>
-                        <span class="nav-name">Notifications</span>
+                    <a href="liveFeed.html">
+                        <i class="ph ph-video-camera"></i><br>
+                        <span class="nav-name">Live Feed</span>
                     </a>
                 </li>
                 <li>
-                    <a href="profile.html" class="active">
+                    <a href="projectHistory.html">
+                        <i class="ph ph-archive"></i><br>
+                        <span class="nav-name">History</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile.html">
                         <i class="ph ph-user"></i><br>
                         <span class="nav-name">Profile</span>
                     </a>
