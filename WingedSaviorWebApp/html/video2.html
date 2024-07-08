@@ -75,12 +75,12 @@
             </button>
           </div>
         </div>
-        <div class="modals">
-          <div class="toast-bottom">
-            <div id="video-err" display="none">
-              <span>Failed to load live feed</span>
-              <button id="retry-load-btn">Retry</button>
-            </div>
+      </div>
+      <div class="modals">
+        <div class="toast-bottom">
+          <div id="video-err" display="none">
+            <span>Failed to load live feed</span>
+            <button id="retry-load-btn">Retry</button>
           </div>
         </div>
       </div>
@@ -147,9 +147,28 @@
         });
 
         function updateStatus() {
-          let { location } = status;
+          let { location, drone_state } = status;
+
+          //console.log(status);
 
           updateLocation(location);
+          updateDroneState(drone_state);
+        }
+
+        function updateDroneState(state) {
+          const $bat = $("#battery-label");
+          const $height = $("#altitude-label");
+          if (!state) {
+            // state is null, be default
+            $bat.text("0 %");
+            $height.text("0 m");
+            return;
+          }
+
+          const { bat, h } = state;
+          $bat.text(`${bat} %`);
+          // div by 100 to get meters
+          $height.text(`${h / 100} m`);
         }
 
         function updateLocation(location) {
@@ -161,6 +180,7 @@
         }
 
         $("#connect").on("click", function () {
+          console.log("connect");
           socket.send("connect");
         });
         $("#play").on("click", function () {
