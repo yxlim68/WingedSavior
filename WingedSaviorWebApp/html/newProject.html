@@ -86,12 +86,14 @@
     </footer>
 
     <script type="module">
-      import { api } from "./conn.js";
+      import { api, getUser } from "./conn.js";
+
       document.addEventListener("DOMContentLoaded", function () {
         const form = document.getElementById("new-project-form");
         const nameInput = document.getElementById("project-name");
         const coordinateInput = document.getElementById("project-coordinates");
         const detectionInput = document.getElementById("drone-detection");
+        const user = getUser();
 
         form.addEventListener("submit", async function (e) {
           e.preventDefault();
@@ -108,7 +110,12 @@
                 "Content-Type": "application/json",
                 Accept: "application/json",
               },
-              body: JSON.stringify({ name, coordinate, detection }),
+              body: JSON.stringify({
+                name,
+                coordinate,
+                detection,
+                user: user.id,
+              }),
             });
 
             const data = await res.json();

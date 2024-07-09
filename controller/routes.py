@@ -93,11 +93,9 @@ def create_project():
     
     data = request.json
     
-    # TODO: add validation
-    
     (_, cursor) = db()
-    query = f"insert into project(name, coordinate, detect) values ('{data['name']}','{data['coordinate']}','{data['detection']}')"
-    cursor.execute(query)
+    query = "insert into project(user, name, coordinate, detect) values (%s,%s,%s,%s)"
+    cursor.execute(query, (data['user'], data['name'], data['coordinate'], data['detection']))
     project_id = cursor.lastrowid
     
     cursor.execute('commit')

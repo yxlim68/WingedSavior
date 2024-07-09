@@ -53,7 +53,7 @@ export async function requiredProject(cb) {
   cb(projectId);
 }
 
-export function requiredUser() {
+export function getUser() {
   let user = localStorage.getItem("user");
 
   if (!user) {
