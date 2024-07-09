@@ -131,8 +131,10 @@
             "data:image/jpeg;base64," + userData.profile_image;
         }
 
+        $("#first-name-display").text(name);
+        $("#organization-display").text(userData.organization);
         if (name) {
-          $("#name-display").text(name);
+          $("#name-display").text(userData.firstname);
         }
         if (email) {
           $("#email-display").text(email);
