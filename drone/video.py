@@ -129,3 +129,4 @@ def get_location():
         return None
     
     return res['location']
+

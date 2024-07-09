@@ -1,6 +1,8 @@
 import base64
 import json
 from io import BytesIO
+
+import requests
 from flask import Blueprint, Response, jsonify, request, Flask, send_file
 
 from controller.db import db
@@ -42,6 +44,44 @@ def register1():
     
     
 
+@routes_bp.route('/create_project', methods=['POST'])
+def create_project():
+    if request.method != 'POST':
+        return Response('', status=405)
+
+    data = request.json
+
+    try:
+        name = data['name']
+        coordinate = data['coordinate']
+        detection = data['detection']
+
+        # TODO: Add validation
+
+        (_, cursor) = db()
+        query = "INSERT INTO project(name, coordinate, detect) VALUES (%s, %s, %s)"
+        cursor.execute(query, (name, coordinate, detection))
+        project_id = cursor.lastrowid
+
+        cursor.execute('commit')
+
+        response = {
+            "message": "Success",
+            "project_id": project_id,
+            "name": name,
+            "coordinate": coordinate,
+            "detection": detection
+        }
+
+        return jsonify(response), 200
+    except Exception as e:
+        log('[create_project] Error occurred')
+        print(e)
+        return jsonify({
+            "message": "Error",
+            "error": str(e)
+        }), 400
+
 @routes_bp.route('/login', methods=['POST'])
 def login():
     if request.method != 'POST':
@@ -49,57 +89,34 @@ def login():
 
     try:
         data = request.json
-        
+
         _, cursor = db()
-        
+
         # TODO: add encryption
         query = f"SELECT * FROM users WHERE username = '{data['username']}' AND password = '{data['password']}'"
-        
+
         cursor.execute(query)
-        
+
         res = cursor.fetchone()
-        
+
         if not res:
             return {
                 "message": "Failed"
             }, 200
-        
+
         return {
             "message": "Success",
             "user": res
         }, 200
-        
-        
+
+
     except Exception as e:
         log('[login] Error occured')
-        print(e) 
+        print(e)
         return {
             "message": "Error",
             "error": str(e)
         }, 400
-
-
-@routes_bp.route('/create_project', methods=['POST'])
-def create_project():
-    if request.method != 'POST':
-        return Response('',status=405)
-    
-    data = request.json
-    
-    # TODO: add validation
-    
-    (_, cursor) = db()
-    query = f"insert into project(name, coordinate, detect) values ('{data['name']}','{data['coordinate']}','{data['detection']}')"
-    cursor.execute(query)
-    project_id = cursor.lastrowid
-    
-    cursor.execute('commit')
-    
-    
-    return jsonify({
-        "message": "Success",
-        "project_id": project_id
-    })
 
 
 def format_results(result):

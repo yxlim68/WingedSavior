@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home - Winged Saviors</title>
+    <title>Project Details - Winged Saviors</title>
     <link href="styles.css" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
   </head>
@@ -24,19 +24,9 @@
       <br />
       <section class="features">
         <div class="container">
-          <h2>Our Features</h2>
-
-          <div class="feature">
-            <div class="live-feed-icon">
-              <a href="video.html">
-                <img src="img/live-feed.png" alt="Live Feed Icon" />
-              </a>
-            </div>
-            <div class="live-feed-content">
-              <h3>Live Feed</h3>
-              <p>Monitor live feed from drones.</p>
-              <button onclick="location.href='video.html'">Live Feed</button>
-            </div>
+          <h2>Project Details</h2>
+          <div id="project-details">
+            <!-- Project details will be inserted here by JavaScript -->
           </div>
         </div>
       </section>
@@ -46,7 +36,7 @@
       <nav class="bottom-nav">
         <ul>
           <li>
-            <a href="home.html" class="active">
+            <a href="home.html">
               <img src="img/home.png" alt="Home" /><br />
               <span class="nav-name">Home</span>
             </a>
@@ -93,6 +83,32 @@
             console.log(noti);
           });
         });
+      });
+
+      document.querySelectorAll(".bottom-nav ul li a").forEach((item) => {
+        item.addEventListener("click", function () {
+          document.querySelectorAll(".bottom-nav ul li a").forEach((link) => {
+            link.classList.remove("active");
+          });
+          this.classList.add("active");
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const projectDetails = JSON.parse(localStorage.getItem("project"));
+        if (!projectDetails) {
+          document.getElementById("project-details").innerHTML = "<p>No project details found.</p>";
+          return;
+        }
+
+        document.getElementById("project-details").innerHTML = `
+          <div class="project-detail">
+            <p><strong>Project ID:</strong> ${projectDetails.project_id}</p>
+            <p><strong>Name:</strong> ${projectDetails.name}</p>
+            <p><strong>Coordinates:</strong> ${projectDetails.coordinate}</p>
+            <p><strong>Detection:</strong> ${projectDetails.detection}</p>
+          </div>
+        `;
       });
     </script>
   </body>

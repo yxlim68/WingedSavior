@@ -7,7 +7,7 @@ if (DEBUG_VIDEO) {
 } else if (DEBUG_ANDROID) {
   BACKEND_URL = "http://10.0.2.2:8766";
 } else {
-  BACKEND_URL = "http://192.168.200.40:8766";
+  BACKEND_URL = "http://192.168.0.191:8766";
 }
 
 export function api(path) {
