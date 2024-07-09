@@ -52,3 +52,19 @@ export async function requiredProject(cb) {
 
   cb(projectId);
 }
+
+export function requiredUser() {
+  let user = localStorage.getItem("user");
+
+  if (!user) {
+    console.warn("no user data");
+    return;
+  }
+
+  try {
+    user = JSON.parse(user);
+    return user;
+  } catch (err) {
+    console.error(err);
+  }
+}
