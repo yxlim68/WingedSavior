@@ -112,15 +112,17 @@
       const VIDEO_RETRY = 3;
       let curr_try = 0;
 
-      $(function () {
-        const $movements = $(
-          "#up,#down,#rotate-left,#rotate-right,#forward,#backward,#strafe-left,#strafe-right"
+      document.addEventListener("DOMContentLoaded", function () {
+        const movements = document.querySelectorAll(
+          "#up, #down, #rotate-left, #rotate-right, #forward, #backward, #strafe-left, #strafe-right"
         );
 
         // disble context menu on whole page
-        $("*").on("contextmenu", function (e) {
-          e.preventDefault();
-          return false;
+        document.querySelectorAll("*").forEach(function (element) {
+          element.addEventListener("contextmenu", function (e) {
+            e.preventDefault();
+            return false;
+          });
         });
 
         let socket;
@@ -135,32 +137,43 @@
           updateStatus();
         });
 
-        $("#retry-server-btn").on("click", function () {
-          window.location.reload();
-        });
+        document
+          .getElementById("retry-server-btn")
+          .addEventListener("click", function () {
+            window.location.reload();
+          });
 
         requiredProject(async (projectId) => {
           // check video feed
           loadVideo(projectId);
 
-          $("#connect").on("click", function () {
-            console.log("connect");
-            let res = sendMessage("connect");
-            if (res) {
-              console.error(res);
-            }
-          });
-          $("#play").on("click", function () {
-            socket.send("takeoff");
-          });
-          $("#stop").on("click", function () {
-            socket.send("land");
-          });
+          document
+            .getElementById("connect")
+            .addEventListener("click", function () {
+              console.log("connect");
+              let res = sendMessage("connect");
+              if (res) {
+                console.error(res);
+              }
+            });
+          document
+            .getElementById("play")
+            .addEventListener("click", function () {
+              socket.send("takeoff");
+            });
 
-          $("#retry-load-btn").on("click", function () {
-            curr_try = 0;
-            loadVideo(projectId);
-          });
+          document
+            .getElementById("stop")
+            .addEventListener("click", function () {
+              socket.send("land");
+            });
+
+          document
+            .getElementById("retry-load-btn")
+            .addEventListener("click", function () {
+              curr_try = 0;
+              loadVideo(projectId);
+            });
         });
 
         function connectServer() {
@@ -174,17 +187,19 @@
             socket.addEventListener("open", function () {
               console.log("Ws server connected");
               isConnected = false;
-              $("#connect-modal").hide();
+              document.getElementById("connect-modal").style.display = "none";
+              socket.addEventListener("message", handleMessageEvent);
+              socket.addEventListener("close", function () {
+                isConnected = false;
+              });
             });
-            socket.addEventListener("message", handleMessageEvent);
-            socket.addEventListener("close", function () {
-              isConnected = false;
-            });
+
             socket.addEventListener("error", function (e) {
               console.log("err occurred");
               if (count >= MAX_RETRY) {
-                $("#connect-modal").hide();
-                $("#connect-error-modal").show();
+                document.getElementById("connect-modal").style.display = "none";
+                document.getElementById("connect-error-modal").style.display =
+                  "block";
                 return;
               }
               console.error("WS ERROR", e);
@@ -217,27 +232,29 @@
         }
 
         function updateDroneState(state) {
-          const $bat = $("#battery-label");
-          const $height = $("#altitude-label");
+          const bat = document.getElementById("battery-label");
+          const height = document.getElementById("altitude-label");
+
           if (!state) {
-            // state is null, be default
-            $bat.text("0 %");
-            $height.text("0 m");
+            // state is null, by default
+            bat.textContent = "0 %";
+            height.textContent = "0 m";
             return;
           }
 
-          const { bat, h } = state;
-          $bat.text(`${bat} %`);
-          // div by 100 to get meters
-          $height.text(`${h / 100} m`);
+          const { bat: batteryPercentage, h: altitude } = state;
+          bat.textContent = `${batteryPercentage} %`;
+          height.textContent = `${altitude / 100} m`;
         }
 
         function updateLocation(location) {
-          const $locLabel = $("#location-label");
-          let locLabel;
-          if (location === null) locLabel = "Unavailable";
-          else locLabel = `${location.lat}, ${location.lng}`;
-          $locLabel.text(locLabel);
+          const locLabel = document.getElementById("location-label");
+
+          if (location === null) {
+            locLabel.textContent = "Unavailable";
+          } else {
+            locLabel.textContent = `${location.lat}, ${location.lng}`;
+          }
         }
 
         async function loadVideo(projectId, retry = 3) {
@@ -246,21 +263,20 @@
             const res = await fetch(api("/video_feed?status=true"));
             const data = await res.json();
 
-            const errModal = $("#video-err");
+            const errModal = document.getElementById("video-err");
 
-            errModal.hide();
+            errModal.style.display = "none";
 
             if (data.video_start) {
-              $("#video-src").prop(
-                "src",
-                api("/video_feed?project=" + projectId)
+              document.getElementById("video-src").src = api(
+                "/video_feed?project=" + projectId
               );
-              errModal.hide();
+              errModal.style.display = "none";
             } else {
               curr_try += 1;
 
               if (curr_try > VIDEO_RETRY) {
-                errModal.show();
+                errModal.style.display = "block";
                 console.warn("MAX VIDEO RETRY");
                 return;
               }
