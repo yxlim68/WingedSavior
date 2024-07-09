@@ -84,13 +84,12 @@
         getAllNotificationImages,
       } from "./notification.js";
       import { requiredProject } from "./conn.js";
-      import "./jquery.min.js";
 
-      $(function () {
-        let notifications = [];
-        let loadedImages = [];
-        let loadNoti = false;
+      let notifications = [];
+      let loadedImages = [];
+      let loadNoti = false;
 
+      document.addEventListener("DOMContentLoaded", function () {
         requiredProject(async (projectId) => {
           initNotification(projectId, async (notis) => {
             console.log(notis);
@@ -127,9 +126,10 @@
         });
 
         function updateNotificationView() {
-          const $container = $(".alerts");
-          const $alerts = $(".alert", $container);
-          const ids = $alerts.map((i, d) => $(d).data("id")).toArray();
+          const container = document.querySelector(".alerts");
+          const alerts = container.querySelectorAll(".alert");
+          const ids = Array.from(alerts).map((alert) => alert.dataset.id);
+
           for (const noti of notifications) {
             if (ids.includes(noti.id)) continue;
             const index = notifications.findIndex((v) => v.id === noti.id);
@@ -144,7 +144,7 @@
               index + 1
             );
 
-            $container.append(alert);
+            container.appendChild(alert);
           }
         }
 
@@ -163,34 +163,32 @@
             location.lat === null
               ? "UNKNOWN"
               : `${location.lat}, ${location.lng}`;
-          const alert = $(`
-          <div class="alert" data-id="${id}">
-            <div class="header" onclick="toggleNotification(${id})">
-              <span class="counter">${index}</span>
-              <span class="location">${locString}</span>
-              <i class="dropdown-icon ph ph-caret-right"></i>
-            </div>
-            <div class="content">
-              <div class="row">
-                <span class="label">
-                  <i class="ph ph-map-pin"></i> Location:
-                </span>
-                <span class="value">${locString}</span>
+
+          const alert = document.createElement("div");
+          alert.className = "alert";
+          alert.dataset.id = id;
+
+          alert.innerHTML = `
+              <div class="header" onclick="toggleNotification(${id})">
+                  <span class="counter">${index}</span>
+                  <span class="location">${locString}</span>
+                  <i class="dropdown-icon ph ph-caret-right"></i>
               </div>
-              <div class="row">
-                <span class="label">
-                  <i class="ph ph-bell-simple-ringing"></i> Object
-                  Detected</span
-                >
-                <img class="image" src="data:image/jpeg;base64,${image}" />
+              <div class="content">
+                  <div class="row">
+                      <span class="label">
+                          <i class="ph ph-map-pin"></i> Location:
+                      </span>
+                      <span class="value">${locString}</span>
+                  </div>
+                  <div class="row">
+                      <span class="label">
+                          <i class="ph ph-bell-simple-ringing"></i> Object Detected
+                      </span>
+                      <img class="image" src="data:image/jpeg;base64,${image}" />
+                  </div>
               </div>
-            </div>
-          </div>
-          <!-- <div class="alert" data-id="${id}">
-            <strong>Alert:</strong> New object detected: ${type} at  lat: ${location.lat}, LNG: ${location.lng}
-             <img src="data:image/jpeg;base64,${image}" alt="">
-          </div> -->
-          `);
+          `;
 
           return alert;
         }
