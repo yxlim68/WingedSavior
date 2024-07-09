@@ -229,12 +229,12 @@
 
     </script>
     <script type="module">
-        import './jquery.min.js';
-        $(function() {
-            const userData = JSON.parse(localStorage.getItem('user'))
-
-            $('#username-display').text(`${userData.firstname} ${userData.lastname}`)
-        })
+        document.addEventListener('DOMContentLoaded', function() {
+            const userData = JSON.parse(localStorage.getItem('user'));
+        
+            document.getElementById('username-display').textContent = `${userData.firstname} ${userData.lastname}`;
+        });
+        
     </script>
 </body>
 </html>
