@@ -1,114 +1,57 @@
-import cv2
-import numpy as np
-from djitellopy import Tello
-import time
+import tello
+import math
+
+# Initialize Tello drone
+drone = tello.Tello()
+drone.connect()
+drone.streamon()
 
 
-class TelloObstacleAvoidance:
-    def __init__(self, tello):
-        self.tello = tello
-        self.tello.connect()
-        self.tello.streamon()
+def haversine(lat1, lon1, lat2, lon2):
+    R = 6371000  # Earth radius in meters
+    phi1 = math.radians(lat1)
+    phi2 = math.radians(lat2)
+    delta_phi = math.radians(lat2 - lat1)
+    delta_lambda = math.radians(lon2 - lon1)
 
-        # Define parameters for obstacle detection
-        self.distance_threshold = 100  # Distance threshold in pixels
-        self.movement_speed = 20  # Movement speed of the drone
+    a = math.sin(delta_phi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2) ** 2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
-    def get_frame(self):
-        # Get the latest frame from the Tello camera
-        frame = self.tello.get_frame_read().frame
-        return frame
-
-    def process_frame(self, frame):
-        # Convert frame to grayscale
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-        # Apply Gaussian blur
-        blur = cv2.GaussianBlur(gray, (5, 5), 0)
-
-        # Use Canny edge detection
-        edges = cv2.Canny(blur, 50, 150)
-
-        return edges
-
-    def detect_obstacles(self, edges):
-        # Detect contours in the edges
-        contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
-        # Filter contours by area
-        obstacles = [cnt for cnt in contours if cv2.contourArea(cnt) > 100]
-
-        return obstacles
-
-    def calculate_distance(self, obstacle):
-        # Placeholder for distance calculation
-        # This should ideally be replaced with a proper distance calculation using camera calibration data
-        x, y, w, h = cv2.boundingRect(obstacle)
-        distance = 1000 / w  # Simplified distance calculation: inverse of width
-        return distance
-
-    def avoid_obstacles(self, obstacles, frame):
-        for obstacle in obstacles:
-            # Get bounding box of obstacle
-            x, y, w, h = cv2.boundingRect(obstacle)
-
-            # Calculate the center of the obstacle
-            center_x = x + w // 2
-            center_y = y + h // 2
-
-            # Calculate and print the distance of the obstacle
-            distance = self.calculate_distance(obstacle)
-            print(f"Detected obstacle at distance: {distance:.2f} cm")
-
-            # Draw the bounding box and distance on the frame
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            cv2.putText(frame, f"{distance:.2f} cm", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-            # Avoid the obstacle if it is within the distance threshold
-            if w > self.distance_threshold or h > self.distance_threshold:
-                try:
-                    if center_x < 320:
-                        # Obstacle on the left, move right
-                        self.tello.move_right(self.movement_speed)
-                    elif center_x > 320:
-                        # Obstacle on the right, move left
-                        self.tello.move_left(self.movement_speed)
-
-                    if center_y < 240:
-                        # Obstacle above, move down
-                        self.tello.move_down(self.movement_speed)
-                    elif center_y > 240:
-                        # Obstacle below, move up
-                        self.tello.move_up(self.movement_speed)
-                except Exception as e:
-                    print(f"Error moving drone: {e}")
-
-    def run(self):
-        while True:
-            # Get the latest frame from the Tello camera
-            frame = self.get_frame()
-
-            # Process the frame to detect edges
-            edges = self.process_frame(frame)
-
-            # Detect obstacles based on edges
-            obstacles = self.detect_obstacles(edges)
-
-            # Avoid detected obstacles
-            self.avoid_obstacles(obstacles, frame)
-
-            # Display the frame and edges
-            cv2.imshow('Tello Camera', frame)
-            cv2.imshow('Edges', edges)
-
-            # Exit on 'q' key press
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-
-        self.tello.end()
-        cv2.destroyAllWindows()
+    return R * c  # Distance in meters
 
 
-if __name__ == "__main__":
-    obstacle_avoidance = TelloObstacleAvoidance()
-    obstacle_avoidance.run()
+def calculate_bearing(lat1, lon1, lat2, lon2):
+    phi1 = math.radians(lat1)
+    phi2 = math.radians(lat2)
+    delta_lambda = math.radians(lon2 - lon1)
+
+    y = math.sin(delta_lambda) * math.cos(phi2)
+    x = math.cos(phi1) * math.sin(phi2) - math.sin(phi1) * math.cos(phi2) * math.cos(delta_lambda)
+
+    return (math.degrees(math.atan2(y, x)) + 360) % 360  # Bearing in degrees
+
+
+def move_to_gps_coordinate(current_lat, current_lon, target_lat, target_lon):
+    distance = haversine(current_lat, current_lon, target_lat, target_lon)
+    bearing = calculate_bearing(current_lat, current_lon, target_lat, target_lon)
+
+    # Move drone according to calculated distance and bearing
+    # Here, you'll need to convert bearing and distance to Tello commands
+    if bearing < 45 or bearing >= 315:
+        drone.move_forward(distance)  # Simplified; requires distance and bearing adjustments
+    elif bearing < 135:
+        drone.move_right(distance)
+    elif bearing < 225:
+        drone.move_back(distance)
+    else:
+        drone.move_left(distance)
+
+
+# Example usage
+current_lat, current_lon = 40.712776, -74.005974  # New York City (example)
+target_lat, target_lon = 40.758896, -73.985130  # Times Square (example)
+
+move_to_gps_coordinate(current_lat, current_lon, target_lat, target_lon)
+
+drone.land()
+drone.streamoff()
