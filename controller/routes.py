@@ -316,3 +316,19 @@ def update_user():
 def format_user(res):
     res['profile_image'] = base64.b64encode(res['profile_image']).decode('utf-8')
     return res 
+
+@routes_bp.route('/update_project', methods=['POST'])
+def update_project():
+    if request.method != 'POST':
+        return {}, 405
+    
+    data = request.json
+    
+    query = 'UPDATE project SET name = %s, coordinate = %s, detect = %s WHERE id = %s'
+    
+    _, cur = db()
+    cur.execute(query, (data['name'], data['coordinate'], data['detect'], data['id']))
+    
+    cur.execute("commit")
+    
+    return data, 200

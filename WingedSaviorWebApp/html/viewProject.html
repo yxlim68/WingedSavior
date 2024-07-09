@@ -93,6 +93,7 @@
           <button
             type="submit"
             class="button"
+            id="edit-button"
             onClick="location.href='editProject.html'"
           >
             Edit Project
@@ -178,6 +179,8 @@
           document.querySelector("#projectCoordinate").textContent =
             data.coordinate;
           document.querySelector("#droneDetection").textContent = data.detect;
+          document.querySelector("#edit-button").onclick = () =>
+            (window.location.href = "editProject.html?project=" + projectId);
         } catch (err) {
           console.error(err);
         }
