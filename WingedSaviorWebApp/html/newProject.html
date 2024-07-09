@@ -86,26 +86,26 @@
     <script type="module">
       import { api } from "./conn.js";
       import "./jquery.min.js";
-      $(function () {
-        const $form = $("#new-project-form");
-        const $name = $("#project-name");
-        const $coordinate = $("#project-coordinates");
-        const $detection = $("#drone-detection");
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("new-project-form");
+        const nameInput = document.getElementById("project-name");
+        const coordinateInput = document.getElementById("project-coordinates");
+        const detectionInput = document.getElementById("drone-detection");
 
-        $form.on("submit", async function (e) {
+        form.addEventListener("submit", async function (e) {
           e.preventDefault();
 
-          const name = $name.prop("value");
-          const coordinate = $coordinate.prop("value");
-          const detection = $detection.prop("value");
+          const name = nameInput.value;
+          const coordinate = coordinateInput.value;
+          const detection = detectionInput.value;
 
           try {
             // send to backend
             const res = await fetch(api("/create_project"), {
-              method: "post",
+              method: "POST",
               headers: {
                 "Content-Type": "application/json",
-                accept: "application/json",
+                Accept: "application/json",
               },
               body: JSON.stringify({ name, coordinate, detection }),
             });
@@ -116,7 +116,7 @@
             localStorage.setItem("project", projectId);
 
             // redirect to project page
-            window.location.href = `project.html`;
+            window.location.href = "viewProject.html?project=" + projectId;
           } catch (e) {
             alert("Failed to create project\n\n" + e);
             console.error(e);
