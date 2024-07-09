@@ -96,6 +96,7 @@
             <tr>
               <th>Project Name</th>
               <th>Status</th>
+              <th>Actions</th>
               <th>Details</th>
             </tr>
           </thead>
@@ -169,6 +170,7 @@
             const $projectRow = $(`<tr>
               <td>${project.name}</td>
               <td style="text-transform: capitalize;">${project.status}</td>
+              <td><button class="button" onclick="window.location.href = 'playProject.html?project=${project.id}'">Play</button></td>
               <td>
                 <button class="button" onclick="viewProject(${project.id})">
                   View
