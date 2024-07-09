@@ -7,7 +7,7 @@ if (DEBUG_VIDEO) {
 } else if (DEBUG_ANDROID) {
   BACKEND_URL = "10.0.2.2";
 } else {
-  BACKEND_URL = "192.168.11.34";
+  BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 }
 
 export const WEB_PORT = "8766";
