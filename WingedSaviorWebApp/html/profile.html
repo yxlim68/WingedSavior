@@ -102,7 +102,6 @@
     </footer>
 
     <script type="module">
-      import "./jquery.min.js";
       import { api } from "./conn.js";
 
       // Load profile data from localStorage
@@ -112,17 +111,21 @@
         if (!user) {
           alert("Invalid user");
           window.location.href = "login.html";
+          return;
         }
 
-        $(".logout-button").on("click", function () {
-          localStorage.removeItem("user");
-          alert("Logout Success");
-          window.location.href = "login.html";
-        });
+        document
+          .querySelector(".logout-button")
+          .addEventListener("click", function () {
+            localStorage.removeItem("user");
+            alert("Logout Success");
+            window.location.href = "login.html";
+          });
+
         // parse user data
         const userData = JSON.parse(user);
 
-        const name = `${userData.firstname}  ${userData.lastname}`;
+        const name = `${userData.firstname} ${userData.lastname}`;
         const email = userData.email;
         const username = userData.username;
 
@@ -131,17 +134,18 @@
             "data:image/jpeg;base64," + userData.profile_image;
         }
 
-        $("#first-name-display").text(name);
-        $("#organization-display").text(userData.organization);
+        document.querySelector("#first-name-display").textContent = name;
+        document.querySelector("#organization-display").textContent =
+          userData.organization;
         if (name) {
-          $("#name-display").text(userData.firstname);
+          document.querySelector("#name-display").textContent =
+            userData.firstname;
         }
         if (email) {
-          $("#email-display").text(email);
+          document.querySelector("#email-display").textContent = email;
         }
-
         if (username) {
-          $("#username-display").text(username);
+          document.querySelector("#username-display").textContent = username;
         }
       };
 
