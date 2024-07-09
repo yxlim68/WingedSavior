@@ -1,9 +1,12 @@
 
+import datetime
 import json
 from flask import Blueprint, request
 
 from controller.db import db
 
+# maximum amount of time to to consider using the location as the current location
+MAX_LOCATION_LIFE = 10000 # ms
 
 current_location = None
 
@@ -43,3 +46,26 @@ def handle_get_location():
         return {}, 400
     return current_location, 200
 
+
+def get_location():
+    _, cur = db()
+    
+    query = "SELECT location, time from location"
+
+    cur.execute(query)
+    
+    res = cur.fetchone()
+    
+    if not res:
+        return None
+    
+    current_time = datetime.datetime.now()
+    
+    loc_time = res['time']
+    
+    time_diff = (current_time - loc_time).total_seconds() * 1000
+    
+    if time_diff > MAX_LOCATION_LIFE:
+        return None
+    
+    return res['location']

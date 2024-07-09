@@ -1,13 +1,15 @@
-import datetime
+import time
 import cv2
+from djitellopy import TelloException
 from flask import Blueprint, Response, request
 from controller.db import db
+from controller.util import log as util_log
 from drone.config import DEBUG_VIDEO
 from drone.detection import detect_person
+from drone.location import get_location
 from drone.yolo import model
 
-# maximum amount of time to to consider using the location as the current location
-MAX_LOCATION_LIFE = 10000 # ms
+
 
 video_bp = Blueprint("Video BP", __name__)
 
@@ -16,73 +18,56 @@ if DEBUG_VIDEO:
 
 @video_bp.route("/video_feed")
 def video_feed():
-    
+    global latest_frame, project, video_start, frame_queue
     project_id = request.args.get('project')
+    check_status = request.args.get('status')
     
-        
-    if not project_id:
-        return {"message": "Please provide project id"}, 400
+    # print(check_status)
+    if check_status is not None:
+        return {
+            "video_start": video_start,
+            "project": project }, 200
     
-    if not DEBUG_VIDEO:
-        from drone.tello import tello, tello_connect_if_not
-        
-        tello_connect_if_not()
-        tello.streamon()
-        
-       
+    project = project_id
     
-    def get_frame():
-        if DEBUG_VIDEO:
-            _, frame = cap.read()
-            return frame
-        
-        frame = tello.get_frame_read().frame
-        return cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-    
-    # keep tracked objects ids to prevent spamming database with images
-    tracked_objects = list()
+    VIDEO_TIMEOUT = 15000
+    log = util_log('web video')
 
-    # TODO: Send predicted image to all connected clients
+    
     def generate():
+        last_try = None
+        
         while True:
-            frame = get_frame()
-            
-            results = model.track(frame, persist=True, classes=0, verbose=False)
-
-            person_detected = detect_person(results[0])
-            
-            
-
-            if person_detected:
-                output = results[0].plot() 
-            else:
-                output = frame
-
-            success, jpeg = cv2.imencode('.jpg', output)
-            
-            if person_detected:
-                boxes = results[0].boxes
-                print(tracked_objects)
-                for box in boxes:
-                    if not box:
-                        continue
-                    if box.id in tracked_objects:
-                        continue
+            if latest_frame is None:
+                if last_try is None:
+                    last_try = time.time() * 1000
                     
-                    tracked_objects.append(box.id.item())
-                    
-                    # send notification
-                    upload_image(project_id, box.id, jpeg.tobytes(), box.conf.item())
-
-
-            if not success:
-                print('[video_feed] Frame Dropped')
+                # check for timeout
+                elapsed = time.time() * 1000 - last_try
+                
+                if elapsed > VIDEO_TIMEOUT:
+                    log('TIMEOUT!')
+                    break
+                
+                time.sleep(0.1)
                 continue
-
+            else:
+                last_try = None
+            
+            
+            time.sleep(0.05)
             yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
+                b'Content-Type: image/jpeg\r\n\r\n' + latest_frame.tobytes() + b'\r\n\r\n')
+            
+            
+        
 
-    return Response(generate(),  mimetype="multipart/x-mixed-replace;boundary=frame")
+    response = Response(generate(),  mimetype="multipart/x-mixed-replace;boundary=frame")
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    
+    return response
 
 
 def upload_image( project_id: int, id: int, image_bytes, conf: float):
@@ -107,26 +92,95 @@ def upload_image( project_id: int, id: int, image_bytes, conf: float):
     except Exception as e:
         print(e)
         
-def get_location():
-    _, cur = db()
-    
-    query = "SELECT location, time from location"
 
-    cur.execute(query)
-    
-    res = cur.fetchone()
-    
-    if not res:
-        return None
-    
-    current_time = datetime.datetime.now()
-    
-    loc_time = res['time']
-    
-    time_diff = (current_time - loc_time).total_seconds() * 1000
-    
-    if time_diff > MAX_LOCATION_LIFE:
-        return None
-    
-    return res['location']
+latest_frame = None
+tracked_objects = list()
+project = None
+video_start = False
 
+def start_video_thread():
+    global latest_frame, tracked_objects, project, video_start
+    
+    log = util_log('video')
+    
+    if DEBUG_VIDEO:
+        cap = cv2.VideoCapture(0)
+     
+    def get_frame():
+        if DEBUG_VIDEO:
+            _, frame = cap.read()
+            return frame
+        
+        frame = tello.get_frame_read().frame
+        return cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+    
+    if not DEBUG_VIDEO:
+        from drone.tello import tello, tello_connect_if_not
+        try:
+            tello_connect_if_not()
+            tello.streamon()        
+        except:
+            # do nothing if cant connect now
+            pass
+    
+    last_video = None
+    
+    while True:
+        # log('frame: ', latest_frame)
+        # log(f'project: {project}')
+        try:
+            if not DEBUG_VIDEO:
+                if last_video is None:
+                    last_video = time.time() * 1000
+                    
+                # try to reconnect every 5 seconds
+                if time.time() * 1000 -  last_video > 10000:
+                    log('reconnect if not')
+                    last_video = None # reset try
+                    tello_connect_if_not()
+                    tello.streamon()
+                    
+            frame = get_frame()
+            
+            results = model.track(frame, persist=True, classes=0, verbose=False)
+
+            person_detected = detect_person(results[0])
+
+            if person_detected:
+                output = results[0].plot() 
+            else:
+                output = frame
+
+            success, jpeg = cv2.imencode('.jpg', output)
+            
+            if person_detected:
+                boxes = results[0].boxes
+                print(tracked_objects)
+                for box in boxes:
+                    if box.id is None:
+                        continue
+                    if box.id in tracked_objects:
+                        continue
+                    
+                    tracked_objects.append(box.id.item())
+                    
+                    # send notification
+                    if project:
+                        upload_image(project, box.id, jpeg.tobytes(), box.conf.item())
+
+
+            if not success:
+                print('[video_feed] Frame Dropped')
+                continue
+            
+            latest_frame = jpeg
+            video_start = True
+            
+        except TelloException as e:
+            log(e)
+            log('wait a bit')
+            latest_frame = None
+            time.sleep(1)
+        except Exception as e:
+            log(e)
+            time.sleep(1)

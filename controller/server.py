@@ -4,11 +4,11 @@ import threading
 import websockets
 import asyncio
 
-from controller.websocket import websocket_main
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 
+from controller.websocket import websocket_main
 from controller.web import init_app
 from drone.tello import tello, tello_connect_if_not
 from drone.state import connected_clients
@@ -58,9 +58,9 @@ if __name__ == '__main__':
     
     fly_thread = threading.Thread(target=flythread, daemon=True)
 
-    # web_thread = threading.Thread(target=init_app, daemon=True)
+    web_thread = threading.Thread(target=init_app, daemon=True)
 
-    # web_thread.start()
+    web_thread.start()
     
     asyncio.run(websocket_main())
 

@@ -19,82 +19,84 @@
       </div>
     </header>
     <main class="background-image">
-    <div class="register-container">
-      <div class="register-box">
-        <h2>Register for Winged Saviors</h2><br>
-        <form id="registerForm">
-          <label for="first-name">First Name</label>
-          <input
-            type="text"
-            id="first-name"
-            name="first-name"
-            placeholder="First Name"
-            required
-          />
-          <label for="last-name">Last Name</label>
-          <input
-            type="text"
-            id="last-name"
-            name="last-name"
-            placeholder="Last Name"
-            required
-          />
-          <label for="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            placeholder="Username"
-            required
-          />
-          <label for="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Email"
-            required
-          />
-          <label for="organization">Organization</label>
-          <input
-            type="organization"
-            id="organization"
-            name="organization"
-            placeholder="organization"
-            required
-          />
-          <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Password"
-            required
-          />
-          <label for="confirm-password">Confirm Password</label>
-          <input
-            type="password"
-            id="confirm-password"
-            name="confirm-password"
-            placeholder="Confirm Password"
-            required
-          />
-          <button type="submit" class="button">Register</button>
-        </form>
-        <div class="login-link">
-          <p>Already have an account? <a href="login.html">Login here</a></p>
+      <div class="register-container">
+        <div class="register-box">
+          <h2>Register for Winged Saviors</h2>
+          <br />
+          <form id="registerForm">
+            <label for="first-name">First Name</label>
+            <input
+              type="text"
+              id="first-name"
+              name="first-name"
+              placeholder="First Name"
+              required
+            />
+            <label for="last-name">Last Name</label>
+            <input
+              type="text"
+              id="last-name"
+              name="last-name"
+              placeholder="Last Name"
+              required
+            />
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Username"
+              required
+            />
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Email"
+              required
+            />
+            <label for="organization">Organization</label>
+            <input
+              type="organization"
+              id="organization"
+              name="organization"
+              placeholder="organization"
+              required
+            />
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Password"
+              required
+            />
+            <label for="confirm-password">Confirm Password</label>
+            <input
+              type="password"
+              id="confirm-password"
+              name="confirm-password"
+              placeholder="Confirm Password"
+              required
+            />
+            <button type="submit" class="button">Register</button>
+          </form>
+          <div class="login-link">
+            <p>Already have an account? <a href="login.html">Login here</a></p>
+          </div>
         </div>
       </div>
-    </div>
-		</body>
-	  </main>
+    </main>
     <script type="module">
       import { api } from "./conn.js";
-      import "./jquery.min.js";
-      $("#registerForm").on("submit", registerUser);
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", registerUser);
 
       async function registerUser(e) {
         e.preventDefault();
+
         // Perform form validation
         const password = document.getElementById("password").value;
         const confirmPassword =
@@ -105,12 +107,12 @@
           return false;
         }
 
-        // register user
-        const firstname = $("#first-name").prop("value");
-        const lastname = $("#last-name").prop("value");
-        const username = $("#username").prop("value");
-        const email = $("#email").prop("value");
-        const organization = $("#organization").prop('value');
+        // Register user
+        const firstname = document.getElementById("first-name").value;
+        const lastname = document.getElementById("last-name").value;
+        const username = document.getElementById("username").value;
+        const email = document.getElementById("email").value;
+        const organization = document.getElementById("organization").value;
 
         const userData = {
           firstname,
@@ -118,14 +120,14 @@
           username,
           email,
           password,
-          organization
+          organization,
         };
 
         try {
           const res = await fetch(api("/register"), {
-            method: "post",
+            method: "POST",
             headers: {
-              "content-type": "application/json",
+              "Content-Type": "application/json",
             },
             body: JSON.stringify(userData),
           });
@@ -134,22 +136,23 @@
             throw new Error("Failed to create user" + (await res.text()));
           }
 
-          // store user data
+          // Store user data
           const json = await res.json();
           const userId = json.user_id;
 
-          // save user session
+          // Save user session
           localStorage.setItem(
             "user",
             JSON.stringify({
               ...userData,
               id: userId,
+              profile_image: "",
             })
           );
 
           console.log(localStorage.getItem("user"));
 
-          console.log("register success");
+          console.log("Register success");
           alert("Register successful");
           window.location.href = "profile.html";
         } catch (e) {
@@ -159,4 +162,5 @@
         return false; // Prevent form from submitting via default behavior
       }
     </script>
+  </body>
 </html>

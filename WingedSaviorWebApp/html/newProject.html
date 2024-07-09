@@ -10,16 +10,22 @@
   <body>
     <header class="fixed-header">
       <div class="header-content">
-        <img
-          src="img/logo.png"
-          alt="Winged Saviors Logo"
-          class="logo-img"
-          height="50px"
-          width="auto"
-        />
+        <a href="home.html" class="back-button">
+          <i class="ph ph-arrow-left"></i
+        ></a>
+        <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img" />
+        <div class="notification-container">
+          <a href="#" class="notification-icon" onclick="togglePopup(event)">
+            <i class="ph ph-bell"></i>
+          </a>
+          <div class="notification-popup" id="notificationPopup">
+            <!-- Notification content goes here -->
+            <p>This is a notification popup!</p>
+          </div>
+        </div>
       </div>
     </header>
-    <main>
+    <main class="background-image">
       <br /><br /><br />
       <section class="features container">
         <h2>Create a New Project</h2>
@@ -39,13 +45,15 @@
           </div>
           <div class="form-group">
             <label for="drone-detection">Drone Detection:</label>
-            <input
-              type="text"
-              id="drone-detection"
-              name="drone-detection"
-              required
-            />
+            <select id="drone-detection" name="drone-detection" required>
+              <option value="">Select a Detection Type</option>
+              <option value="type1">Person</option>
+              <option value="type2">Animal</option>
+              <option value="type3">Object</option>
+              <!-- Add more options as needed -->
+            </select>
           </div>
+          <br />
           <button type="submit" class="button">Create Project</button>
         </form>
       </section>
@@ -60,15 +68,9 @@
             </a>
           </li>
           <li>
-            <a href="video.html">
+            <a href="liveFeed.html">
               <i class="ph ph-video-camera"></i><br />
               <span class="nav-name">Live Feed</span>
-            </a>
-          </li>
-          <li>
-            <a href="projectHistory.html">
-              <i class="ph ph-archive"></i><br />
-              <span class="nav-name">History</span>
             </a>
           </li>
           <li>
@@ -83,41 +85,37 @@
 
     <script type="module">
       import { api } from "./conn.js";
-      import "./jquery.min.js";
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("new-project-form");
+        const nameInput = document.getElementById("project-name");
+        const coordinateInput = document.getElementById("project-coordinates");
+        const detectionInput = document.getElementById("drone-detection");
 
-      $(function () {
-        const $form = $("#new-project-form");
-        const $name = $("#project-name");
-        const $coordinate = $("#project-coordinates");
-        const $detection = $("#drone-detection");
-
-        $form.on("submit", async function (e) {
+        form.addEventListener("submit", async function (e) {
           e.preventDefault();
 
-          const name = $name.prop("value");
-          const coordinate = $coordinate.prop("value");
-          const detection = $detection.prop("value");
+          const name = nameInput.value;
+          const coordinate = coordinateInput.value;
+          const detection = detectionInput.value;
 
           try {
             // send to backend
             const res = await fetch(api("/create_project"), {
-              method: "post",
+              method: "POST",
               headers: {
                 "Content-Type": "application/json",
-                accept: "application/json",
+                Accept: "application/json",
               },
               body: JSON.stringify({ name, coordinate, detection }),
             });
 
-            if (!res.ok) throw new Error("Failed to create project");
-
             const data = await res.json();
             const projectId = data.project_id;
 
-            localStorage.setItem("project", JSON.stringify(data));
+            localStorage.setItem("project", projectId);
 
             // redirect to project page
-            window.location.href = `project.html`;
+            window.location.href = "viewProject.html?project=" + projectId;
           } catch (e) {
             alert("Failed to create project\n\n" + e);
             console.error(e);
@@ -127,3 +125,11 @@
     </script>
   </body>
 </html>
+<script>
+  // Toggle notification popup visibility
+  function togglePopup(event) {
+    event.preventDefault();
+    var popup = document.getElementById("notificationPopup");
+    popup.classList.toggle("show");
+  }
+</script>

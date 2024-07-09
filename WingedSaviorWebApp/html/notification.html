@@ -20,6 +20,8 @@
       property="og:url"
       content="https://www.wingedsaviors.com/notifications.html"
     />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="alert.css" />
   </head>
   <body>
     <header class="fixed-header">
@@ -29,51 +31,52 @@
     </header>
     <main>
       <br /><br /><br />
-      <section class="notifications container">
+      <section
+        class="notifications container"
+        style="margin-top: 20px; background-color: #fff"
+      >
         <h2>Notifications</h2>
-        <div class="alert">
-          <p>
-            <strong>Alert:</strong> New object detected: Tree at X: 100, Y: 200,
-            Z: 50.
-          </p>
-        </div>
-        <div class="alert">
-          <p>
-            <strong>Alert:</strong> New object detected: Building at X: 150, Y:
-            250, Z: 70.
-            <!-- <img src="data:image/jpeg;base64," alt=""> -->
-          </p>
-        </div>
-        <div class="alert">
-          <p>
-            <strong>Alert:</strong> New object detected: Car at X: 200, Y: 300,
-            Z: 100.
-          </p>
-        </div>
+        <div class="alerts"></div>
       </section>
     </main>
-    <footer class="bottom-nav">
-      <ul>
-        <li>
-          <a href="home.html" class="active">
-            <img src="img/home.png" alt="Home" /><br />
-            <span class="nav-name">Home</span>
-          </a>
-        </li>
-        <li>
-          <a href="notification.html">
-            <img src="img/notification.png" alt="Notifications" />
-            <span class="nav-name">Notifications</span>
-          </a>
-        </li>
-        <li>
-          <a href="profile.html">
-            <img src="img/user.png" alt="Profile" /><br />
-            <span class="nav-name">Profile</span>
-          </a>
-        </li>
-      </ul>
+    <footer>
+      <nav class="bottom-nav">
+        <ul>
+          <li>
+            <a href="home.html">
+              <i class="ph ph-house"></i><br />
+              <span class="nav-name">Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="video.html">
+              <i class="ph ph-video-camera"></i><br />
+              <span class="nav-name">Live Feed</span>
+            </a>
+          </li>
+          <li>
+            <a href="projectHistory.html">
+              <i class="ph ph-archive"></i><br />
+              <span class="nav-name">History</span>
+            </a>
+          </li>
+          <li>
+            <a href="profile.html">
+              <i class="ph ph-user"></i><br />
+              <span class="nav-name">Profile</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </footer>
+
+    <script>
+      function toggleNotification(id) {
+        const noti = document.querySelector(`[data-id="${id}"]`);
+
+        noti.classList.toggle("open");
+      }
+    </script>
 
     <script type="module">
       import {
@@ -81,13 +84,12 @@
         getAllNotificationImages,
       } from "./notification.js";
       import { requiredProject } from "./conn.js";
-      import "./jquery.min.js";
 
-      $(function () {
-        let notifications = [];
-        let loadedImages = [];
-        let loadNoti = false;
+      let notifications = [];
+      let loadedImages = [];
+      let loadNoti = false;
 
+      document.addEventListener("DOMContentLoaded", function () {
         requiredProject(async (projectId) => {
           initNotification(projectId, async (notis) => {
             console.log(notis);
@@ -124,28 +126,69 @@
         });
 
         function updateNotificationView() {
-          const $container = $(".notifications.container");
-          const $alerts = $(".alert", $container);
-          const ids = $alerts.map((i, d) => $(d).data("id")).toArray();
+          const container = document.querySelector(".alerts");
+          const alerts = container.querySelectorAll(".alert");
+          const ids = Array.from(alerts).map((alert) => alert.dataset.id);
+
           for (const noti of notifications) {
             if (ids.includes(noti.id)) continue;
+            const index = notifications.findIndex((v) => v.id === noti.id);
 
             const imageData = loadedImages.find((i) => i.SSID === noti.img_id);
 
-            const alert = createAlert(noti.id, "Person", imageData.SS);
+            const alert = createAlert(
+              noti.id,
+              "Person",
+              imageData.SS,
+              imageData.location,
+              index + 1
+            );
 
-            $container.append(alert);
+            container.appendChild(alert);
           }
         }
 
-        function createAlert(id, type, image) {
-          const alert = $(`
-          <div class="alert" data-id="${id}">
-            <strong>Alert:</strong> New object detected: ${type} at X: 150, Y:
-            250, Z: 70.
-             <img src="data:image/jpeg;base64,${image}" alt="">
-          </div>
-          `);
+        function createAlert(id, type, image, loc, index) {
+          let location = {
+            lat: null,
+            lng: null,
+          };
+          if (loc) {
+            const parsed = JSON.parse(loc);
+            location.lat = parsed.lat;
+            location.lng = parsed.lng;
+          }
+          console.log(location);
+          const locString =
+            location.lat === null
+              ? "UNKNOWN"
+              : `${location.lat}, ${location.lng}`;
+
+          const alert = document.createElement("div");
+          alert.className = "alert";
+          alert.dataset.id = id;
+
+          alert.innerHTML = `
+              <div class="header" onclick="toggleNotification(${id})">
+                  <span class="counter">${index}</span>
+                  <span class="location">${locString}</span>
+                  <i class="dropdown-icon ph ph-caret-right"></i>
+              </div>
+              <div class="content">
+                  <div class="row">
+                      <span class="label">
+                          <i class="ph ph-map-pin"></i> Location:
+                      </span>
+                      <span class="value">${locString}</span>
+                  </div>
+                  <div class="row">
+                      <span class="label">
+                          <i class="ph ph-bell-simple-ringing"></i> Object Detected
+                      </span>
+                      <img class="image" src="data:image/jpeg;base64,${image}" />
+                  </div>
+              </div>
+          `;
 
           return alert;
         }

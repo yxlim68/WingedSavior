@@ -11,14 +11,16 @@
   <style>
     /* Project List Section */
     .project-list-section {
-      background-color: #ffffff;
-      padding: 20px;
+      background-color: #fff;
       border-radius: 10px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
       width: 80%;
-      max-width: 1200px;
-      margin: 20px auto;
-      margin-top: 100px;
+      height: 70%;
+      text-align: left; /* Align text to the left */
+      margin: 0 auto; /* Center the box horizontally */
+      margin-top: 70px;
+      max-height: 100%;
+      overflow-y: auto;
     }
 
     .project-list-section h2 {
@@ -27,8 +29,15 @@
       margin-bottom: 20px;
     }
 
+    .table-container {
+      width: auto; /* Allow container to expand based on table content */
+      max-width: 100%; /* Ensure container does not exceed viewport width */
+      overflow-x: auto; /* Enable horizontal scrolling */
+      -webkit-overflow-scrolling: touch; /* Smooth scrolling on touch devices */
+    }
+
     .project-table {
-      width: 100%;
+      width: 100%; /* Full width of its container */
       border-collapse: collapse;
       margin-top: 20px;
     }
@@ -46,6 +55,7 @@
 
     .project-table td button {
       padding: 5px 10px;
+      width: 100%;
       background-color: #2f3645;
       color: #fff;
       border: none;
@@ -62,15 +72,24 @@
   <body>
     <header class="fixed-header">
       <div class="header-content">
+        <a href="home.html" class="back-button">
+          <i class="ph ph-arrow-left"></i
+        ></a>
         <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img" />
-        <a href="notification.html" class="notification-icon">
-          <i class="ph ph-bell"></i>
-        </a>
+        <div class="notification-container">
+          <a href="#" class="notification-icon" onclick="togglePopup(event)">
+            <i class="ph ph-bell"></i>
+          </a>
+          <div class="notification-popup" id="notificationPopup">
+            <!-- Notification content goes here -->
+            <p>This is a notification popup!</p>
+          </div>
+        </div>
       </div>
     </header>
 
     <main class="background-image">
-      <section class="container project-list-section" style="overflow: auto">
+      <section class="container project-list-section">
         <h2>Project List</h2>
         <table class="project-table">
           <thead>
@@ -78,21 +97,13 @@
               <th>Project Name</th>
               <th>Status</th>
               <th>Actions</th>
+              <th>Details</th>
             </tr>
           </thead>
           <tbody class="project-list-container"></tbody>
         </table>
       </section>
-
-      <style>
-        table,
-        thead,
-        tbody,
-        th,
-        td {
-          box-sizing: border-box;
-        }
-      </style>
+      <br /><br />
     </main>
 
     <footer>
@@ -105,15 +116,9 @@
             </a>
           </li>
           <li>
-            <a href="video.html">
+            <a href="liveFeed.html">
               <i class="ph ph-video-camera"></i><br />
               <span class="nav-name">Live Feed</span>
-            </a>
-          </li>
-          <li>
-            <a href="projectHistory.html">
-              <i class="ph ph-archive"></i><br />
-              <span class="nav-name">History</span>
             </a>
           </li>
           <li>
@@ -129,7 +134,7 @@
     <script>
       function viewProject(projectId) {
         // Redirect to project details page
-        window.location.href = `projectDetails.html?project=${projectId}`;
+        window.location.href = `viewProject.html?project=${projectId}`;
       }
 
       function toggleFeature(element) {
@@ -141,31 +146,33 @@
         });
         element.classList.toggle("show");
       }
-    </script>
 
+      // Toggle notification popup visibility
+      function togglePopup(event) {
+        event.preventDefault();
+        var popup = document.getElementById("notificationPopup");
+        popup.classList.toggle("show");
+      }
+    </script>
     <script type="module">
-      import "./jquery.min.js";
       import { api } from "./conn.js";
-      $(async function () {
+      document.addEventListener("DOMContentLoaded", async function () {
         try {
-          const $container = $(".project-list-container");
+          const container = document.querySelector(".project-list-container");
 
           // get project list
           const res = await fetch(api("/project_list"));
-
           const data = await res.json();
 
           for (const project of data) {
-            const $projectRow = $(`<tr>
-              <td>${project.name}</td>
-              <td>UNKNOWN</td>
-              <td>
-                <button class="button" onclick="viewProject(${project.id})">
-                  View
-                </button>
-              </td>
-            </tr>`);
-            $container.append($projectRow);
+            const projectRow = document.createElement("tr");
+            projectRow.innerHTML = `
+                    <td>${project.name}</td>
+                    <td style="text-transform: capitalize;">${project.status}</td>
+                    <td><button class="button" onclick="window.location.href = 'playProject.html?project=${project.id}'">Play</button></td>
+                    <td><button class="button" onclick="viewProject(${project.id})">View</button></td>
+                `;
+            container.appendChild(projectRow);
           }
 
           console.log(data);

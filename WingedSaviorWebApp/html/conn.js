@@ -3,15 +3,22 @@ export const DEBUG_ANDROID = true;
 
 export let BACKEND_URL;
 if (DEBUG_VIDEO) {
-  BACKEND_URL = "http://127.0.0.1:5000";
+  BACKEND_URL = "127.0.0.1";
 } else if (DEBUG_ANDROID) {
-  BACKEND_URL = "http://10.0.2.2:8766";
+  BACKEND_URL = "10.0.2.2";
 } else {
-  BACKEND_URL = "http://192.168.0.191:8766";
+  BACKEND_URL = "192.168.11.34";
+}
+
+export const WEB_PORT = "8766";
+export const WS_PORT = "8765";
+
+export function ws() {
+  return `ws://${BACKEND_URL}:${WS_PORT}`;
 }
 
 export function api(path) {
-  return BACKEND_URL + path;
+  return `http://${BACKEND_URL}:${WEB_PORT}${path}`;
 }
 
 export async function checkProjectExist(projectId) {
@@ -27,11 +34,15 @@ export async function checkProjectExist(projectId) {
 
 export async function requiredProject(cb) {
   const params = new URLSearchParams(window.location.search);
-  const projectId = params.get("project");
+  let projectId = params.get("project");
+
+  const projectId2 = localStorage.getItem("project");
 
   // TODO: redirect user to project list page
 
-  if (!projectId) alert("No valid project found");
+  if (!projectId && !projectId2) alert("No valid project found");
+
+  if (!projectId) projectId = projectId2;
 
   const exist = await checkProjectExist(projectId);
   if (!exist) {

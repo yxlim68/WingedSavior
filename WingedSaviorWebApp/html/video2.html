@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Controller</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="video.css" />
+  </head>
+  <body>
+    <style>
+      @media screen and (orientation: potrait) {
+        #potrait-warning {
+          display: block;
+        }
+      }
+    </style>
+    <div id="potrait-warning" style="display: none">please use landscape</div>
+    <div id="controller-page">
+      <img
+        src="img/Aidil.jpg"
+        alt=""
+        id="video-src"
+        oncontextmenu="return false"
+      />
+      <div class="controllers">
+        <div class="top-bar">
+          <div class="left-actions">
+            <button id="stop"><i class="ph-fill ph-stop"></i></button>
+            <button id="play"><i class="ph-fill ph-play"></i></button>
+            <button id="connect"><i class="ph-fill ph-plugs"></i></button>
+          </div>
+          <div class="statuses">
+            <span class="status">
+              <i class="ph-fill ph-battery-full"></i>
+              <span id="battery-label">69 %</span>
+            </span>
+            <span class="status">
+              <i class="ph-fill ph-airplane-in-flight"></i>
+              <span id="altitude-label">2.0 m</span>
+            </span>
+            <div class="status">
+              <i class="ph-fill ph-map-pin"></i>
+              <span id="location-label">100.00, 100.00</span>
+            </div>
+          </div>
+          <div class="right-actions">
+            <button id="notification">
+              <a href="notification.html">
+                <i class="ph-fill ph-bell-simple"></i>
+              </a>
+            </button>
+            <button id="setting-btn"><i class="ph-fill ph-gear"></i></button>
+          </div>
+        </div>
+        <div class="actions">
+          <div class="left">
+            <button id="up"><i class="ph ph-arrow-fat-line-up"></i></button>
+            <button id="down">
+              <i class="ph-bold ph-arrow-fat-line-down"></i>
+            </button>
+            <button id="rotate-left">
+              <i class="ph ph-arrow-counter-clockwise"></i>
+            </button>
+            <button id="rotate-right">
+              <i class="ph ph-arrow-clockwise"></i>
+            </button>
+          </div>
+          <div class="right">
+            <button id="forward"><i class="ph-fill ph-caret-up"></i></button>
+            <button id="backward"><i class="ph-fill ph-caret-down"></i></button>
+            <button id="strafe-left">
+              <i class="ph-fill ph-caret-left"></i>
+            </button>
+            <button id="strafe-right">
+              <i class="ph-fill ph-caret-right"></i>
+            </button>
+          </div>
+        </div>
+        <div class="modals">
+          <div id="connect-modal" class="main-modal">
+            <i class="ph ph-spinner-gap spin"></i> Connecting to server...
+          </div>
+          <div
+            id="connect-error-modal"
+            class="main-modal"
+            style="display: none"
+          >
+            <span
+              ><i class="ph-fill ph-x-circle"></i> Failed to connect to
+              server</span
+            >
+            <button id="retry-server-btn">Retry</button>
+          </div>
+          <div class="toast-bottom">
+            <div id="video-err">
+              <span>Failed to load live feed</span>
+              <button id="retry-load-btn">Retry</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="jquery.min.js"></script>
+
+    <script type="module">
+      import { ws, requiredProject, api } from "./conn.js";
+
+      // load project
+      const projectId = localStorage.getItem("project");
+      const VIDEO_RETRY = 3;
+      let curr_try = 0;
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const movements = document.querySelectorAll(
+          "#up, #down, #rotate-left, #rotate-right, #forward, #backward, #strafe-left, #strafe-right"
+        );
+
+        // disble context menu on whole page
+        document.querySelectorAll("*").forEach(function (element) {
+          element.addEventListener("contextmenu", function (e) {
+            e.preventDefault();
+            return false;
+          });
+        });
+
+        let socket;
+        let isConnected = false;
+        let status = null;
+
+        const listeners = {};
+
+        connectServer();
+        listen("status", function (e) {
+          status = JSON.parse(e);
+          updateStatus();
+        });
+
+        document
+          .getElementById("retry-server-btn")
+          .addEventListener("click", function () {
+            window.location.reload();
+          });
+
+        requiredProject(async (projectId) => {
+          // check video feed
+          loadVideo(projectId);
+
+          document
+            .getElementById("connect")
+            .addEventListener("click", function () {
+              console.log("connect");
+              let res = sendMessage("connect");
+              if (res) {
+                console.error(res);
+              }
+            });
+          document
+            .getElementById("play")
+            .addEventListener("click", function () {
+              socket.send("takeoff");
+            });
+
+          document
+            .getElementById("stop")
+            .addEventListener("click", function () {
+              socket.send("land");
+            });
+
+          document
+            .getElementById("retry-load-btn")
+            .addEventListener("click", function () {
+              curr_try = 0;
+              loadVideo(projectId);
+            });
+        });
+
+        function connectServer() {
+          let count = 0;
+          const MAX_RETRY = 3;
+          function _() {
+            count++;
+            console.log(count);
+
+            socket = new WebSocket(ws());
+            socket.addEventListener("open", function () {
+              console.log("Ws server connected");
+              isConnected = false;
+              document.getElementById("connect-modal").style.display = "none";
+              socket.addEventListener("message", handleMessageEvent);
+              socket.addEventListener("close", function () {
+                isConnected = false;
+              });
+            });
+
+            socket.addEventListener("error", function (e) {
+              console.log("err occurred");
+              if (count >= MAX_RETRY) {
+                document.getElementById("connect-modal").style.display = "none";
+                document.getElementById("connect-error-modal").style.display =
+                  "block";
+                return;
+              }
+              console.error("WS ERROR", e);
+              setTimeout(_, 3000);
+            });
+          }
+          _();
+        }
+
+        function listen(event, cb) {
+          listeners[event] = listeners[event]
+            ? [...listeners[event], cb]
+            : [cb];
+        }
+        function handleMessageEvent(e) {
+          const [event, ...data] = e.data.split(" ");
+
+          if (listeners[event]) {
+            for (const cb of listeners[event]) cb(data.join(" "));
+          }
+        }
+
+        function updateStatus() {
+          let { location, drone_state } = status;
+
+          //console.log(status);
+
+          updateLocation(location);
+          updateDroneState(drone_state);
+        }
+
+        function updateDroneState(state) {
+          const bat = document.getElementById("battery-label");
+          const height = document.getElementById("altitude-label");
+
+          if (!state) {
+            // state is null, by default
+            bat.textContent = "0 %";
+            height.textContent = "0 m";
+            return;
+          }
+
+          const { bat: batteryPercentage, h: altitude } = state;
+          bat.textContent = `${batteryPercentage} %`;
+          height.textContent = `${altitude / 100} m`;
+        }
+
+        function updateLocation(location) {
+          const locLabel = document.getElementById("location-label");
+
+          if (location === null) {
+            locLabel.textContent = "Unavailable";
+          } else {
+            locLabel.textContent = `${location.lat}, ${location.lng}`;
+          }
+        }
+
+        async function loadVideo(projectId, retry = 3) {
+          try {
+            console.log("Fetching video try: " + (curr_try + 1));
+            const res = await fetch(api("/video_feed?status=true"));
+            const data = await res.json();
+
+            const errModal = document.getElementById("video-err");
+
+            errModal.style.display = "none";
+
+            if (data.video_start) {
+              document.getElementById("video-src").src = api(
+                "/video_feed?project=" + projectId
+              );
+              errModal.style.display = "none";
+            } else {
+              curr_try += 1;
+
+              if (curr_try > VIDEO_RETRY) {
+                errModal.style.display = "block";
+                console.warn("MAX VIDEO RETRY");
+                return;
+              }
+              setTimeout(() => loadVideo(projectId), 1000);
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        }
+        function sendMessage(msg) {
+          if (!isConnected) {
+            return "Not connected to server!";
+          }
+          socket.send(msg);
+          return;
+        }
+      });
+    </script>
+  </body>
+</html>

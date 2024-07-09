@@ -1,8 +1,8 @@
 import { api, requiredProject } from "./conn.js";
-import "./jquery.min.js";
 
-const $videoSrc = $("#video-src");
-const $err = $("#errmodal");
+const videoSrc = document.getElementById("video-src");
+const errModal = document.getElementById("errmodal");
+
 requiredProject(async (projectId) => {
   try {
     // check connection
@@ -10,9 +10,9 @@ requiredProject(async (projectId) => {
     await fetch(url);
 
     // if success set video src html
-    $videoSrc.prop("src", url);
+    videoSrc.src = url;
   } catch (e) {
-    $err.show();
+    errModal.style.display = "block";
     console.error(e);
   }
 });

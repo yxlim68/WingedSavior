@@ -72,11 +72,12 @@
             : "img/icon_ShowPassword.png";
       });
 
-      $("#login-form").on("submit", async function (e) {
+      document.querySelector("#login-form").addEventListener("submit", login);
+      async function login(e) {
         e.preventDefault();
 
-        const username = $("#username").prop("value");
-        const password = $("#password").prop("value");
+        const username = document.querySelector("#username").value;
+        const password = document.querySelector("#password").value;
 
         try {
           const userData = { username, password };
@@ -101,7 +102,7 @@
 
           console.error(e);
         }
-      });
+      }
     </script>
   </body>
 </html>
