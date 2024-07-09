@@ -240,11 +240,16 @@ def ping():
 def project_list():
     try:
         
-        query = "SELECT * FROM project"
+        user = request.args.get('user')
+        
+        if not user:
+            return {"message": "No user"}, 400
+        
+        query = "SELECT * FROM project WHERE user = %s"
         
         _, cur = db()
         
-        cur.execute(query)
+        cur.execute(query, (user,))
         
         res = cur.fetchall()
         
