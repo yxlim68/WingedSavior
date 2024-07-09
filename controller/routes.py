@@ -62,12 +62,14 @@ def login():
         cursor.execute(query)
         
         res = cursor.fetchone()
-        res['profile_image'] = base64.b64encode(res['profile_image']).decode('utf-8')
         
         if not res:
             return {
                 "message": "Failed"
             }, 400
+        
+        res['profile_image'] = base64.b64encode(res['profile_image']).decode('utf-8')
+        
         
         return {
             "message": "Success",
