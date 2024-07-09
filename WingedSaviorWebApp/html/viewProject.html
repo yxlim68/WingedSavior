@@ -143,50 +143,44 @@
         }, 300); // duration matches the CSS animation
       }
 
-      document.addEventListener("DOMContentLoaded", () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const projectId = urlParams.get("project");
-
-        if (projectId) {
-          loadProjectDetails(projectId);
-        }
-      });
-
-      function loadProjectDetails(projectId) {
-        // Placeholder data; this would be replaced with actual data fetching logic
-        const projectDetails = {
-          alpha: {
-            name: "Project Alpha",
-            coordinate: "Latitude: 3.1390, Longitude: 101.6869",
-            detection: "Active",
-          },
-          beta: {
-            name: "Project Beta",
-            coordinate: "Latitude: 3.1400, Longitude: 101.6860",
-            detection: "Inactive",
-          },
-          gamma: {
-            name: "Project Gamma",
-            coordinate: "Latitude: 3.1410, Longitude: 101.6850",
-            detection: "Planned",
-          },
-        };
-
-        const project = projectDetails[projectId];
-        if (project) {
-          document.getElementById("projectName").textContent = project.name;
-          document.getElementById("projectCoordinate").textContent =
-            project.coordinate;
-          document.getElementById("droneDetection").textContent =
-            project.detection;
-        }
-      }
-
       // Toggle notification popup visibility
       function togglePopup(event) {
         event.preventDefault();
         var popup = document.getElementById("notificationPopup");
         popup.classList.toggle("show");
+      }
+    </script>
+    <script type="module">
+      import { api } from "./conn.js";
+      document.addEventListener("DOMContentLoaded", () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get("project");
+        console.log("123");
+        if (projectId) {
+          loadProjectDetails(projectId);
+        }
+      });
+
+      async function loadProjectDetails(projectId) {
+        try {
+          const res = await fetch(api("/check_project?project=" + projectId));
+
+          if (res.status !== 200) {
+            alert("Project not found!");
+            window.location.href = "projectList.html";
+            return;
+          }
+
+          const data = await res.json();
+          console.log(data);
+
+          document.querySelector("#projectName").textContent = data.name;
+          document.querySelector("#projectCoordinate").textContent =
+            data.coordinate;
+          document.querySelector("#droneDetection").textContent = data.detect;
+        } catch (err) {
+          console.error(err);
+        }
       }
     </script>
   </body>

@@ -184,7 +184,7 @@ def check_project():
     if not res:
         return {}, 404
     
-    return {}, 200
+    return res, 200
 
 @routes_bp.route('/notification')
 def notification():
