@@ -97,232 +97,10 @@
             <tr>
               <th>Project Name</th>
               <th>Status</th>
-              <th>Actions</th>
               <th>Details</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>Project Alpha</td>
-              <td>Completed</td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='playProject.html'"
-                >
-                  Play
-                </button>
-              </td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='viewProject.html'"
-                >
-                  View
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Project Beta</td>
-              <td>In Progress</td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='playProject.html'"
-                >
-                  Play
-                </button>
-              </td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='viewProject.html'"
-                >
-                  View
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Project Gamma</td>
-              <td>Planned</td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='playProject.html'"
-                >
-                  Play
-                </button>
-              </td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='viewProject.html'"
-                >
-                  View
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Project Gamma</td>
-              <td>Planned</td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='playProject.html'"
-                >
-                  Play
-                </button>
-              </td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='viewProject.html'"
-                >
-                  View
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Project Gamma</td>
-              <td>Planned</td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='playProject.html'"
-                >
-                  Play
-                </button>
-              </td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='viewProject.html'"
-                >
-                  View
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Project Gamma</td>
-              <td>Planned</td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='playProject.html'"
-                >
-                  Play
-                </button>
-              </td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='viewProject.html'"
-                >
-                  View
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Project Gamma</td>
-              <td>Planned</td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='playProject.html'"
-                >
-                  Play
-                </button>
-              </td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='viewProject.html'"
-                >
-                  View
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Project Gamma</td>
-              <td>Planned</td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='playProject.html'"
-                >
-                  Play
-                </button>
-              </td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='viewProject.html'"
-                >
-                  View
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Project Gamma</td>
-              <td>Planned</td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='playProject.html'"
-                >
-                  Play
-                </button>
-              </td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='viewProject.html'"
-                >
-                  View
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Project Gamma</td>
-              <td>Planned</td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='playProject.html'"
-                >
-                  Play
-                </button>
-              </td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='viewProject.html'"
-                >
-                  View
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Project Gamma</td>
-              <td>Completed</td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='playProject.html'"
-                >
-                  Play
-                </button>
-              </td>
-              <td>
-                <button
-                  class="button"
-                  onclick="location.href='viewProject.html'"
-                >
-                  View
-                </button>
-              </td>
-            </tr>
-          </tbody>
+          <tbody class="project-list-container"></tbody>
         </table>
       </section>
       <br /><br />
@@ -362,7 +140,7 @@
     <script>
       function viewProject(projectId) {
         // Redirect to project details page
-        window.location.href = `projectDetails.html?project=${projectId}`;
+        window.location.href = `viewProject.html?project=${projectId}`;
       }
 
       function toggleFeature(element) {
@@ -381,6 +159,37 @@
         var popup = document.getElementById("notificationPopup");
         popup.classList.toggle("show");
       }
+    </script>
+    <script type="module">
+      import "./jquery.min.js";
+      import { api } from "./conn.js";
+      $(async function () {
+        try {
+          const $container = $(".project-list-container");
+
+          // get project list
+          const res = await fetch(api("/project_list"));
+
+          const data = await res.json();
+
+          for (const project of data) {
+            const $projectRow = $(`<tr>
+              <td>${project.name}</td>
+              <td style="text-transform: capitalize;">${project.status}</td>
+              <td>
+                <button class="button" onclick="viewProject(${project.id})">
+                  View
+                </button>
+              </td>
+            </tr>`);
+            $container.append($projectRow);
+          }
+
+          console.log(data);
+        } catch (e) {
+          console.error(e);
+        }
+      });
     </script>
   </body>
 </html>
