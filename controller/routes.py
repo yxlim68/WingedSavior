@@ -68,7 +68,7 @@ def login():
                 "message": "Failed"
             }, 400
         
-        res['profile_image'] = base64.b64encode(res['profile_image']).decode('utf-8')
+        res['profile_image'] =  base64.b64encode(res['profile_image']).decode('utf-8') if res['profile_image'] is not None else ""
         
         
         return {
