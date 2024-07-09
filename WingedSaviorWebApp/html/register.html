@@ -90,11 +90,13 @@
     </main>
     <script type="module">
       import { api } from "./conn.js";
-      import "./jquery.min.js";
-      $("#registerForm").on("submit", registerUser);
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", registerUser);
 
       async function registerUser(e) {
         e.preventDefault();
+
         // Perform form validation
         const password = document.getElementById("password").value;
         const confirmPassword =
@@ -104,12 +106,13 @@
           alert("Passwords do not match.");
           return false;
         }
-        // register user
-        const firstname = $("#first-name").prop("value");
-        const lastname = $("#last-name").prop("value");
-        const username = $("#username").prop("value");
-        const email = $("#email").prop("value");
-        const organization = $("#organization").prop("value");
+
+        // Register user
+        const firstname = document.getElementById("first-name").value;
+        const lastname = document.getElementById("last-name").value;
+        const username = document.getElementById("username").value;
+        const email = document.getElementById("email").value;
+        const organization = document.getElementById("organization").value;
 
         const userData = {
           firstname,
@@ -122,9 +125,9 @@
 
         try {
           const res = await fetch(api("/register"), {
-            method: "post",
+            method: "POST",
             headers: {
-              "content-type": "application/json",
+              "Content-Type": "application/json",
             },
             body: JSON.stringify(userData),
           });
@@ -133,22 +136,23 @@
             throw new Error("Failed to create user" + (await res.text()));
           }
 
-          // store user data
+          // Store user data
           const json = await res.json();
           const userId = json.user_id;
 
-          // save user session
+          // Save user session
           localStorage.setItem(
             "user",
             JSON.stringify({
               ...userData,
               id: userId,
+              profile_image: "",
             })
           );
 
           console.log(localStorage.getItem("user"));
 
-          console.log("register success");
+          console.log("Register success");
           alert("Register successful");
           window.location.href = "profile.html";
         } catch (e) {
