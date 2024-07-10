@@ -121,10 +121,12 @@
         startStopImage.classList.add('animate');
         setTimeout(() => {
             if (isStarted) {
+                stopDrone();
                 startStopImage.src = 'img/btnOff.png';
                 droneStatus.innerHTML = '<strong>Drone Offline</strong>';
                 isStarted = false;
             } else {
+                startDrone();
                 startStopImage.src = 'img/btnOn.png';
                 droneStatus.innerHTML = '<strong>Drone Online</strong>';
                 isStarted = true;
@@ -176,7 +178,46 @@
         var popup = document.getElementById('notificationPopup');
         popup.classList.toggle('show');
     }
+
+    function startDrone() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get('project');
+
+        // Make an AJAX request to start the drone
+        fetch(`/api/start-drone?project=${projectId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to start drone');
+                }
+                console.log('Drone started successfully');
+                // Optionally, update UI or perform additional actions upon successful start
+            })
+            .catch(error => {
+                console.error('Error starting drone:', error);
+                alert('Failed to start the drone');
+            });
+    }
+
+    function stopDrone() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get('project');
+
+        // Make an AJAX request to stop the drone
+        fetch(`/api/stop-drone?project=${projectId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to stop drone');
+                }
+                console.log('Drone stopped successfully');
+                // Optionally, update UI or perform additional actions upon successful stop
+            })
+            .catch(error => {
+                console.error('Error stopping drone:', error);
+                alert('Failed to stop the drone');
+            });
+    }
 </script>
+
 
 </body>
 </html>
