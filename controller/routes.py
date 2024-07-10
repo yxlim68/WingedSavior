@@ -3,6 +3,8 @@ import json
 from io import BytesIO
 import cv2
 from flask import Blueprint, Response, jsonify, request, Flask, send_file
+import threading
+from drone.camera import start_drone, stop_drone
 import numpy as np
 
 from controller.db import db
@@ -99,7 +101,6 @@ def create_project():
     project_id = cursor.lastrowid
     
     cursor.execute('commit')
-    
     
     return jsonify({
         "message": "Success",
@@ -332,3 +333,41 @@ def update_project():
     cur.execute("commit")
     
     return data, 200
+
+drone_thread = None
+drone_running = False
+tello = None
+movements = []
+
+@routes_bp.route('/start_drone', methods=['POST'])
+def start_drone_route():
+    global drone_thread, drone_running, tello, movements
+
+    if drone_running:
+        return jsonify({"message": "Drone is already running"}), 400
+
+    data = request.json
+    project_id = data.get('project_id', 12)  # Default project ID
+
+    drone_running = True
+
+    drone_thread = threading.Thread(target=start_drone, args=(project_id,), daemon=True)
+    drone_thread.start()
+
+    return jsonify({"message": "Drone started successfully"}), 200
+
+@routes_bp.route('/stop_drone', methods=['POST'])
+def stop_drone_route():
+    global drone_running, tello, movements
+
+    if not drone_running:
+        return jsonify({"message": "Drone is not running"}), 400
+
+    drone_running = False
+
+    if drone_thread is not None:
+        drone_thread.join()
+
+    stop_drone(tello, movements)
+
+    return jsonify({"message": "Drone stopped successfully"}), 200

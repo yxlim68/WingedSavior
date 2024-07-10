@@ -279,10 +279,6 @@ class TelloObstacleAvoidance:
         cv2.destroyAllWindows()
 
 def fly(tello, start_time, movements, parameters):
-    if not parameters:
-        print(f"No parameters found for project ID {project_id}. Exiting.")
-        return
-
     forward_distance = int(parameters['fly_time'])  # Ensure integer division
     print(f"Navigating with parameter: Forward Distance={forward_distance}")
 
@@ -344,15 +340,12 @@ def reverse_movements(tello, movements):
             tello.move_right(20)
         time.sleep(1)
 
-if __name__ == '__main__':
+def start_drone(project_id):
     check_and_start_xampp()
 
-    project_id = 12  # Replace with actual project ID or fetch dynamically
     parameters = get_project_parameters(project_id)
 
     if parameters:
-        # Initialize obstacle avoidance
-
         tello = Tello()
         obstacle_avoidance = TelloObstacleAvoidance(tello)
 
@@ -421,3 +414,9 @@ if __name__ == '__main__':
     else:
         print("Failed to get valid project parameters. Exiting.")
         stop_xampp()
+
+def stop_drone(tello, movements):
+    reverse_movements(tello, movements)
+    tello.land()
+    cv2.destroyAllWindows()
+    stop_xampp()
