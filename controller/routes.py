@@ -62,12 +62,14 @@ def login():
         cursor.execute(query)
         
         res = cursor.fetchone()
-        res['profile_image'] = base64.b64encode(res['profile_image']).decode('utf-8')
         
         if not res:
             return {
                 "message": "Failed"
             }, 400
+        
+        res['profile_image'] =  base64.b64encode(res['profile_image']).decode('utf-8') if res['profile_image'] is not None else ""
+        
         
         return {
             "message": "Success",
@@ -91,11 +93,9 @@ def create_project():
     
     data = request.json
     
-    # TODO: add validation
-    
     (_, cursor) = db()
-    query = f"insert into project(name, coordinate, detect) values ('{data['name']}','{data['coordinate']}','{data['detection']}')"
-    cursor.execute(query)
+    query = "insert into project(user, name, coordinate, detect) values (%s,%s,%s,%s)"
+    cursor.execute(query, (data['user'], data['name'], data['coordinate'], data['detection']))
     project_id = cursor.lastrowid
     
     cursor.execute('commit')
@@ -240,11 +240,16 @@ def ping():
 def project_list():
     try:
         
-        query = "SELECT * FROM project"
+        user = request.args.get('user')
+        
+        if not user:
+            return {"message": "No user"}, 400
+        
+        query = "SELECT * FROM project WHERE user = %s"
         
         _, cur = db()
         
-        cur.execute(query)
+        cur.execute(query, (user,))
         
         res = cur.fetchall()
         

@@ -155,13 +155,15 @@
       }
     </script>
     <script type="module">
-      import { api } from "./conn.js";
+      import { api, getUser } from "./conn.js";
       document.addEventListener("DOMContentLoaded", async function () {
         try {
           const container = document.querySelector(".project-list-container");
 
+          const user = getUser();
+
           // get project list
-          const res = await fetch(api("/project_list"));
+          const res = await fetch(api("/project_list?user=" + user.id));
           const data = await res.json();
 
           for (const project of data) {

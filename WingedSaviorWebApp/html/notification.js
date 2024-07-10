@@ -34,19 +34,3 @@ export const getAllNotificationImages = async (notis = null) => {
     console.error(e);
   }
 };
-
-export const registerNotificationHandler = () => {
-  // LocalNotifications.addListener(
-  //   "localNotificationActionPerformed",
-  //   (notiAction) => {
-  //     console.log(notiAction);
-  //     const notification = notiAction.notification;
-  //     if (!notification.extra) {
-  //       return;
-  //     }
-  //     const { projectId, notiId } = notification.extra;
-  //     // redirect to project page
-  //     window.location.href = `notification.html?project=${projectId}&noti=${notiId}`;
-  //   }
-  // );
-};
