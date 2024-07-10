@@ -204,6 +204,7 @@
       function startDrone() {
         const urlParams = new URLSearchParams(window.location.search);
         const projectId = urlParams.get("project");
+        localStorage.setItem("project", projectId);
 
         // Make an AJAX request to start the drone
         fetch(api(`start-drone?project=${projectId}`))
@@ -237,6 +238,39 @@
             console.error("Error stopping drone:", error);
             alert("Failed to stop the drone");
           });
+      }
+    </script>
+    <script type="module">
+      import { api } from "./conn.js";
+      document.addEventListener("DOMContentLoaded", () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get("project");
+        console.log("123");
+        if (projectId) {
+          loadProjectDetails(projectId);
+        }
+      });
+
+      async function loadProjectDetails(projectId) {
+        try {
+          const res = await fetch(api("/check_project?project=" + projectId));
+
+          if (res.status !== 200) {
+            alert("Project not found!");
+            window.location.href = "projectList.html";
+            return;
+          }
+
+          const data = await res.json();
+          console.log(data);
+
+          document.querySelector("#projectName").textContent = data.name;
+          document.querySelector("#projectCoordinate").textContent =
+            data.coordinate;
+          document.querySelector("#droneDetection").textContent = data.detect;
+        } catch (err) {
+          console.error(err);
+        }
       }
     </script>
   </body>
