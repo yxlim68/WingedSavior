@@ -1,12 +1,11 @@
 import threading
 import time
 import cv2
-from djitellopy import Tello
+import numpy as np
+from djitellopy import Tello, TelloException
 from ultralytics import YOLO
 from plyer import notification
-import numpy as np
 import os
-import requests
 import mysql.connector as connector
 import platform
 import subprocess
@@ -80,6 +79,47 @@ def send_notification(message):
     )
 
 
+def get_project_parameters(project_id):
+    db_config = {
+        'user': 'root',
+        'password': 'root',
+        'host': 'localhost',
+        'database': 'drone',
+        'raise_on_warnings': True
+    }
+
+    try:
+        cnx = connector.connect(**db_config)
+        cursor = cnx.cursor(dictionary=True)
+
+        query = "SELECT coordinate FROM project WHERE id = %s"
+        cursor.execute(query, (project_id,))
+        result = cursor.fetchone()
+
+        cursor.close()
+        cnx.close()
+
+        if result and 'coordinate' in result:
+            coordinate_data = result['coordinate']
+            if isinstance(coordinate_data, str):
+                # Convert the string to a dictionary
+                parameters = eval(coordinate_data)
+            elif isinstance(coordinate_data, int):
+                # Handle case where coordinates are simple integers
+                parameters = {'fly_time': coordinate_data}
+            else:
+                print(f"Unexpected data type for coordinates: {type(coordinate_data)}")
+                return None
+
+            return parameters
+        else:
+            print(f"No parameters found for project ID {project_id}")
+            return None
+    except connector.Error as err:
+        print(f"Error: {err}")
+        return None
+
+
 # Snap function to save image and save to database
 def snap(frame, confidence, x, y, w, h):
     # Save image to a directory served by XAMPP (htdocs)
@@ -134,85 +174,249 @@ def save_to_database(confidence, image_bytes):
     except connector.Error as err:
         print(f"Error: {err}")
 
-def fly(tello):
-    tello.move_up(50)  # Move up by 50 cm
+class TelloObstacleAvoidance:
+    def __init__(self, tello ):
+        self.tello = tello
+        self.tello.connect()
+        self.tello.streamon()
+
+        # Define parameters for obstacle detection
+        self.distance_threshold = 100  # Distance threshold in pixels
+        self.movement_speed = 20  # Movement speed of the drone
+
+    def get_frame(self):
+        # Get the latest frame from the Tello camera
+        frame = self.tello.get_frame_read().frame
+        return frame
+
+    def process_frame(self, frame):
+        # Convert frame to grayscale
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        # Apply Gaussian blur
+        blur = cv2.GaussianBlur(gray, (5, 5), 0)
+
+        # Use Canny edge detection
+        edges = cv2.Canny(blur, 50, 150)
+
+        return edges
+
+    def detect_obstacles(self, edges):
+        # Detect contours in the edges
+        contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        # Filter contours by area
+        obstacles = [cnt for cnt in contours if cv2.contourArea(cnt) > 100]
+
+        return obstacles
+
+    def calculate_distance(self, obstacle):
+        # Placeholder for distance calculation
+        # This should ideally be replaced with a proper distance calculation using camera calibration data
+        x, y, w, h = cv2.boundingRect(obstacle)
+        distance = 1000 / w  # Simplified distance calculation: inverse of width
+        return distance
+
+    def avoid_obstacles(self, obstacles, frame):
+        for obstacle in obstacles:
+            # Get bounding box of obstacle
+            x, y, w, h = cv2.boundingRect(obstacle)
+
+            # Calculate the center of the obstacle
+            center_x = x + w // 2
+            center_y = y + h // 2
+
+            # Calculate and print the distance of the obstacle
+            distance = self.calculate_distance(obstacle)
+            print(f"Detected obstacle at distance: {distance:.2f} cm")
+
+            # Draw the bounding box and distance on the frame
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            cv2.putText(frame, f"{distance:.2f} cm", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+            # Avoid the obstacle if it is within the distance threshold
+            if w > self.distance_threshold or h > self.distance_threshold:
+                try:
+                    if center_x < 320:
+                        # Obstacle on the left, move right
+                        self.tello.move_right(self.movement_speed)
+                    elif center_x > 320:
+                        # Obstacle on the right, move left
+                        self.tello.move_left(self.movement_speed)
+
+                    if center_y < 240:
+                        # Obstacle above, move down
+                        self.tello.move_down(self.movement_speed)
+                    elif center_y > 240:
+                        # Obstacle below, move up
+                        self.tello.move_up(self.movement_speed)
+                except TelloException as e:
+                    print(f"Error moving drone: {e}")
+
+    def run(self):
+        while True:
+            # Get the latest frame from the Tello camera
+            frame = self.get_frame()
+
+            # Process the frame to detect edges
+            edges = self.process_frame(frame)
+
+            # Detect obstacles based on edges
+            obstacles = self.detect_obstacles(edges)
+
+            # Avoid detected obstacles
+            self.avoid_obstacles(obstacles, frame)
+
+            # Display the frame and edges
+            cv2.imshow('Tello Camera', frame)
+            cv2.imshow('Edges', edges)
+
+            # Exit on 'q' key press
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        self.tello.end()
+        cv2.destroyAllWindows()
+
+def fly(tello, start_time, movements, parameters):
+    forward_distance = int(parameters['fly_time'])  # Ensure integer division
+    print(f"Navigating with parameter: Forward Distance={forward_distance}")
+
+    planned_movements = [
+        ('move_forward', forward_distance),
+        ('rotate_clockwise', 90),
+        ('move_forward', forward_distance),
+        ('rotate_clockwise', 90),
+        ('move_forward', forward_distance),
+        ('rotate_clockwise', 90),
+        ('move_forward', forward_distance),
+        ('rotate_clockwise', 90),
+    ]
+
     while True:
-        tello.move_forward(100)
-        tello.rotate_clockwise(90)
+        for move, value in planned_movements:
+            if move == 'move_forward':
+                try:
+                    response = tello.move_forward(int(value))
+                    if response is None:
+                        print(f"Move forward command failed. Retrying...")
+                        response = tello.move_forward(int(value))  # Retry the command
+                        if response is None:
+                            print(f"Second attempt failed. Landing drone...")
+                    elif response == 'ok':
+                        movements.append(('move_back', value))
+                    else:
+                        print(f"Unexpected response: {response}. Retrying...")
+                except TelloException as e:
+                    print(f"TelloException: {e}")
+                    tello.land()
+                    sys.exit(1)
+            elif move == 'rotate_clockwise':
+                try:
+                    response = tello.rotate_clockwise(value)
+                    if response == 'ok':
+                        movements.append(('rotate_counter_clockwise', value))
+                    else:
+                        print(f"Rotation failed with response: {response}. Retrying...")
+                except TelloException as e:
+                    print(f"TelloException: {e}")
+                    tello.land()
+                    sys.exit(1)
+
+            elapsed_time = time.time() - start_time
+            print(f"Total time flying: {elapsed_time:.2f} seconds")
+            time.sleep(1)
+
+def reverse_movements(tello, movements):
+    movements.reverse()
+    for move in movements:
+        if 'forward' in move:
+            tello.move_back(20)
+        elif 'back' in move:
+            tello.move_forward(20)
+        elif 'right' in move:
+            tello.move_left(20)
+        elif 'left' in move:
+            tello.move_right(20)
         time.sleep(1)
 
-def get_location(max_retries=3):
-    url = 'https://api64.ipify.org?format=json'
-    retries = 0
-    while retries < max_retries:
-        try:
-            response = requests.get(url)
-            response.raise_for_status()  # Raise an error for bad responses
-            data = response.json()
-            return data['loc'].split(',')
-        except (requests.ConnectionError, requests.HTTPError) as e:
-            print(f"Error fetching location: {e}")
-            retries += 1
-            time.sleep(1)  # Wait for 1 second before retrying
-    return None
-
-if __name__ == '__main__':
+def start_drone(project_id):
     check_and_start_xampp()
-    tello = Tello()
-    model = YOLO('yolov8n.pt')
-    tello.connect()
-    tello.takeoff()
-    print("Battery:", tello.get_battery())
-    tello.streamon()
 
-    fly_thread = threading.Thread(target=fly, args=(tello,), daemon=True)
-    fly_thread.start()
+    parameters = get_project_parameters(project_id)
 
-    seen_person_hashes = set()
-    last_notification_time = time.time()  # Track the last notification time
+    if parameters:
+        tello = Tello()
+        obstacle_avoidance = TelloObstacleAvoidance(tello)
 
-    while True:
-        result_frame = tello.get_frame_read()
-        frame = result_frame.frame
+        model = YOLO('yolov8n.pt')
+        tello.connect()
+        tello.takeoff()
+        print("Battery:", tello.get_battery())
+        tello.streamon()
 
-        # Apply white balance
-        frame = white_balance(frame)
-        # Adjust color balance (optional, fine-tune as needed)
-        frame = adjust_color_balance(frame, red_gain=1.1, green_gain=1.1, blue_gain=1.0)
-        # Apply gamma correction
-        frame = gamma_correction(frame, gamma=1.2)
-        # Enhance contrast
-        frame = enhance_contrast(frame)
+        start_time = time.time()
+        movements = []
 
-        results = model(frame)
+        fly_thread = threading.Thread(target=fly, args=(tello, start_time, movements, parameters), daemon=True)
+        fly_thread.start()
 
-        predict_image = results[0].plot()
+        seen_person_hashes = set()
+        last_notification_time = time.time()  # Track the last notification time
 
-        current_time = time.time()
+        try:
+            while True:
+                frame = tello.get_frame_read().frame
 
-        # Check if any human is detected
-        for result in results[0].boxes:
-            if result.cls == 0:  # class 0 is typically 'person' in COCO dataset
-                confidence = result.conf.item()  # Convert Tensor to Python float
-                x1, y1, x2, y2 = map(int, result.xyxy[0])  # Get bounding box coordinates
-                x, y, w, h = x1, y1, x2 - x1, y2 - y1  # Convert to (x, y, w, h)
+                # Apply image processing functions
+                frame = white_balance(frame)
+                frame = adjust_color_balance(frame, red_gain=1.1, green_gain=1.1, blue_gain=1.0)
+                frame = gamma_correction(frame, gamma=1.2)
+                frame = enhance_contrast(frame)
 
-                # Generate hash of bounding box coordinates
-                bbox_hash = hashlib.md5(f"{x1}{y1}{x2}{y2}".encode()).hexdigest()
+                results = model(frame)
 
-                # Check if this person has been seen before and if the last notification was more than a minute ago
-                if bbox_hash not in seen_person_hashes and (current_time - last_notification_time) > 10:
-                    seen_person_hashes.add(bbox_hash)
-                    last_notification_time = current_time
-                    send_notification(f"Human detected with confidence {confidence:.2f}")
-                    snap(frame, confidence, x, y, w, h)  # Take a snapshot
+                predict_image = results[0].plot()
 
-        cv2.imshow("Drone Camera", frame)
-        cv2.imshow("Prediction", predict_image)
+                current_time = time.time()
 
-        if cv2.waitKey(1) & 0xFF == ord("q"):
-            break
+                cv2.imshow("Drone Camera", frame)
+                cv2.imshow("Prediction", predict_image)
 
-    cv2.destroyAllWindows()
+                # Process detection results
+                for result in results[0].boxes:
+                    if result.cls == 0:  # Assuming class 0 is 'person'
+                        confidence = result.conf.item()
+                        x1, y1, x2, y2 = map(int, result.xyxy[0])
+                        x, y, w, h = x1, y1, x2 - x1, y2 - y1
+
+                        bbox_hash = hashlib.md5(f"{x1}{y1}{x2}{y2}".encode()).hexdigest()
+
+                        if bbox_hash not in seen_person_hashes and (current_time - last_notification_time) > 10:
+                            seen_person_hashes.add(bbox_hash)
+                            last_notification_time = current_time
+                            send_notification(f"Human detected with confidence {confidence:.2f}")
+                            snap(frame, confidence, x, y, w, h)
+
+                # Run obstacle avoidance
+                obstacle_avoidance.run()
+
+                if cv2.waitKey(1) & 0xFF == ord("q"):
+                    break
+
+        except KeyboardInterrupt:
+            print("Stopping drone...")
+            stop_xampp()
+            reverse_movements(tello, movements)
+
+        cv2.destroyAllWindows()
+        tello.land()
+    else:
+        print("Failed to get valid project parameters. Exiting.")
+        stop_xampp()
+
+def stop_drone(tello, movements):
+    reverse_movements(tello, movements)
     tello.land()
+    cv2.destroyAllWindows()
     stop_xampp()

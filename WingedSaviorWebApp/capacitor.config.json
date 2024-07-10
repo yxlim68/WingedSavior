@@ -7,6 +7,7 @@
   },
   "server": {
     "androidScheme": "http",
+    "url": "http://192.168.0.191:5173",
     "clearText": true
   }
 }
