@@ -3,6 +3,6 @@ TELLO_HOST = "192.168.10.1"
 DEBUG_WEB = True
 
 # use device camera instead of drone
-DEBUG_VIDEO = True
+DEBUG_VIDEO = False
 
 DEBUG_WEBSOCKET = True
