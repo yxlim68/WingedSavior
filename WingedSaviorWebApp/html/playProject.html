@@ -77,12 +77,7 @@
         <h2>Project Control</h2>
         <div class="project-info">
           <div class="start-stop-container">
-            <img
-              src="img/btnOff.png"
-              alt="Start"
-              id="startStopImage"
-              onclick="toggleStartStop()"
-            />
+            <img src="img/btnOff.png" alt="Start" id="startStopImage" />
             <p id="droneStatus"><strong>Drone Offline</strong></p>
             <br />
           </div>
@@ -128,29 +123,6 @@
     </footer>
 
     <script>
-      let isStarted = false;
-
-      function toggleStartStop() {
-        const startStopImage = document.getElementById("startStopImage");
-        const droneStatus = document.getElementById("droneStatus");
-
-        startStopImage.classList.add("animate");
-        setTimeout(() => {
-          if (isStarted) {
-            stopDrone();
-            startStopImage.src = "img/btnOff.png";
-            droneStatus.innerHTML = "<strong>Drone Offline</strong>";
-            isStarted = false;
-          } else {
-            startDrone();
-            startStopImage.src = "img/btnOn.png";
-            droneStatus.innerHTML = "<strong>Drone Online</strong>";
-            isStarted = true;
-          }
-          startStopImage.classList.remove("animate");
-        }, 300); // duration matches the CSS animation
-      }
-
       document.addEventListener("DOMContentLoaded", () => {
         const urlParams = new URLSearchParams(window.location.search);
         const projectId = urlParams.get("project");
@@ -196,13 +168,45 @@
         var popup = document.getElementById("notificationPopup");
         popup.classList.toggle("show");
       }
+    </script>
+    <script type="module">
+      import { setupNoti } from "./notification.js";
+      setupNoti();
+    </script>
+    <script type="module">
+      import { api } from "./conn.js";
+
+      let isStarted = false;
+
+      document.querySelector("#startStopImage").onclick = toggleStartStop;
+
+      function toggleStartStop() {
+        const startStopImage = document.getElementById("startStopImage");
+        const droneStatus = document.getElementById("droneStatus");
+
+        startStopImage.classList.add("animate");
+        setTimeout(() => {
+          if (isStarted) {
+            stopDrone();
+            startStopImage.src = "img/btnOff.png";
+            droneStatus.innerHTML = "<strong>Drone Offline</strong>";
+            isStarted = false;
+          } else {
+            startDrone();
+            startStopImage.src = "img/btnOn.png";
+            droneStatus.innerHTML = "<strong>Drone Online</strong>";
+            isStarted = true;
+          }
+          startStopImage.classList.remove("animate");
+        }, 300); // duration matches the CSS animation
+      }
 
       function startDrone() {
         const urlParams = new URLSearchParams(window.location.search);
         const projectId = urlParams.get("project");
 
         // Make an AJAX request to start the drone
-        fetch(`/api/start-drone?project=${projectId}`)
+        fetch(api(`start-drone?project=${projectId}`))
           .then((response) => {
             if (!response.ok) {
               throw new Error("Failed to start drone");
@@ -221,7 +225,7 @@
         const projectId = urlParams.get("project");
 
         // Make an AJAX request to stop the drone
-        fetch(`/api/stop-drone?project=${projectId}`)
+        fetch(api(`/stop-drone?project=${projectId}`))
           .then((response) => {
             if (!response.ok) {
               throw new Error("Failed to stop drone");
@@ -234,10 +238,6 @@
             alert("Failed to stop the drone");
           });
       }
-    </script>
-    <script type="module">
-      import { setupNoti } from "./notification.js";
-      setupNoti();
     </script>
   </body>
 </html>
