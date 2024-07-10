@@ -3,8 +3,8 @@
 #include <HTTPClient.h>
 #include <TinyGPS++.h>
 
-const char *SSID = "Telur";
-const char *PASSWORD = "123456789";
+const char *SSID = "YourMama";
+const char *PASSWORD = "S0upn!fy";
 
 #define GPS_BAUD 9600
 #define RXD2 16
@@ -16,7 +16,7 @@ TinyGPSPlus gps;
 unsigned long timerDelay = 1000; // send wifi data every 1 second
 unsigned long lastTimeSent = 0;
 
-const String serverName = "http://192.168.11.34:8766";
+const String serverName = "http://192.168.8.100:8766";
 
 String api(String path)
 {
