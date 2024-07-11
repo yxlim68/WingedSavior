@@ -207,8 +207,9 @@
         localStorage.setItem("project", projectId);
 
         // Make an AJAX request to start the drone
-        fetch(api(`start-drone?project=${projectId}`))
+        fetch(api(`/start_drone?project=${projectId}`))
           .then((response) => {
+            response.text().then(console.log);
             if (!response.ok) {
               throw new Error("Failed to start drone");
             }
@@ -226,7 +227,7 @@
         const projectId = urlParams.get("project");
 
         // Make an AJAX request to stop the drone
-        fetch(api(`/stop-drone?project=${projectId}`))
+        fetch(api(`/stop_drone?project=${projectId}`))
           .then((response) => {
             if (!response.ok) {
               throw new Error("Failed to stop drone");

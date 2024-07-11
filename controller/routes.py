@@ -349,15 +349,17 @@ drone_running = False
 tello = None
 movements = []
 
-@routes_bp.route('/start_drone', methods=['POST'])
+@routes_bp.route('/start_drone')
 def start_drone_route():
     global drone_thread, drone_running, tello, movements
 
     if drone_running:
+        print('botak gay')
         return jsonify({"message": "Drone is already running"}), 400
 
-    data = request.json
-    project_id = data.get('project_id', 12)  # Default project ID
+    # data = request.json
+    # project_id = data.get('project_id', 12)  # Default project ID
+    project_id = 26
 
     drone_running = True
 
@@ -366,11 +368,12 @@ def start_drone_route():
 
     return jsonify({"message": "Drone started successfully"}), 200
 
-@routes_bp.route('/stop_drone', methods=['POST'])
+@routes_bp.route('/stop_drone')
 def stop_drone_route():
     global drone_running, tello, movements
 
     if not drone_running:
+        print('botak babi')
         return jsonify({"message": "Drone is not running"}), 400
 
     drone_running = False
@@ -378,6 +381,8 @@ def stop_drone_route():
     if drone_thread is not None:
         drone_thread.join()
 
+
+    print(tello)
     stop_drone(tello, movements)
 
     return jsonify({"message": "Drone stopped successfully"}), 200
