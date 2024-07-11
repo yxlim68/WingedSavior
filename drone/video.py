@@ -18,7 +18,7 @@ if DEBUG_VIDEO:
 
 @video_bp.route("/video_feed")
 def video_feed():
-    global latest_frame, project, video_start, frame_queue
+    global latest_frame, video_project, video_start, frame_queue
     project_id = request.args.get('project')
     check_status = request.args.get('status')
     
@@ -26,9 +26,9 @@ def video_feed():
     if check_status is not None:
         return {
             "video_start": video_start,
-            "project": project }, 200
+            "project": video_project }, 200
     
-    project = project_id
+    video_project = project_id
     
     VIDEO_TIMEOUT = 15000
     log = util_log('web video')
@@ -95,11 +95,15 @@ def upload_image( project_id: int, id: int, image_bytes, conf: float):
 
 latest_frame = None
 tracked_objects = list()
-project = None
+video_project = None
 video_start = False
 
+def set_video_project(id):
+    global video_project
+    video_project = id
+
 def start_video_thread():
-    global latest_frame, tracked_objects, project, video_start
+    global latest_frame, tracked_objects, video_project, video_start
     
     log = util_log('video')
     
@@ -127,7 +131,7 @@ def start_video_thread():
     
     while True:
         # log('frame: ', latest_frame)
-        # log(f'project: {project}')
+        # log(f'project: {video_project}')
         try:
             if not DEBUG_VIDEO:
                 if last_video is None:
@@ -155,7 +159,7 @@ def start_video_thread():
             
             if person_detected:
                 boxes = results[0].boxes
-                print(tracked_objects)
+                # print(tracked_objects)
                 for box in boxes:
                     if box.id is None:
                         continue
@@ -165,8 +169,8 @@ def start_video_thread():
                     tracked_objects.append(box.id.item())
                     
                     # send notification
-                    if project:
-                        upload_image(project, box.id, jpeg.tobytes(), box.conf.item())
+                    if video_project:
+                        upload_image(video_project, box.id, jpeg.tobytes(), box.conf.item())
 
 
             if not success:

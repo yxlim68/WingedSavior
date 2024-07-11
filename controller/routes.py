@@ -10,6 +10,7 @@ import numpy as np
 from controller.db import db
 from controller.util import log as util_log
 from drone.config import DEBUG_WEB
+from drone.video import video_project, set_video_project
 
 routes_bp = Blueprint("general routes", __name__)
 
@@ -351,7 +352,12 @@ movements = []
 
 @routes_bp.route('/start_drone')
 def start_drone_route():
-    global drone_thread, drone_running, tello, movements
+    global drone_thread, drone_running, tello, movements, video_project
+    
+    project_id = request.args.get('project')
+    
+    if not project_id:
+        return {"message": "Invalid project"}, 400
 
     if drone_running:
         print('botak gay')
@@ -359,9 +365,9 @@ def start_drone_route():
 
     # data = request.json
     # project_id = data.get('project_id', 12)  # Default project ID
-    project_id = 26
 
     drone_running = True
+    set_video_project(project_id)
 
     drone_thread = threading.Thread(target=start_drone, args=(project_id,), daemon=True)
     drone_thread.start()
@@ -370,7 +376,9 @@ def start_drone_route():
 
 @routes_bp.route('/stop_drone')
 def stop_drone_route():
-    global drone_running, tello, movements
+    global drone_running, tello, movements, video_project
+
+    set_video_project(None)
 
     if not drone_running:
         print('botak babi')
@@ -380,6 +388,7 @@ def stop_drone_route():
 
     if drone_thread is not None:
         drone_thread.join()
+
 
 
     print(tello)
