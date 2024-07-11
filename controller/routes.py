@@ -191,6 +191,7 @@ def check_project():
 def notification():
     
     project_id = request.args.get('project')
+    after = request.args.get('after')
     
     if not project_id:
         return {}, 400
@@ -199,7 +200,11 @@ def notification():
     
     query = "SELECT * FROM notification WHERE project_id = %s"
     
-    cur.execute(query, (project_id,))
+    if after:
+        query += " AND id > %s"
+        cur.execute(query, (project_id,after))
+    else:
+        cur.execute(query, (project_id,))
     
     results = cur.fetchall()
     

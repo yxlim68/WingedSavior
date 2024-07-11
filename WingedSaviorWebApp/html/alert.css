@@ -1,6 +1,3 @@
-.alert.open .header {
-  border-bottom: 1px solid #94a3b8;
-}
 .alert.open .header .dropdown-icon {
   transform: rotate(90deg);
 }
@@ -12,7 +9,7 @@
   display: flex;
   align-items: center;
   padding: 12px 0;
-  border-top: 1px solid #94a3b8;
+  border-bottom: 1px solid #94a3b8;
 }
 .alert .header .counter {
   width: 35px;

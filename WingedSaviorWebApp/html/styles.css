@@ -1,3 +1,5 @@
+@import url("./alert.css");
+
 /* Base Styles */
 body {
   font-family: Arial, sans-serif;
@@ -18,8 +20,9 @@ body {
   position: fixed; /* Position fixed to stay in the middle of the viewport */
   top: 8%;
   right: 5%;
-  width: auto;
-  opacity: 0.8;
+  width: 300px;
+  max-height: 80vh;
+  overflow-y: auto;
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -28,6 +31,7 @@ body {
   display: none; /* Hide by default */
   z-index: 1000; /* Ensure it's above other content */
   color: black;
+  max-width: 85%;
 }
 
 .notification-popup.show {

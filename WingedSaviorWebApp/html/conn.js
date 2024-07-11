@@ -40,13 +40,17 @@ export async function requiredProject(cb) {
 
   // TODO: redirect user to project list page
 
-  if (!projectId && !projectId2) alert("No valid project found");
+  if (!projectId && !projectId2) {
+    // alert("No valid project found");
+    console.error("No valid project found");
+    return;
+  }
 
   if (!projectId) projectId = projectId2;
 
   const exist = await checkProjectExist(projectId);
   if (!exist) {
-    alert("Invalid project");
+    console.error("Invalid project");
     return;
   }
 
