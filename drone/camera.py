@@ -12,7 +12,7 @@ import subprocess
 import sys
 import hashlib
 
-# Ensure class names from COCO dataset
+# Ensure class names from COCO datasets
 CLASS_NAMES = {
     0: "person",
     1: "bicycle",
