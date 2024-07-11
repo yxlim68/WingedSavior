@@ -77,9 +77,16 @@
         <h2>Project Control</h2>
         <div class="project-info">
           <div class="start-stop-container">
-            <img src="img/btnOff.png" alt="Start" id="startStopImage" />
+            <img
+              src="img/btnOff.png"
+              alt="Start"
+              id="startStopImage"
+              onclick="toggleStartStop()"
+            />
             <p id="droneStatus"><strong>Drone Offline</strong></p>
             <br />
+            <p id="timer">00:00:00</p>
+            <!-- Timer display -->
           </div>
           <p>
             <strong>Project Name:</strong>
@@ -93,6 +100,11 @@
             <strong>Drone Detection:</strong>
             <span id="droneDetection">People</span>
           </p>
+          <p>
+            <strong>Previous Processing Time:</strong>
+            <span id="totalTime">00:00:00</span>
+          </p>
+          <!-- Total Time display -->
         </div>
       </section>
     </main>
@@ -123,6 +135,67 @@
     </footer>
 
     <script>
+      let isStarted = false;
+      let timerInterval;
+      let startTime;
+
+      function toggleStartStop() {
+        const startStopImage = document.getElementById("startStopImage");
+        const droneStatus = document.getElementById("droneStatus");
+
+        startStopImage.classList.add("animate");
+        setTimeout(() => {
+          if (isStarted) {
+            const duration = stopTimer(); // Stop the timer and get the duration
+            stopDrone();
+            startStopImage.src = "img/btnOff.png";
+            droneStatus.innerHTML = "<strong>Drone Offline</strong>";
+            isStarted = false;
+          } else {
+            startDrone();
+            startTimer(); // Start the timer
+            startStopImage.src = "img/btnOn.png";
+            droneStatus.innerHTML = "<strong>Drone Online</strong>";
+            isStarted = true;
+          }
+          startStopImage.classList.remove("animate");
+        }, 300); // duration matches the CSS animation
+      }
+
+      function startTimer() {
+        startTime = new Date();
+        timerInterval = setInterval(() => {
+          const now = new Date();
+          const elapsed = new Date(now - startTime);
+          const hours = String(elapsed.getUTCHours()).padStart(2, "0");
+          const minutes = String(elapsed.getUTCMinutes()).padStart(2, "0");
+          const seconds = String(elapsed.getUTCSeconds()).padStart(2, "0");
+          document.getElementById(
+            "timer"
+          ).textContent = `${hours}:${minutes}:${seconds}`;
+        }, 1000);
+      }
+
+      function stopTimer() {
+        clearInterval(timerInterval);
+        document.getElementById("timer").textContent = "00:00:00";
+        const endTime = new Date();
+        const duration = (endTime - startTime) / 1000; // Duration in seconds
+
+        // Format the duration to HH:MM:SS
+        const hours = String(Math.floor(duration / 3600)).padStart(2, "0");
+        const minutes = String(Math.floor((duration % 3600) / 60)).padStart(
+          2,
+          "0"
+        );
+        const seconds = String(Math.floor(duration % 60)).padStart(2, "0");
+        document.getElementById(
+          "totalTime"
+        ).textContent = `${hours}:${minutes}:${seconds}`;
+
+        return duration;
+      }
+
       document.addEventListener("DOMContentLoaded", () => {
         const urlParams = new URLSearchParams(window.location.search);
         const projectId = urlParams.get("project");
@@ -176,8 +249,6 @@
     <script type="module">
       import { api } from "./conn.js";
 
-      let isStarted = false;
-
       document.querySelector("#startStopImage").onclick = toggleStartStop;
 
       function toggleStartStop() {
@@ -214,6 +285,7 @@
               throw new Error("Failed to start drone");
             }
             console.log("Drone started successfully");
+            startTimer(); // Start the timer
             // Optionally, update UI or perform additional actions upon successful start
           })
           .catch((error) => {
@@ -225,8 +297,8 @@
       function stopDrone() {
         const urlParams = new URLSearchParams(window.location.search);
         const projectId = urlParams.get("project");
+        const duration = stopTimer(); // Stop the timer and get the duration
 
-        // Make an AJAX request to stop the drone
         fetch(api(`/stop_drone?project=${projectId}`))
           .then((response) => {
             if (!response.ok) {
@@ -241,6 +313,7 @@
           });
       }
     </script>
+
     <script type="module">
       import { api } from "./conn.js";
       document.addEventListener("DOMContentLoaded", () => {
