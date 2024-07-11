@@ -386,3 +386,26 @@ def stop_drone_route():
     stop_drone(tello, movements)
 
     return jsonify({"message": "Drone stopped successfully"}), 200
+
+@routes_bp.route('/update_timer')
+def update_timer():
+    project_id = request.args.get('project')
+    timer = request.args.get('timer')
+    
+    if not project_id:
+        return {}, 400
+    
+    query = "UPDATE project SET timer = %s WHERE id = %s"
+    
+    try:
+        _, cur = db()
+        
+        cur.execute(query, (timer,project_id))
+        cur.execute("commit")
+        
+        return {}, 200
+        
+    except Exception as e:
+        log(e)
+        return {"error": str(e)}, 500
+    
