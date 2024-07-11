@@ -12,6 +12,8 @@ import subprocess
 import sys
 import hashlib
 
+from drone.tello import  tello
+
 # Assuming a frame size of 960x720 (adjust according to your Tello camera resolution)
 FRAME_WIDTH = 960
 FRAME_HEIGHT = 720
@@ -346,7 +348,6 @@ def start_drone(project_id):
     parameters = get_project_parameters(project_id)
 
     if parameters:
-        tello = Tello()
         obstacle_avoidance = TelloObstacleAvoidance(tello)
 
         model = YOLO('yolov8n.pt')
@@ -399,7 +400,7 @@ def start_drone(project_id):
                             snap(frame, confidence, x, y, w, h)
 
                 # Run obstacle avoidance
-                obstacle_avoidance.run()
+                # obstacle_avoidance.run()
 
                 if cv2.waitKey(1) & 0xFF == ord("q"):
                     break
@@ -416,7 +417,8 @@ def start_drone(project_id):
         stop_xampp()
 
 def stop_drone(tello, movements):
-    reverse_movements(tello, movements)
+    print("kenapa takknak land")
     tello.land()
+    print("land la bood")
     cv2.destroyAllWindows()
     stop_xampp()
