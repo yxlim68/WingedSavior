@@ -276,6 +276,7 @@ async def fly_thread():
                 tello.send_control_command(f'{cmd} {val}')
                 log(f'sending {cmd}')
 
+
         except Exception as e:
             log('ERROR COK', e)
             time.sleep(0.1)

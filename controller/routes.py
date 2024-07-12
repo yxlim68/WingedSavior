@@ -6,11 +6,14 @@ from flask import Blueprint, Response, jsonify, request, Flask, send_file
 import threading
 from drone.camera import start_drone, stop_drone
 import numpy as np
+from djitellopy import TelloException
 
 from controller.db import db
 from controller.util import log as util_log
 from drone.config import DEBUG_WEB
 from drone.video import video_project, set_video_project
+from drone.tello import tello
+
 
 routes_bp = Blueprint("general routes", __name__)
 
@@ -347,7 +350,6 @@ def update_project():
 
 drone_thread = None
 drone_running = False
-tello = None
 movements = []
 
 @routes_bp.route('/start_drone')
@@ -369,32 +371,42 @@ def start_drone_route():
     drone_running = True
     set_video_project(project_id)
 
-    drone_thread = threading.Thread(target=start_drone, args=(project_id,), daemon=True)
-    drone_thread.start()
+    # drone_thread = threading.Thread(target=start_drone, args=(tello,project_id,), daemon=True)
+    # drone_thread.start()
 
+    start_drone(tello,project_id)
     return jsonify({"message": "Drone started successfully"}), 200
 
 @routes_bp.route('/stop_drone')
 def stop_drone_route():
-    global drone_running, tello, movements, video_project
+    global drone_running, tello, movements, video_project, drone_thread
 
     set_video_project(None)
 
     if not drone_running:
-        print('botak babi')
+        print('Drone is not running')
         return jsonify({"message": "Drone is not running"}), 400
 
     drone_running = False
 
     if drone_thread is not None:
+        print('Joining drone thread...')
         drone_thread.join()
+        print('Drone thread joined.')
 
+    print(f"Tello object: {tello}")
 
+    def stop_drone_thread():
+        try:
+            stop_drone(tello, movements)
+            print('Drone stopped successfully.')
+        except TelloException as e:
+            print(f"Error stopping drone: {e}")
 
-    print(tello)
-    stop_drone(tello, movements)
+    stop_thread = threading.Thread(target=stop_drone_thread)
+    stop_thread.start()
 
-    return jsonify({"message": "Drone stopped successfully"}), 200
+    return jsonify({"message": "Drone stop initiated"}), 200
 
 @routes_bp.route('/update_timer')
 def update_timer():

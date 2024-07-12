@@ -1,5 +1,5 @@
 export const DEBUG_VIDEO = false;
-export const DEBUG_ANDROID = true;
+export const DEBUG_ANDROID = false;
 
 export let BACKEND_URL;
 if (DEBUG_VIDEO) {
