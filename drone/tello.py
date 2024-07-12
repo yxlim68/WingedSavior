@@ -24,7 +24,7 @@ def kill_process_on_port(port):
 
 
 kill_process_on_port(8889)
-tello = TelloIO()
+tello = Tello()
 
 if DEBUG_WEBSOCKET:
     # tello.RESPONSE_TIMEOUT = 1

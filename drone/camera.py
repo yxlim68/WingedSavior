@@ -464,10 +464,9 @@ def stop_drone(tello, movements):
 actions = list()
 
 
-async def fly_thread():
+def fly_thread(tello: Tello):
     global actions
     log = util_log('flying baby')
-    tello = Tello()
     while True:
         try:
             if len(actions) == 0:
