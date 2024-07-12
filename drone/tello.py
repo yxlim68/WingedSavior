@@ -1,5 +1,6 @@
 from djitellopy import Tello
 from drone.config import DEBUG_VIDEO, DEBUG_WEBSOCKET, TELLO_HOST
+from tello_asyncio import Tello as TelloIO
 
 import subprocess
 
@@ -23,10 +24,11 @@ def kill_process_on_port(port):
 
 
 kill_process_on_port(8889)
-tello = Tello()
+tello = TelloIO()
 
 if DEBUG_WEBSOCKET:
-    tello.RESPONSE_TIMEOUT = 1
+    # tello.RESPONSE_TIMEOUT = 1
+    pass
     
     
 def tello_connect_if_not():

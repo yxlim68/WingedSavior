@@ -4,10 +4,13 @@ import sys, os
 import threading
 from flask import Flask
 
+
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from controller.util import log
 
+from drone.tello import tello
+from drone.camera import fly_thread
 import controller.routes as routes
 from drone.video import start_video_thread, video_bp
 from drone.location import location_bp
@@ -26,7 +29,11 @@ def init_components():
     app.before_request_funcs[None].remove(init_components)
     
     video_thread = threading.Thread(target=start_video_thread, daemon=True)
-    video_thread.start()
+    # video_thread.start()
+    
+    # asyncio.run(fly_thread())
+    f_thread = threading.Thread(target=lambda: asyncio.run(fly_thread()), daemon=True)
+    f_thread.start()
 
 
 def init_app():
