@@ -210,6 +210,8 @@ def start_drone(tello, project_id):
     print(f"Navigating with parameter: Forward Distance={forward_distance}")
 
     actions = [
+        'connect',
+        'takeoff',
         ('forward', forward_distance),
         ('ccw', 90),
         ('forward', forward_distance),
