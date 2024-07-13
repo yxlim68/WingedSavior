@@ -203,22 +203,48 @@ class TelloObstacleAvoidance:
         self.tello.end()
         cv2.destroyAllWindows()
 
+def create_distance_chunks(distance):
+    SIZE = 40 # maximum 20 size
+    
+    fit_chunk = distance // SIZE
+    remainder = distance % SIZE
+    
+    result = [*[SIZE for i in range(fit_chunk)], remainder]
+    
+    # remove anything with 0
+    result = list(filter(lambda c: c != 0, result))
+    
+    return result
+
+def create_commands(cmd, values):
+    result = list()
+    for value in values:
+        result.append((cmd, value))
+        
+    return result
+
 def start_drone(tello, project_id):
     global actions
     parameters = get_project_parameters(project_id)
     forward_distance = int(parameters['coordinate'])
+
+    # create chunks of forward commands to prevent running into wall
+    # forward_chunks = create_distance_chunks(forward_distance)
+    forward_chunks = create_distance_chunks(forward_distance)
+    forward_distances = create_commands('forward', forward_chunks)
+    
     print(f"Navigating with parameter: Forward Distance={forward_distance}")
 
     actions = [
         'connect',
         'takeoff',
-        ('forward', forward_distance),
+        *forward_distances,
         ('ccw', 90),
-        ('forward', forward_distance),
+        *forward_distances,
         ('ccw', 90),
-        ('forward', forward_distance),
+        *forward_distances,
         ('ccw', 90),
-        ('forward', forward_distance),
+        *forward_distances,
         ('ccw', 90),
     ]
 
