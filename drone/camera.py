@@ -203,8 +203,9 @@ class TelloObstacleAvoidance:
         self.tello.end()
         cv2.destroyAllWindows()
 
-def start_drone(tello, parameters):
+def start_drone(tello, project_id):
     global actions
+    parameters = get_project_parameters(project_id)
     forward_distance = int(parameters['coordinate'])
     print(f"Navigating with parameter: Forward Distance={forward_distance}")
 
