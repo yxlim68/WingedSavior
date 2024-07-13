@@ -250,10 +250,17 @@ actions = list()
 async def fly_thread(tello: Tello):
     global actions
     log = util_log('flying')
+    last_no_command = None
+
     while True:
         try:
             if len(actions) == 0:
-                log('no command')
+                if last_no_command is None:
+                    last_no_command = time.time()
+                    
+                if time.time() - last_no_command > 5:
+                    log('no command')
+                    last_no_command = None
                 time.sleep(0.1)
                 continue
 
