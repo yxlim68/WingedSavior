@@ -222,25 +222,6 @@ def start_drone(tello, project_id):
         ('ccw', 90),
     ]
 
-    while True:
-        for move, value in actions:
-            if move == 'move_forward':
-                try:
-                    tello.move_forward(int(value))
-                except TelloException as e:
-                    print(f"TelloException: {e}")
-                    tello.land()
-                    sys.exit(1)
-            elif move == 'rotate_clockwise':
-                try:
-                    response = tello.rotate_clockwise(value)
-                except TelloException as e:
-                    print(f"TelloException: {e}")
-                    tello.land()
-                    sys.exit(1)
-
-            time.sleep(1)
-
 def stop_drone(tello, movements):
     global actions
     actions = ['land']
@@ -249,7 +230,7 @@ def stop_drone(tello, movements):
 actions = list()
 
 
-async def fly_thread(tello: Tello):
+def fly_thread(tello: Tello):
     global actions
     log = util_log('flying')
     last_no_command = None
@@ -279,7 +260,6 @@ async def fly_thread(tello: Tello):
             if action == 'land':
                 tello.land()
 
-            print(type(action))
             if type(action) is tuple:
                 cmd, val = action
 
