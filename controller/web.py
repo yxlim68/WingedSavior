@@ -29,7 +29,7 @@ def init_components():
     app.before_request_funcs[None].remove(init_components)
     
     video_thread = threading.Thread(target=start_video_thread, daemon=True)
-    # video_thread.start()
+    video_thread.start()
     
     # asyncio.run(fly_thread())
     f_thread = threading.Thread(target=fly_thread,args=(tello,), daemon=True)

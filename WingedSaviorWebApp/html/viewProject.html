@@ -129,6 +129,14 @@
     <script>
       let isStarted = false;
 
+      const detectionMap = {
+        "-1": "All",
+        0: "Person",
+        2: "Car",
+        15: "Cat",
+        16: "Dog",
+      };
+
       function toggleStartStop() {
         const startStopImage = document.getElementById("startStopImage");
         startStopImage.classList.add("animate");
@@ -178,7 +186,14 @@
           document.querySelector("#projectName").textContent = data.name;
           document.querySelector("#projectCoordinate").textContent =
             data.coordinate;
-          document.querySelector("#droneDetection").textContent = data.detect;
+
+          const detectType = detectionMap[data.detect];
+          if (detectType) {
+            document.querySelector("#droneDetection").textContent = detectType;
+          } else {
+            document.querySelector("#droneDetection").textContent = "UNKNOWN";
+          }
+
           document.querySelector("#edit-button").onclick = () =>
             (window.location.href = "editProject.html?project=" + projectId);
         } catch (err) {

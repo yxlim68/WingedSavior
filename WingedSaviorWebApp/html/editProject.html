@@ -86,13 +86,16 @@
               <input type="text" id="coordinate" name="coordinate" required />
             </div>
             <div>
-              <label for="droneDetection">Drone Detection:</label>
-              <input
-                type="text"
-                id="droneDetection"
-                name="droneDetection"
-                required
-              />
+              <label for="drone-detection">Drone Detection:</label>
+              <select id="drone-detection" name="drone-detection" required>
+                <optgroup label="Select a Detection Type">
+                  <option value="0" selected>Person</option>
+                  <option value="15">Cat</option>
+                  <option value="16">Dog</option>
+                  <option value="2">Car</option>
+                  <option value="-1">All</option>
+                </optgroup>
+              </select>
             </div>
             <button type="submit" class="button">Save Changes</button>
           </form>
@@ -154,7 +157,7 @@
 
       const name = document.querySelector("#projectName");
       const coordinate = document.querySelector("#coordinate");
-      const detect = document.querySelector("#droneDetection");
+      const detect = document.querySelector("#drone-detection");
       let projectId;
 
       document.addEventListener("DOMContentLoaded", () => {

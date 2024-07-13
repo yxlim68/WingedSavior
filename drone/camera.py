@@ -253,6 +253,15 @@ def stop_drone(tello, movements):
     actions = ['land']
     return
 
+def add_actions(_actions, first = False):
+    global actions
+    
+    if first:
+        actions = [*_actions, *actions]
+    else:
+        actions = [*actions, *_actions]
+
+
 actions = list()
 
 
@@ -285,6 +294,12 @@ def fly_thread(tello: Tello):
 
             if action == 'land':
                 tello.land()
+                
+            if action == 'streamon':
+                tello.streamon()
+            
+            if action == 'motoron':
+                tello.turn_motor_on()
 
             if type(action) is tuple:
                 cmd, val = action

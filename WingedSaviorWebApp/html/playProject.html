@@ -132,6 +132,14 @@
     <script>
       let projectId;
 
+      const detectionMap = {
+        "-1": "All",
+        0: "Person",
+        2: "Car",
+        15: "Cat",
+        16: "Dog",
+      };
+
       // Toggle notification popup visibility
       function togglePopup(event) {
         event.preventDefault();
@@ -312,7 +320,8 @@
           document.querySelector("#projectName").textContent = data.name;
           document.querySelector("#projectCoordinate").textContent =
             data.coordinate;
-          document.querySelector("#droneDetection").textContent = data.detect;
+          document.querySelector("#droneDetection").textContent =
+            detectionMap[data.detect] || "UNKNOWN";
         } catch (err) {
           console.error(err);
         }
