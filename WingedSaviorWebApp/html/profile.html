@@ -52,7 +52,10 @@
             ><span id="email-display">user@example.com</span>
           </p>
           <hr />
-          <p><i class="ph ph-calendar"></i><b>Member Since: </b>Jun 2024</p>
+          <p>
+            <i class="ph ph-calendar"></i><b>Member Since: </b
+            ><span id="register-display">Jun 2024</span>
+          </p>
           <hr />
           <p>
             <i class="ph ph-building"></i><b>Organization: </b
@@ -126,6 +129,7 @@
         const name = `${userData.firstname} ${userData.lastname}`;
         const email = userData.email;
         const username = userData.username;
+        const registerAt = userData.create_at;
 
         if (userData.profile_image.length > 0) {
           document.querySelector("#profile-pic-display").src =
@@ -144,6 +148,14 @@
         }
         if (username) {
           document.querySelector("#username-display").textContent = username;
+        }
+
+        if (registerAt) {
+          // parse
+          const realDate = new Date(registerAt);
+          document.querySelector(
+            "#register-display"
+          ).textContent = `${realDate.getDate()}/${realDate.getMonth()}/${realDate.getFullYear()}`;
         }
       };
 
