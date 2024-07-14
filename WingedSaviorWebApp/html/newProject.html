@@ -37,7 +37,8 @@
           <div class="form-group">
             <label for="project-coordinates">Project Area (cm):</label>
             <input
-              type="text"
+              type="number"
+              min="20"
               id="project-coordinates"
               name="project-coordinates"
               required
@@ -95,11 +96,6 @@
         const detectionInput = document.getElementById("drone-detection");
         const user = getUser();
 
-        // Restrict input to numbers only
-        coordinateInput.addEventListener("input", function () {
-          this.value = this.value.replace(/[^0-9]/g, '');
-        });
-
         form.addEventListener("submit", async function (e) {
           e.preventDefault();
 
@@ -108,8 +104,8 @@
           const detection = detectionInput.value;
 
           // Check if the coordinate is less than 400
-          if (coordinate < 400) {
-            alert("The project area must be at least 400 cm.");
+          if (coordinate < 20) {
+            alert("The project area must be at least 20 cm.");
             return;
           }
 
