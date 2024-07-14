@@ -5,8 +5,11 @@ from djitellopy import Tello, TelloException
 from plyer import notification
 import os
 import mysql.connector as connector
+<<<<<<< HEAD
 import sys
 from controller.util import log as util_log
+=======
+>>>>>>> d8bda5a7730a563157505c7a356350cd87295d7e
 
 # Ensure class names from COCO datasets
 CLASS_NAMES = {
@@ -29,6 +32,10 @@ CLASS_NAMES = {
     79: "toothbrush"
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> d8bda5a7730a563157505c7a356350cd87295d7e
 def white_balance(img):
     result = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
     avg_a = np.average(result[:, :, 1])
@@ -68,7 +75,7 @@ def send_notification(message):
 def get_project_parameters(project_id):
     db_config = {
         'user': 'root',
-        'password': '',
+        'password': 'root',
         'host': 'localhost',
         'database': 'drone',
         'raise_on_warnings': True
@@ -143,10 +150,12 @@ def save_to_database(confidence, image_bytes):
         print(f"Error: {err}")
 
 class TelloObstacleAvoidance:
-    def __init__(self, tello, distance_threshold=20, movement_speed=20):
+    def __init__(self, tello, distance_threshold=70, movement_speed=20):
         self.tello = tello
         self.distance_threshold = distance_threshold
         self.movement_speed = movement_speed
+        self.cooldown_time = 25  # Cooldown period in seconds
+        self.last_avoidance_time = 0
 
     def get_frame(self):
         frame = self.tello.get_frame_read().frame
@@ -164,6 +173,13 @@ class TelloObstacleAvoidance:
 
     def avoid_obstacles(self, obstacles, frame):
         global actions
+<<<<<<< HEAD
+=======
+        current_time = time.time()
+        if current_time - self.last_avoidance_time < self.cooldown_time:
+            return
+
+>>>>>>> d8bda5a7730a563157505c7a356350cd87295d7e
         for obstacle in obstacles:
             x, y, w, h = cv2.boundingRect(obstacle)
             distance = self.distance_threshold * (640 - w) / 640
@@ -176,6 +192,7 @@ class TelloObstacleAvoidance:
 
             if w > self.distance_threshold or h > self.distance_threshold:
                 try:
+<<<<<<< HEAD
                     if center_x < 320:
                         actions = [('right', 20), *actions]
                     elif center_x > 320:
@@ -184,24 +201,33 @@ class TelloObstacleAvoidance:
                         actions = [('down', 10), *actions]
                     elif center_y > 240:
                         actions = [('up', 10), *actions]
+=======
+                    if center_x < 100:
+                        actions = [('right', self.movement_speed), *actions]
+                    elif center_x > 540:
+                        actions = [('left', self.movement_speed), *actions]
+                    if center_y < 100:
+                        actions = [('down', self.movement_speed), *actions]
+                    elif center_y > 380:
+                        actions = [('up', self.movement_speed), *actions]
+                    self.last_avoidance_time = current_time
+>>>>>>> d8bda5a7730a563157505c7a356350cd87295d7e
                 except TelloException as e:
                     print(f"Error moving drone: {e}")
 
     def run(self):
-        while True:
-            frame = self.get_frame()
-            edges = self.process_frame(frame)
-            obstacles = self.detect_obstacles(edges)
-            self.avoid_obstacles(obstacles, frame)
+        frame = self.get_frame()
+        edges = self.process_frame(frame)
+        obstacles = self.detect_obstacles(edges)
+        self.avoid_obstacles(obstacles, frame)
 
-            cv2.imshow('Tello Camera', frame)
-            cv2.imshow('Edges', edges)
+        cv2.imshow("Frame", frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            self.tello.end()
+            cv2.destroyAllWindows()
+            return False  # To stop the loop
 
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-
-        self.tello.end()
-        cv2.destroyAllWindows()
+        return True  # To continue the loop
 
 def create_distance_chunks(distance):
     SIZE = 40 # maximum 20 size
@@ -216,12 +242,36 @@ def create_distance_chunks(distance):
     
     return result
 
+<<<<<<< HEAD
+=======
+
+def create_distance_chunks(distance):
+    SIZE = 40  # maximum 20 size
+
+    fit_chunk = distance // SIZE
+    remainder = distance % SIZE
+
+    result = [*[SIZE for i in range(fit_chunk)], remainder]
+
+    # remove anything with 0
+    result = list(filter(lambda c: c != 0, result))
+
+    return result
+
+
+>>>>>>> d8bda5a7730a563157505c7a356350cd87295d7e
 def create_commands(cmd, values):
     result = list()
     for value in values:
         result.append((cmd, value))
+<<<<<<< HEAD
         
     return result
+=======
+
+    return result
+
+>>>>>>> d8bda5a7730a563157505c7a356350cd87295d7e
 
 def start_drone(tello, project_id):
     global actions
@@ -232,8 +282,27 @@ def start_drone(tello, project_id):
     # forward_chunks = create_distance_chunks(forward_distance)
     forward_chunks = create_distance_chunks(forward_distance)
     forward_distances = create_commands('forward', forward_chunks)
+<<<<<<< HEAD
     
     print(f"Navigating with parameter: Forward Distance={forward_distance}")
+=======
+
+    print(f"Navigating with parameter: Forward Distance={forward_distance}")
+    print(forward_distances)
+
+    actions = [
+        'connect',
+        'takeoff',
+        *forward_distances,
+        ('ccw', 90),
+        *forward_distances,
+        ('ccw', 90),
+        *forward_distances,
+        ('ccw', 90),
+        *forward_distances,
+        ('ccw', 90),
+    ]
+>>>>>>> d8bda5a7730a563157505c7a356350cd87295d7e
 
     actions = [
         'connect',
@@ -253,9 +322,16 @@ def stop_drone(tello, movements):
     actions = ['land']
     return
 
+<<<<<<< HEAD
 def add_actions(_actions, first = False):
     global actions
     
+=======
+
+def add_actions(_actions, first=False):
+    global actions
+
+>>>>>>> d8bda5a7730a563157505c7a356350cd87295d7e
     if first:
         actions = [*_actions, *actions]
     else:
@@ -267,24 +343,36 @@ actions = list()
 
 def fly_thread(tello: Tello):
     global actions
+<<<<<<< HEAD
     log = util_log('flying')
     last_no_command = None
 
+=======
+    last_no_command = None
+
+    obstacle_avoidance = TelloObstacleAvoidance(tello)
+
+>>>>>>> d8bda5a7730a563157505c7a356350cd87295d7e
     while True:
         try:
+            # Process obstacle avoidance in a separate thread or with lower priority
             if len(actions) == 0:
                 if last_no_command is None:
                     last_no_command = time.time()
+<<<<<<< HEAD
                     
                 if time.time() - last_no_command > 5:
                     log('no command')
+=======
+
+                if time.time() - last_no_command > 5:
+>>>>>>> d8bda5a7730a563157505c7a356350cd87295d7e
                     last_no_command = None
                 time.sleep(0.1)
                 continue
 
             action = actions[0]
             actions = actions[1:]
-            log(f'cmd {action} from {actions}')
 
             if action == 'connect':
                 tello.connect()
@@ -301,13 +389,23 @@ def fly_thread(tello: Tello):
             if action == 'motoron':
                 tello.turn_motor_on()
 
+<<<<<<< HEAD
+=======
+            if action == 'streamon':
+                tello.streamon()
+
+            if action == 'motoron':
+                tello.turn_motor_on()
+
+>>>>>>> d8bda5a7730a563157505c7a356350cd87295d7e
             if type(action) is tuple:
                 cmd, val = action
 
                 tello.send_control_command(f'{cmd} {val}')
-                log(f'sending {cmd}')
+                obstacle_avoidance.run()
+                time.sleep(2)  # Allow some time for the command to execute
 
 
         except Exception as e:
-            log('ERROR COK', e)
+            print(f"Exception in fly_thread: {e}")
             time.sleep(0.1)
