@@ -11,8 +11,8 @@
     <header class="fixed-header">
       <div class="header-content">
         <a href="home.html" class="back-button">
-          <i class="ph ph-arrow-left"></i
-        ></a>
+          <i class="ph ph-arrow-left"></i>
+        </a>
         <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img" />
         <div class="notification-container">
           <a href="#" class="notification-icon" onclick="togglePopup(event)">
@@ -35,7 +35,7 @@
             <input type="text" id="project-name" name="project-name" required />
           </div>
           <div class="form-group">
-            <label for="project-coordinates">Project Coordinates (cm):</label>
+            <label for="project-coordinates">Project Area (cm):</label>
             <input
               type="text"
               id="project-coordinates"
@@ -95,12 +95,23 @@
         const detectionInput = document.getElementById("drone-detection");
         const user = getUser();
 
+        // Restrict input to numbers only
+        coordinateInput.addEventListener("input", function () {
+          this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
         form.addEventListener("submit", async function (e) {
           e.preventDefault();
 
           const name = nameInput.value;
           const coordinate = coordinateInput.value;
           const detection = detectionInput.value;
+
+          // Check if the coordinate is less than 400
+          if (coordinate < 400) {
+            alert("The project area must be at least 400 cm.");
+            return;
+          }
 
           try {
             // send to backend
@@ -136,13 +147,13 @@
       import { setupNoti } from "./notification.js";
       setupNoti();
     </script>
+    <script>
+      // Toggle notification popup visibility
+      function togglePopup(event) {
+        event.preventDefault();
+        var popup = document.getElementById("notificationPopup");
+        popup.classList.toggle("show");
+      }
+    </script>
   </body>
 </html>
-<script>
-  // Toggle notification popup visibility
-  function togglePopup(event) {
-    event.preventDefault();
-    var popup = document.getElementById("notificationPopup");
-    popup.classList.toggle("show");
-  }
-</script>

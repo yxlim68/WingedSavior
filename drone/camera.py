@@ -1,3 +1,4 @@
+import threading
 import time
 import cv2
 import numpy as np
@@ -5,8 +6,6 @@ from djitellopy import Tello, TelloException
 from plyer import notification
 import os
 import mysql.connector as connector
-import sys
-from controller.util import log as util_log
 
 # Ensure class names from COCO datasets
 CLASS_NAMES = {
@@ -29,6 +28,7 @@ CLASS_NAMES = {
     79: "toothbrush"
 }
 
+
 def white_balance(img):
     result = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
     avg_a = np.average(result[:, :, 1])
@@ -38,6 +38,7 @@ def white_balance(img):
     result = cv2.cvtColor(result, cv2.COLOR_LAB2BGR)
     return result
 
+
 def adjust_color_balance(image, red_gain=1.0, green_gain=1.0, blue_gain=1.0):
     b, g, r = cv2.split(image)
     r = cv2.multiply(r, red_gain)
@@ -45,10 +46,12 @@ def adjust_color_balance(image, red_gain=1.0, green_gain=1.0, blue_gain=1.0):
     b = cv2.multiply(b, blue_gain)
     return cv2.merge((b, g, r))
 
+
 def gamma_correction(image, gamma=1.0):
     invGamma = 1.0 / gamma
     table = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
     return cv2.LUT(image, table)
+
 
 def enhance_contrast(image):
     lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
@@ -58,6 +61,7 @@ def enhance_contrast(image):
     limg = cv2.merge((cl, a, b))
     return cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
 
+
 def send_notification(message):
     notification.notify(
         title="Detection",
@@ -65,10 +69,11 @@ def send_notification(message):
         timeout=5
     )
 
+
 def get_project_parameters(project_id):
     db_config = {
         'user': 'root',
-        'password': '',
+        'password': 'root',
         'host': 'localhost',
         'database': 'drone',
         'raise_on_warnings': True
@@ -95,6 +100,7 @@ def get_project_parameters(project_id):
         print(f"Error: {err}")
         return None
 
+
 def snap(frame, confidence, x, y, w, h):
     snapshot_dir = 'C:\\xampp\\htdocs\\snapshots'
     if not os.path.exists(snapshot_dir):
@@ -115,6 +121,7 @@ def snap(frame, confidence, x, y, w, h):
     download_url = f"http://localhost/snapshots/{filename}"
     print(f"Download URL: {download_url}")
     send_notification(f"Snapshot available at {download_url}")
+
 
 def save_to_database(confidence, image_bytes):
     db_config = {
@@ -142,11 +149,14 @@ def save_to_database(confidence, image_bytes):
     except connector.Error as err:
         print(f"Error: {err}")
 
+
 class TelloObstacleAvoidance:
-    def __init__(self, tello, distance_threshold=20, movement_speed=20):
+    def __init__(self, tello, distance_threshold=70, movement_speed=20):
         self.tello = tello
         self.distance_threshold = distance_threshold
         self.movement_speed = movement_speed
+        self.cooldown_time = 25  # Cooldown period in seconds
+        self.last_avoidance_time = 0
 
     def get_frame(self):
         frame = self.tello.get_frame_read().frame
@@ -164,6 +174,10 @@ class TelloObstacleAvoidance:
 
     def avoid_obstacles(self, obstacles, frame):
         global actions
+        current_time = time.time()
+        if current_time - self.last_avoidance_time < self.cooldown_time:
+            return
+
         for obstacle in obstacles:
             x, y, w, h = cv2.boundingRect(obstacle)
             distance = self.distance_threshold * (640 - w) / 640
@@ -176,89 +190,121 @@ class TelloObstacleAvoidance:
 
             if w > self.distance_threshold or h > self.distance_threshold:
                 try:
-                    if center_x < 320:
-                        actions = [('right', 20), *actions]
-                    elif center_x > 320:
-                        actions = [('left', 20), *actions]
-                    if center_y < 240:
-                        actions = [('down', 10), *actions]
-                    elif center_y > 240:
-                        actions = [('up', 10), *actions]
+                    if center_x < 100:
+                        actions = [('right', self.movement_speed), *actions]
+                    elif center_x > 540:
+                        actions = [('left', self.movement_speed), *actions]
+                    if center_y < 100:
+                        actions = [('down', self.movement_speed), *actions]
+                    elif center_y > 380:
+                        actions = [('up', self.movement_speed), *actions]
+                    self.last_avoidance_time = current_time
                 except TelloException as e:
                     print(f"Error moving drone: {e}")
 
     def run(self):
-        while True:
-            frame = self.get_frame()
-            edges = self.process_frame(frame)
-            obstacles = self.detect_obstacles(edges)
-            self.avoid_obstacles(obstacles, frame)
+        frame = self.get_frame()
+        edges = self.process_frame(frame)
+        obstacles = self.detect_obstacles(edges)
+        self.avoid_obstacles(obstacles, frame)
 
-            cv2.imshow('Tello Camera', frame)
-            cv2.imshow('Edges', edges)
+        cv2.imshow("Frame", frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            self.tello.end()
+            cv2.destroyAllWindows()
+            return False  # To stop the loop
 
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+        return True  # To continue the loop
 
-        self.tello.end()
-        cv2.destroyAllWindows()
 
-def start_drone(tello, parameters):
+
+def create_distance_chunks(distance):
+    SIZE = 40  # maximum 20 size
+
+    fit_chunk = distance // SIZE
+    remainder = distance % SIZE
+
+    result = [*[SIZE for i in range(fit_chunk)], remainder]
+
+    # remove anything with 0
+    result = list(filter(lambda c: c != 0, result))
+
+    return result
+
+
+def create_commands(cmd, values):
+    result = list()
+    for value in values:
+        result.append((cmd, value))
+
+    return result
+
+
+def start_drone(tello, project_id):
     global actions
+    parameters = get_project_parameters(project_id)
     forward_distance = int(parameters['coordinate'])
+
+    # create chunks of forward commands to prevent running into wall
+    # forward_chunks = create_distance_chunks(forward_distance)
+    forward_chunks = create_distance_chunks(forward_distance)
+    forward_distances = create_commands('forward', forward_chunks)
+
     print(f"Navigating with parameter: Forward Distance={forward_distance}")
+    print(forward_distances)
 
     actions = [
-        ('forward', forward_distance),
+        'connect',
+        'takeoff',
+        *forward_distances,
         ('ccw', 90),
-        ('forward', forward_distance),
+        *forward_distances,
         ('ccw', 90),
-        ('forward', forward_distance),
+        *forward_distances,
         ('ccw', 90),
-        ('forward', forward_distance),
+        *forward_distances,
         ('ccw', 90),
     ]
 
-    while True:
-        for move, value in actions:
-            if move == 'move_forward':
-                try:
-                    tello.move_forward(int(value))
-                except TelloException as e:
-                    print(f"TelloException: {e}")
-                    tello.land()
-                    sys.exit(1)
-            elif move == 'rotate_clockwise':
-                try:
-                    response = tello.rotate_clockwise(value)
-                except TelloException as e:
-                    print(f"TelloException: {e}")
-                    tello.land()
-                    sys.exit(1)
-
-            time.sleep(1)
 
 def stop_drone(tello, movements):
     global actions
     actions = ['land']
     return
 
+
+def add_actions(_actions, first=False):
+    global actions
+
+    if first:
+        actions = [*_actions, *actions]
+    else:
+        actions = [*actions, *_actions]
+
+
 actions = list()
 
-async def fly_thread():
+
+def fly_thread(tello: Tello):
     global actions
-    log = util_log('flying baby')
-    tello = Tello()
+    last_no_command = None
+
+    obstacle_avoidance = TelloObstacleAvoidance(tello)
+
     while True:
         try:
+            # Process obstacle avoidance in a separate thread or with lower priority
             if len(actions) == 0:
-                log('no command')
+                if last_no_command is None:
+                    last_no_command = time.time()
+
+                if time.time() - last_no_command > 5:
+                    last_no_command = None
                 time.sleep(0.1)
                 continue
 
             action = actions[0]
             actions = actions[1:]
-            log(f'cmd {action} from {actions}')
 
             if action == 'connect':
                 tello.connect()
@@ -269,14 +315,19 @@ async def fly_thread():
             if action == 'land':
                 tello.land()
 
-            print(type(action))
+            if action == 'streamon':
+                tello.streamon()
+
+            if action == 'motoron':
+                tello.turn_motor_on()
+
             if type(action) is tuple:
                 cmd, val = action
 
                 tello.send_control_command(f'{cmd} {val}')
-                log(f'sending {cmd}')
-
+                obstacle_avoidance.run()
+                time.sleep(2)  # Allow some time for the command to execute
 
         except Exception as e:
-            log('ERROR COK', e)
+            print(f"Exception in fly_thread: {e}")
             time.sleep(0.1)
