@@ -163,6 +163,7 @@ def start_video_thread():
                 
                 if to_detect in CLASS_NAMES.keys():
                     detect_type = to_detect
+                    detect_type = list(map(lambda x: int(x), detect_type.split(',')))
 
             min_threshold = 0.5
                 

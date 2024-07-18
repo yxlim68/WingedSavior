@@ -71,6 +71,17 @@
         height: 50px;
         font-size: 1em;
       }
+
+      .more-options .line {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 12px;
+      }
+      .more-options .line label {
+        margin-bottom: 0;
+      }
     </style>
   </head>
   <body>
@@ -95,7 +106,10 @@
         </div>
       </div>
     </header>
-    <main class="background-image">
+    <main
+      class="background-image"
+      style="box-sizing: border-box; width: 100%; padding: 20px"
+    >
       <br /><br /><br />
       <section class="features container">
         <h2>Create a New Project</h2>
@@ -139,14 +153,14 @@
               required
             />
           </div>
-          <div class="form-group">
+          <div class="form-group" style="align-items: start; margin-top: 20px">
             <span class="icon">
               <i class="ph ph-drone" style="font-size: 2em"></i>
               <!-- Larger icon size -->
             </span>
-            <div id="detection-container">
-              <div class="detection-container">
-                <select id="drone-detection" name="drone-detection" required>
+            <div id="detection-container" style="flex: 1">
+              <!--<div class="detection-container">
+                 <select id="drone-detection" name="drone-detection" required>
                   <optgroup label="Select a Detection Type">
                     <option value="0" selected>Person</option>
                     <option value="15">Cat</option>
@@ -160,8 +174,27 @@
                   title="Add more detection types"
                 >
                   <i class="ph ph-plus-circle" style="font-size: 1.5em"></i>
-                  <!-- Larger icon size -->
                 </button>
+              </div> -->
+              <div class="more-options" style="flex: 1">
+                <div class="line">
+                  <input
+                    type="checkbox"
+                    name="detection"
+                    id="person"
+                    value="0"
+                    checked
+                  />
+                  <label for="person"> Person </label>
+                </div>
+                <div class="line">
+                  <input type="checkbox" name="detection" id="cat" value="15" />
+                  <label for="cat"> Cat </label>
+                </div>
+                <div class="line">
+                  <input type="checkbox" name="detection" id="dog" value="16" />
+                  <label for="dog"> Dog </label>
+                </div>
               </div>
             </div>
           </div>
@@ -208,6 +241,7 @@
         const addDetectionButton = document.getElementById("add-detection");
         const user = getUser();
 
+        /*
         addDetectionButton.addEventListener("click", function () {
           const newDetectionContainer = document.createElement("div");
           newDetectionContainer.className = "detection-container";
@@ -216,8 +250,10 @@
           newDetectionSelect.required = true;
           newDetectionSelect.innerHTML = `
                     <optgroup label="Select a Detection Type">
-                        <option value="0" selected>Person</option>
-                        <option value="15">Cat</option>
+                        <option value="0" disabled>Person</option>
+                        <option value="15" ${
+                          selected.includes(15) ? "disabled" : ""
+                        }>Cat</option>
                         <option value="16">Dog</option>
                     </optgroup>
                 `;
@@ -232,24 +268,32 @@
           newDetectionContainer.appendChild(newDetectionSelect);
           newDetectionContainer.appendChild(removeButton);
           detectionContainer.appendChild(newDetectionContainer);
+          newDetectionSelect.addEventListener('')
         });
+          */
 
         form.addEventListener("submit", async function (e) {
           e.preventDefault();
 
           const name = nameInput.value;
           const coordinate = coordinateInput.value;
-          const detectionInputs = detectionContainer.querySelectorAll(
-            'select[name="drone-detection"]'
-          );
-          const detections = Array.from(detectionInputs).map(
-            (select) => select.value
-          );
-          const projectIcon = document.getElementById("project-icon").value;
+          const detectionInputs =
+            detectionContainer.querySelectorAll('[name="detection"]');
+          const detections = Array.from(detectionInputs)
+            .filter((i) => i.checked)
+            .map((select) => select.value);
+          //const projectIcon = document.getElementById("project-icon").value;
 
           // Check if the coordinate is less than 20
           if (coordinate < 20) {
             alert("The project area must be at least 20 cm.");
+            return;
+          }
+
+          // validate check
+
+          if (detections.length === 0) {
+            alert("Select at least an object to detect");
             return;
           }
 
@@ -264,8 +308,7 @@
               body: JSON.stringify({
                 name,
                 coordinate,
-                detections,
-                icon: projectIcon,
+                detection: detections.join(","),
                 user: user.id,
               }),
             });
