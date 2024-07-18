@@ -272,14 +272,6 @@
       }
     </script>
     <script type="module">
-      document.addEventListener("DOMContentLoaded", function () {
-        const userData = JSON.parse(localStorage.getItem("user"));
-
-        document.getElementById(
-          "username-display"
-        ).textContent = `${userData.firstname} ${userData.lastname}`;
-      });
-
       import { setupNoti } from "./notification.js";
       setupNoti();
 
