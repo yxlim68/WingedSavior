@@ -105,27 +105,6 @@
     </footer>
 
     <script>
-      // Load current profile data into the form fields on settings page
-      window.onload = function () {
-        const name = localStorage.getItem("name");
-        const email = localStorage.getItem("email");
-        const location = localStorage.getItem("location");
-        const profilePic = localStorage.getItem("profilePic");
-
-        if (name) {
-          document.getElementById("name").value = name;
-        }
-        if (email) {
-          document.getElementById("email").value = email;
-        }
-        if (location) {
-          document.getElementById("location").value = location;
-        }
-        if (profilePic) {
-          document.getElementById("profile-pic-preview").src = profilePic;
-        }
-      };
-
       // Handle profile picture preview
       document
         .getElementById("profile-pic")
@@ -151,7 +130,7 @@
         });
     </script>
 
-    <!-- <script type="module">
+    <script type="module">
       import { api } from "./conn.js";
       document.addEventListener("DOMContentLoaded", function () {
         // load user data
@@ -195,6 +174,8 @@
             .then((res) => {
               console.log(res);
               localStorage.setItem("user", JSON.stringify(res));
+              alert("Update successful");
+              window.location.href = "profile.html";
             })
             .catch((err) => {
               alert("Update failed");
@@ -203,16 +184,6 @@
         });
 
       console.log("balls");
-
-      document.addEventListener("DOMContentLoaded", function() {
-  const links = document.querySelectorAll('.bottom-nav ul li a');
-  links.forEach(link => {
-    if (link.href === window.location.href) {
-      link.classList.add('active');
-    }
-  });
-});
-
-    </script> -->
+    </script>
   </body>
 </html>
