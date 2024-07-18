@@ -6,6 +6,11 @@
     <title>Winged Saviors - Profile</title>
     <link href="styles.css" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+      .profile-box i.ph {
+        vertical-align: bottom;
+      }
+    </style>
   </head>
 
   <body>
@@ -106,7 +111,6 @@
       </nav>
     </footer>
 
-    <!--
     <script type="module">
       import { api } from "./conn.js";
 
@@ -175,17 +179,6 @@
       import { setupNoti } from "./notification.js";
       setupNoti();
     </script>
-
-  document.addEventListener("DOMContentLoaded", function() {
-  const links = document.querySelectorAll('.bottom-nav ul li a');
-  links.forEach(link => {
-    if (link.href === window.location.href) {
-      link.classList.add('active');
-    }
-  });
-});
-  
--->
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
