@@ -8,24 +8,26 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
       /* Project Detail Section */
-      .project-detail-section {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        width: 90%;
-        max-width: 800px;
-        height: 75vh;
-        overflow-y: auto;
-        max-height: 90vh;
-        margin: 100px auto 20px;
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: beige;
       }
 
-      .project-detail-section h2 {
+      .project-detail-card {
+        background-color: beige;
+        border-radius: 10px;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        overflow: hidden;
+      }
+
+      .project-detail-card h2 {
         color: #2f3645;
         text-align: center;
         margin-bottom: 20px;
-        font-size: 2em;
       }
 
       .project-info {
@@ -33,24 +35,81 @@
       }
 
       .project-info p {
-        font-size: 24px;
+        font-size: 1.1em;
         margin: 10px 0;
       }
 
       .start-stop-container {
         text-align: center;
+        margin-bottom: 20px;
       }
 
       .start-stop-container img {
         cursor: pointer;
-        width: 250px;
-        border-radius: 100%;
+        width: 150px;
+        border-radius: 50%;
         transition: transform 0.3s ease;
       }
 
       .start-stop-container img.animate {
         transform: scale(1.1);
-        transition: transform 0.3s ease;
+      }
+
+      /* Additional Card Style */
+      .additional-card {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        overflow: hidden;
+      }
+
+      .additional-card h2 {
+        color: #2f3645;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .additional-card .project-info {
+        margin-bottom: 20px;
+      }
+
+      .additional-card .project-info p {
+        font-size: 1.1em;
+        margin: 10px 0;
+      }
+
+      /* Timer Card Style */
+      .timer-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        overflow: hidden;
+        z-index: 1000;
+      }
+
+      .timer-card h2 {
+        color: #2f3645;
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 2em;
+      }
+
+      .timer-card .timer-info {
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .timer-card .timer-info p {
+        font-size: 1.1em;
+        margin: 10px 0;
       }
     </style>
   </head>
@@ -58,9 +117,13 @@
     <header class="fixed-header">
       <div class="header-content">
         <a href="projectList.html" class="back-button">
-          <i class="ph ph-arrow-left"></i
-        ></a>
-        <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img" />
+          <i class="ph ph-arrow-left"></i>
+        </a>
+        <img
+          src="asset/logo-wingedSaviors-whitky.svg"
+          alt="Winged Saviors Logo"
+          class="logo-img"
+        />
         <div class="notification-container">
           <a href="#" class="notification-icon" onclick="togglePopup(event)">
             <i class="ph ph-bell"></i>
@@ -73,38 +136,40 @@
       </div>
     </header>
     <main class="background-image">
-      <section class="container project-detail-section">
+      <div class="project-detail-card">
         <h2>Project Control</h2>
         <div class="project-info">
           <div class="start-stop-container">
             <img src="img/btnOff.png" alt="Start" id="startStopImage" />
             <p id="droneStatus"><strong>Drone Offline</strong></p>
             <br />
-            <p id="timer">00:00:00</p>
-            <!-- Timer display -->
           </div>
-          <p>
-            <strong>Project Name:</strong>
-            <span id="projectName">Project Alpha</span>
-          </p>
-          <p>
-            <strong>Project Area:</strong>
-            <span id="projectCoordinate">128cm</span>
-          </p>
-          <p>
-            <strong>Drone Detection:</strong>
-            <span id="droneDetection">People</span>
-          </p>
-          <p>
-            <strong>Previous Processing Time:</strong>
-            <span id="totalTime">00:00:00</span>
-          </p>
-          <!-- Total Time display -->
+          <!-- Timer Card -->
+          <div class="timer-card">
+            <h2>Timer</h2>
+            <div class="timer-info">
+              <p id="currentTimer">00:00:00</p>
+              <!-- Timer display -->
+            </div>
+          </div>
         </div>
-      </section>
+
+        <!-- Additional Card -->
+        <div class="additional-card">
+          <h2>Additional Information</h2>
+          <div class="project-info">
+            <p><strong>Project Name:</strong> <span>Project Beta</span></p>
+            <p><strong>Project Area:</strong> <span>256cm</span></p>
+            <p><strong>Drone Detection:</strong> <span>Car</span></p>
+            <p>
+              <strong>Previous Processing Time:</strong> <span>01:30:45</span>
+            </p>
+          </div>
+        </div>
+      </div>
     </main>
 
-    <footer>
+    <footer class="footer">
       <nav class="bottom-nav">
         <ul>
           <li>
@@ -130,36 +195,19 @@
     </footer>
 
     <script>
-      let projectId;
-
-      const detectionMap = {
-        "-1": "All",
-        0: "Person",
-        2: "Car",
-        15: "Cat",
-        16: "Dog",
-      };
-
       // Toggle notification popup visibility
       function togglePopup(event) {
         event.preventDefault();
         var popup = document.getElementById("notificationPopup");
         popup.classList.toggle("show");
       }
-    </script>
-    <script type="module">
-      import { setupNoti } from "./notification.js";
-      //setupNoti();
-    </script>
-    <script type="module">
-      import { api } from "./conn.js";
 
+      // Start/Stop functionality
       let isStarted = false;
-      let timerInterval;
-      let startTime;
-      let prevTime;
 
-      document.querySelector("#startStopImage").onclick = toggleStartStop;
+      document
+        .getElementById("startStopImage")
+        .addEventListener("click", toggleStartStop);
 
       function toggleStartStop() {
         const startStopImage = document.getElementById("startStopImage");
@@ -183,148 +231,48 @@
       }
 
       function startDrone() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const projectId = urlParams.get("project");
-        localStorage.setItem("project", projectId);
-
-        // Make an AJAX request to start the drone
-        fetch(api(`/start_drone?project=${projectId}`))
-          .then((response) => {
-            response.text().then(console.log);
-            if (!response.ok) {
-              throw new Error("Failed to start drone");
-            }
-            console.log("Drone started successfully");
-            startTimer(); // Start the timer
-            // Optionally, update UI or perform additional actions upon successful start
-          })
-          .catch((error) => {
-            console.error("Error starting drone:", error);
-            alert("Failed to start the drone");
-          });
+        // Simulated start
+        console.log("Drone started");
+        startTimer();
       }
 
       function stopDrone() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const projectId = urlParams.get("project");
-        const duration = stopTimer(); // Stop the timer and get the duration
-
-        fetch(api(`/stop_drone?project=${projectId}`))
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Failed to stop drone");
-            }
-            console.log("Drone stopped successfully");
-            // Optionally, update UI or perform additional actions upon successful stop
-          })
-          .catch((error) => {
-            console.error("Error stopping drone:", error);
-            alert("Failed to stop the drone");
-          });
+        // Simulated stop
+        console.log("Drone stopped");
+        stopTimer();
       }
 
-      function startTimer() {
-        if (!startTime) {
-          startTime = new Date();
-        }
-        timerInterval = setInterval(() => {
-          const now = new Date();
-          const elapsed = new Date(now - startTime);
-          const elapsed2 = new Date(elapsed.getTime() - prevTime);
+      // Timer functionality
+      let timerInterval;
 
-          const hours = String(elapsed2.getUTCHours()).padStart(2, "0");
-          const minutes = String(elapsed2.getUTCMinutes()).padStart(2, "0");
-          const seconds = String(elapsed2.getUTCSeconds()).padStart(2, "0");
-          console.log(projectId);
-          /**
-          fetch(
-            api(
-              `/update_timer?project=${projectId}&timer=${
-                elapsed.getTime() / 1000
-              }`
-            )
-          )
-            .then((res) => res.json())
-            .then((res) => {
-              console.log(res);
-            })
-            .catch((err) => {
-              console.error(err);
-            });
-          */
-          document.getElementById(
-            "timer"
-          ).textContent = `${hours}:${minutes}:${seconds}`;
+      function startTimer() {
+        let startTime = Date.now();
+        timerInterval = setInterval(() => {
+          let elapsedTime = Date.now() - startTime;
+          displayTimer(elapsedTime);
         }, 1000);
       }
 
       function stopTimer() {
         clearInterval(timerInterval);
-        document.getElementById("timer").textContent = "00:00:00";
-        const endTime = new Date();
-        const duration = (endTime - startTime) / 1000; // Duration in seconds
-        console.log(duration);
-
-        // Format the duration to HH:MM:SS
-        const hours = String(Math.floor(duration / 3600)).padStart(2, "0");
-        const minutes = String(Math.floor((duration % 3600) / 60)).padStart(
-          2,
-          "0"
-        );
-        const seconds = String(Math.floor(duration % 60)).padStart(2, "0");
-        document.getElementById(
-          "totalTime"
-        ).textContent = `${hours}:${minutes}:${seconds}`;
-
-        return duration;
       }
 
-      document.addEventListener("DOMContentLoaded", () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const projectId1 = urlParams.get("project");
-        console.log("123");
-        if (projectId1) {
-          projectId = projectId1;
-          loadProjectDetails(projectId1);
-        }
-      });
+      function displayTimer(milliseconds) {
+        let seconds = Math.floor(milliseconds / 1000);
+        let minutes = Math.floor(seconds / 60);
+        let hours = Math.floor(minutes / 60);
 
-      async function loadProjectDetails(projectId) {
-        try {
-          const res = await fetch(api("/check_project?project=" + projectId));
+        seconds %= 60;
+        minutes %= 60;
+        hours %= 24;
 
-          if (res.status !== 200) {
-            alert("Project not found!");
-            window.location.href = "projectList.html";
-            return;
-          }
+        document.getElementById("currentTimer").innerText = `${formatTime(
+          hours
+        )}:${formatTime(minutes)}:${formatTime(seconds)}`;
+      }
 
-          const data = await res.json();
-          console.log(data);
-
-          startTime = new Date(new Date().getTime() - data.timer * 1000);
-          let duration = data.timer;
-          prevTime = data.timer * 1000;
-
-          // Format the duration to HH:MM:SS
-          const hours = String(Math.floor(duration / 3600)).padStart(2, "0");
-          const minutes = String(Math.floor((duration % 3600) / 60)).padStart(
-            2,
-            "0"
-          );
-          const seconds = String(Math.floor(duration % 60)).padStart(2, "0");
-          document.getElementById(
-            "totalTime"
-          ).textContent = `${hours}:${minutes}:${seconds}`;
-
-          document.querySelector("#projectName").textContent = data.name;
-          document.querySelector("#projectCoordinate").textContent =
-            data.coordinate;
-          document.querySelector("#droneDetection").textContent =
-            detectionMap[data.detect] || "UNKNOWN";
-        } catch (err) {
-          console.error(err);
-        }
+      function formatTime(time) {
+        return time < 10 ? `0${time}` : time;
       }
     </script>
   </body>

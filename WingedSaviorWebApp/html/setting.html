@@ -6,6 +6,13 @@
     <title>Winged Saviors - Settings</title>
     <link href="styles.css" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+      input {
+        display: block;
+        margin-bottom: 12px;
+        margin-top: 4px;
+      }
+    </style>
   </head>
   <body>
     <header class="fixed-header">
@@ -13,7 +20,11 @@
         <a href="profile.html" class="back-button">
           <i class="ph ph-arrow-left"></i
         ></a>
-        <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img" />
+        <img
+          src="asset/logo-wingedSaviors-whitky.svg"
+          alt="Winged Saviors Logo"
+          class="logo-img"
+        />
         <div class="notification-container">
           <a href="#" class="notification-icon" onclick="togglePopup(event)">
             <i class="ph ph-bell"></i>
@@ -61,8 +72,6 @@
           <input type="email" id="email" name="email" required />
           <label for="organization">Organization</label>
           <input type="text" id="organization" name="organization" required />
-          <label for="passsword">Password</label>
-          <input type="text" id="passowrd" name="password" />
           <br /><br />
           <button type="submit" class="button">Update Profile</button
           ><br /><br />
@@ -142,7 +151,7 @@
         });
     </script>
 
-    <script type="module">
+    <!-- <script type="module">
       import { api } from "./conn.js";
       document.addEventListener("DOMContentLoaded", function () {
         // load user data
@@ -194,6 +203,16 @@
         });
 
       console.log("balls");
-    </script>
+
+      document.addEventListener("DOMContentLoaded", function() {
+  const links = document.querySelectorAll('.bottom-nav ul li a');
+  links.forEach(link => {
+    if (link.href === window.location.href) {
+      link.classList.add('active');
+    }
+  });
+});
+
+    </script> -->
   </body>
 </html>

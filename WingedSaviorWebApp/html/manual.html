@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drone Manual - Winged Saviors</title>
+  <link href="styles.css" rel="stylesheet" type="text/css" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    /* Manual-specific styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .manual-content {
+      max-width: 800px;
+      margin: 20px auto;
+      background-color: beige;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    
+    .manual-section {
+      margin-bottom: 30px;
+    }
+    
+    .manual-section h1 {
+      color: #2f3645;
+      font-size: 24px;
+      border-bottom: 2px solid #2f3645;
+      padding-bottom: 10px;
+      padding-top: 50px;
+      margin-top: 0;
+    }
+    
+    .manual-section h2 {
+      color: #2f3645;
+      font-size: 20px;
+      border-bottom: 1px solid #2f3645;
+      padding-bottom: 5px;
+      margin-top: 30px;
+    }
+    
+    .manual-section p {
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+    <header class="fixed-header">
+        <div class="header-content">
+          <a href="home.html" class="back-button">
+            <i class="ph ph-arrow-left"></i
+          ></a>
+          <img src="asset/logo-wingedSaviors-whitky.svg" alt="Winged Saviors Logo" class="logo-img" />
+          <div class="notification-container">
+            <a href="#" class="notification-icon" onclick="togglePopup(event)">
+              <i class="ph ph-bell"></i>
+            </a>
+            <div class="notification-popup" id="notificationPopup">
+              <!-- Notification content goes here -->
+              <p>This is a notification popup!</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+  <main>
+    <div class="manual-content">
+      <div class="manual-section">
+        <h1>Welcome to the Drone Manual</h1>
+        <p>
+          This manual provides instructions and guidelines for using the drone effectively in various scenarios.
+        </p>
+      </div>
+
+      <div class="manual-section">
+        <h2>Getting Started</h2>
+        <p>
+          Before flying the drone, ensure that you have read and understood the user manual provided with your drone. Familiarize yourself with the controls and safety precautions.
+        </p>
+      </div>
+
+      <div class="manual-section">
+        <h2>Basic Operations</h2>
+        <p>
+          - Power on/off: Learn how to safely power the drone on and off.<br />
+          - Takeoff and landing: Understand the procedures for taking off and landing the drone smoothly.<br />
+          - Flight controls: Practice using the joystick or remote control to maneuver the drone in different directions.
+        </p>
+      </div>
+
+      <div class="manual-section">
+        <h2>Advanced Features</h2>
+        <p>
+          Explore advanced features such as waypoint navigation, automated flight modes, and camera controls if applicable to your drone model.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <nav class="bottom-nav">
+      <ul>
+        <li>
+          <a href="home.html">
+            <i class="ph ph-house"></i><br />
+            <span class="nav-name">Home</span>
+          </a>
+        </li>
+        <li>
+          <a href="liveFeed.html">
+            <i class="ph ph-video-camera"></i><br />
+            <span class="nav-name">Live Feed</span>
+          </a>
+        </li>
+        <li>
+          <a href="profile.html">
+            <i class="ph ph-user"></i><br />
+            <span class="nav-name">Profile</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </footer>
+
+  <script>
+    function togglePopup(event) {
+      event.preventDefault();
+      var popup = document.getElementById("notificationPopup");
+      popup.classList.toggle("show");
+    }
+  </script>
+</body>
+</html>

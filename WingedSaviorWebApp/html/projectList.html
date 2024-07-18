@@ -1,191 +1,236 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Project List - Winged Saviors</title>
-    <link href="styles.css" rel="stylesheet" type="text/css" />
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  </head>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Project List - Winged Saviors</title>
+        <link href="styles.css" rel="stylesheet" type="text/css" />
+        <script src="https://unpkg.com/@phosphor-icons/web"></script>
+        <style>    
+            /* Project List Section */
+            .project-list-section {
+                border-radius: 10px;
+                padding: 20px;
+                margin: 0 auto;
+                margin-top: 70px;
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+    
+            .project-list-section h2 {
+                color: #2f3645;
+                text-align: center;
+                margin-bottom: 20px;
+                font-weight: bold;
+            }
+    
+            .project-card-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-around;
+            }
+    
+            .project-card {
+                padding: 20px;
+                margin: 10px;
+                border-radius: 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                width: calc(45% - 20px);
+                min-width: 250px;
+                flex-grow: 1;
+                cursor: pointer;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                background-color: white;
+            }
+    
+            .project-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            }
+    
+            .project-card-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+    
+            .project-card-header h3 {
+                color: #2f3645;
+                margin: 0;
+            }
+    
+            .project-card-header i {
+                font-size: 1.2em;
+                transition: transform 0.3s ease;
+            }
+    
+            .project-card-content {
+                display: none;
+                margin-top: 10px;
+                color: #555;
+            }
+    
+            .project-card.show .project-card-content {
+                display: block;
+            }
+    
+            .project-card.show .project-card-header i {
+                transform: rotate(180deg);
+            }
+    
+            .project-card-content p {
+                margin: 5px 0;
+            }
+    
+            .project-card-buttons {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 15px;
+            }
+    
+            .project-card-buttons button {
+                padding: 10px 20px;
+                background-color: #2f3645;
+                color: #fff;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                width: 45%;
+            }
+    
+            .project-card-buttons button:hover {
+                background-color: #495167;
+            }
+        </style>
+    </head>
+    <body>
+        <header class="fixed-header">
+            <div class="header-content">
+                <a href="home.html" class="back-button">
+                    <i class="ph ph-arrow-left"></i>
+                </a>
+                <img src="asset/logo-wingedSaviors-whitky.svg" alt="Winged Saviors Logo" class="logo-img" />
+                <div class="notification-container">
+                    <a href="#" class="notification-icon" onclick="togglePopup(event)">
+                        <i class="ph ph-bell"></i>
+                    </a>
+                    <div class="notification-popup" id="notificationPopup">
+                        <!-- Notification content goes here -->
+                        <p>This is a notification popup!</p>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-  <style>
-    /* Project List Section */
-    .project-list-section {
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-      width: 80%;
-      height: 70%;
-      text-align: left; /* Align text to the left */
-      margin: 0 auto; /* Center the box horizontally */
-      margin-top: 70px;
-      max-height: 100%;
-      overflow-y: auto;
-    }
+        <main class="background-image">
+            <section class="container project-list-section">
+                <h2>Project List</h2>
+                <div class="project-card-container">
+                    <div class="project-card" onclick="toggleFeature(this)">
+                        <div class="project-card-header">
+                            <h3><i class="ph ph-folder"></i> Example Project</h3>
+                            <i class="ph ph-caret-down"></i>
+                        </div>
+                        <div class="project-card-content">
+                            <p>Description: An example project description.</p>
+                            <p>Project Area: 500 CM</p>
+                            <p>Drone Detection: High Precision</p>
+                            <div class="project-card-buttons">
+                                <button onclick="window.location.href = 'playProject.html?project=1'">Start</button>
+                                <button onclick="viewProject(1)">View</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <br /><br />
+        </main>
 
-    .project-list-section h2 {
-      color: #2f3645;
-      text-align: center;
-      margin-bottom: 20px;
-    }
+        <footer>
+            <nav class="bottom-nav">
+                <ul>
+                    <li>
+                        <a href="home.html">
+                            <i class="ph ph-house"></i><br />
+                            <span class="nav-name">Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="liveFeed.html">
+                            <i class="ph ph-video-camera"></i><br />
+                            <span class="nav-name">Live Feed</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html">
+                            <i class="ph ph-user"></i><br />
+                            <span class="nav-name">Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </footer>
 
-    .table-container {
-      width: auto; /* Allow container to expand based on table content */
-      max-width: 100%; /* Ensure container does not exceed viewport width */
-      overflow-x: auto; /* Enable horizontal scrolling */
-      -webkit-overflow-scrolling: touch; /* Smooth scrolling on touch devices */
-    }
+        <script>
+            function toggleFeature(element) {
+                element.classList.toggle("show");
+            }
 
-    .project-table {
-      width: 100%; /* Full width of its container */
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
+            function viewProject(projectId) {
+                // Redirect to project details page
+                window.location.href = `viewProject.html?project=${projectId}`;
+            }
 
-    .project-table th,
-    .project-table td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
+            function togglePopup(event) {
+                event.preventDefault();
+                var popup = document.getElementById("notificationPopup");
+                popup.classList.toggle("show");
+            }
+        </script>
+        <script type="module">
+            import { api, getUser } from "./conn.js";
+            document.addEventListener("DOMContentLoaded", async function () {
+                try {
+                    const container = document.querySelector(".project-card-container");
 
-    .project-table th {
-      background-color: #f2f2f2;
-    }
+                    const user = getUser();
 
-    .project-table td button {
-      padding: 5px 10px;
-      width: 100%;
-      background-color: #2f3645;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+                    // get project list
+                    const res = await fetch(api("/project_list?user=" + user.id));
+                    const data = await res.json();
 
-    .project-table td button:hover {
-      background-color: #0056b3;
-    }
-  </style>
+                    for (const project of data) {
+                        const projectCard = document.createElement("div");
+                        projectCard.classList.add("project-card");
+                        projectCard.onclick = () => toggleFeature(projectCard);
+                        projectCard.innerHTML = `
+                            <div class="project-card-header">
+                                <h3><i class="ph ph-folder"></i> ${project.name}</h3>
+                                <i class="ph ph-caret-down"></i>
+                            </div>
+                            <div class="project-card-content">
+                                <p>Description: ${project.description}</p>
+                                <p>Project Area: ${project.area} CM</p>
+                                <p>Drone Detection: ${project.detection}</p>
+                                <div class="project-card-buttons">
+                                    <button onclick="window.location.href = 'playProject.html?project=${project.id}'">Start</button>
+                                    <button onclick="viewProject(${project.id})">View</button>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(projectCard);
+                    }
 
-  <body>
-    <header class="fixed-header">
-      <div class="header-content">
-        <a href="home.html" class="back-button">
-          <i class="ph ph-arrow-left"></i
-        ></a>
-        <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img" />
-        <div class="notification-container">
-          <a href="#" class="notification-icon" onclick="togglePopup(event)">
-            <i class="ph ph-bell"></i>
-          </a>
-          <div class="notification-popup" id="notificationPopup">
-            <!-- Notification content goes here -->
-            <p>This is a notification popup!</p>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <main class="background-image">
-      <section class="container project-list-section">
-        <h2>Project List</h2>
-        <table class="project-table">
-          <thead>
-            <tr>
-              <th>Project Name</th>
-              <th>Status</th>
-              <th>Actions</th>
-              <th>Details</th>
-            </tr>
-          </thead>
-          <tbody class="project-list-container"></tbody>
-        </table>
-      </section>
-      <br /><br />
-    </main>
-
-    <footer>
-      <nav class="bottom-nav">
-        <ul>
-          <li>
-            <a href="home.html">
-              <i class="ph ph-house"></i><br />
-              <span class="nav-name">Home</span>
-            </a>
-          </li>
-          <li>
-            <a href="liveFeed.html">
-              <i class="ph ph-video-camera"></i><br />
-              <span class="nav-name">Live Feed</span>
-            </a>
-          </li>
-          <li>
-            <a href="profile.html">
-              <i class="ph ph-user"></i><br />
-              <span class="nav-name">Profile</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </footer>
-
-    <script>
-      function viewProject(projectId) {
-        // Redirect to project details page
-        window.location.href = `viewProject.html?project=${projectId}`;
-      }
-
-      function toggleFeature(element) {
-        const allFeatures = document.querySelectorAll(".feature");
-        allFeatures.forEach((feature) => {
-          if (feature !== element) {
-            feature.classList.remove("show");
-          }
-        });
-        element.classList.toggle("show");
-      }
-
-      // Toggle notification popup visibility
-      function togglePopup(event) {
-        event.preventDefault();
-        var popup = document.getElementById("notificationPopup");
-        popup.classList.toggle("show");
-      }
-    </script>
-    <script type="module">
-      import { api, getUser } from "./conn.js";
-      document.addEventListener("DOMContentLoaded", async function () {
-        try {
-          const container = document.querySelector(".project-list-container");
-
-          const user = getUser();
-
-          // get project list
-          const res = await fetch(api("/project_list?user=" + user.id));
-          const data = await res.json();
-
-          for (const project of data) {
-            const projectRow = document.createElement("tr");
-            projectRow.innerHTML = `
-                    <td>${project.name}</td>
-                    <td style="text-transform: capitalize;">${project.status}</td>
-                    <td><button class="button" onclick="window.location.href = 'playProject.html?project=${project.id}'">Play</button></td>
-                    <td><button class="button" onclick="viewProject(${project.id})">View</button></td>
-                `;
-            container.appendChild(projectRow);
-          }
-
-          console.log(data);
-        } catch (e) {
-          console.error(e);
-        }
-      });
-    </script>
-    <script type="module">
-      import { setupNoti } from "./notification.js";
-      setupNoti();
-    </script>
-  </body>
-</html>
+                    console.log(data);
+                } catch (e) {
+                    console.error(e);
+                }
+            });
+        </script>
+        <script type="module">
+            import { setupNoti } from "./notification.js";
+            setupNoti();
+        </script>
+    </body>
+    </html>

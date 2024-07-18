@@ -6,59 +6,67 @@
     <title>Winged Saviors - Splash Screen</title>
     <link href="styles.css" rel="stylesheet" type="text/css" />
     <style>
-      /* Additional styling for the splash screen */
+      /* Apply background color to the entire body */
+      body {
+        background-color: #2f3645;
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      /* Splash Screen Styles */
       .splash-screen {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        height: 100vh; /* Full height of the viewport */
-        width: 100vw; /* Full width of the viewport */
-        background-color: #2f3645;
-        color: white;
+        height: 100vh;
+        color: rgb(3, 3, 3);
         text-align: center;
-        padding-left: 10px;
-        padding-right: 10px;
-        margin: 0; /* Remove default margin */
-        padding: 0; /* Remove default padding */
-        box-sizing: border-box; /* Ensure padding does not affect element size */
       }
 
-      .splash-screen h1 {
-        font-size: 2rem; /* Set a specific font size */
-        margin-top: 20px; /* Add some spacing between the logo and the welcome message */
-        animation: fadeInOut 5s ease-in-out;
+      .splash-screen img.logo {
+        height: auto;
+        width: 300px;
+        animation: fadeIn 2s ease-in-out;
       }
 
-      .splash-screen img {
-        height: 250px;
-        width: 250px;
-        animation: fadeInOut 5s ease-in-out;
+      .splash-screen img.loading {
+        height: auto;
+        width: 100px; /* Adjust as needed */
+        margin-top: 20px; /* Space between logo and loading image */
+        animation: fadeIn 2s ease-in-out forwards;
       }
 
       @keyframes fadeInOut {
-        0% {
+        0%,
+        100% {
           opacity: 0;
         }
         50% {
           opacity: 1;
         }
-        100% {
+      }
+
+      @keyframes fadeIn {
+        0% {
           opacity: 0;
+        }
+        100% {
+          opacity: 1;
         }
       }
     </style>
   </head>
   <body>
     <div class="splash-screen">
-      <img src="img/logo.png" alt="Logo" />
-      <h1>Welcome to<br />Winged Saviors</h1>
+      <img src="asset/logo-wingedSaviors-whitky.svg" alt="Logo" class="logo" />
+      <img src="img/loading.gif" alt="Loading" class="loading" />
     </div>
     <script>
-      // Redirect to home.html after 5 seconds
+      // Redirect to login.html after 8 seconds
       setTimeout(function () {
         window.location.href = "login.html";
-      }, 5000);
+      }, 8000);
     </script>
   </body>
 </html>

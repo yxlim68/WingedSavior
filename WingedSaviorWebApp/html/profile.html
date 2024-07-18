@@ -14,7 +14,11 @@
         <a href="home.html" class="back-button">
           <i class="ph ph-arrow-left"></i
         ></a>
-        <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img" />
+        <img
+          src="asset/logo-wingedSaviors-whitky.svg"
+          alt="Winged Saviors Logo"
+          class="logo-img"
+        />
         <div class="notification-container">
           <a href="#" class="notification-icon" onclick="togglePopup(event)">
             <i class="ph ph-bell"></i>
@@ -65,12 +69,12 @@
           <br /><br />
           <div class="profile-actions">
             <button class="button" onclick="location.href='setting.html'">
-              Edit Profile</button
-            ><br />
+              Edit Profile
+            </button>
             <button class="button logout-button">Log Out</button>
           </div>
           <div class="feedback-link">
-            <p>Have feedback? <a href="#">Leave feedback</a></p>
+            <!-- <p>Have feedback? <a href="#">Leave feedback</a></p> -->
             <br /><br />
           </div>
         </div>
@@ -102,6 +106,7 @@
       </nav>
     </footer>
 
+    <!--
     <script type="module">
       import { api } from "./conn.js";
 
@@ -169,6 +174,28 @@
     <script type="module">
       import { setupNoti } from "./notification.js";
       setupNoti();
+    </script>
+
+  document.addEventListener("DOMContentLoaded", function() {
+  const links = document.querySelectorAll('.bottom-nav ul li a');
+  links.forEach(link => {
+    if (link.href === window.location.href) {
+      link.classList.add('active');
+    }
+  });
+});
+  
+-->
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const links = document.querySelectorAll(".bottom-nav ul li a");
+        links.forEach((link) => {
+          if (link.href === window.location.href) {
+            link.classList.add("active");
+          }
+        });
+      });
     </script>
   </body>
 </html>

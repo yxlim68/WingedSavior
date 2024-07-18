@@ -7,60 +7,86 @@
     <link href="styles.css" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-      /* Project Detail Section */
-      .project-detail-section {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        width: 90%;
-        max-width: 800px;
-        height: 75vh;
-        overflow-y: auto;
-        max-height: 90vh;
-        margin: 100px auto 20px;
+      /* General styling similar to newProject.html */
+      body {
+        display: block;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        width: 100%;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        margin-top: 100px;
       }
 
-      .project-detail-section h2 {
-        color: #2f3645;
+      .project-details {
+        margin-top: 20px;
         text-align: center;
-        margin-bottom: 20px;
+      }
+
+      .project-details h2 {
+        color: #333;
+        text-align: center; /* Center align the text */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .project-details h2 .edit-icon {
+        margin-left: 10px;
+        cursor: pointer;
+        color: #666;
+      }
+
+      .project-details p {
+        text-align: center; /* Center align paragraphs */
+        margin: 10px 0;
+        line-height: 1.6;
+      }
+
+      .project-details .icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      /* Specific styles for icons */
+      .icon i {
         font-size: 2em;
       }
 
-      .project-info {
-        margin-bottom: 20px;
-      }
-
-      .project-info p {
-        font-size: 24px;
-        margin: 10px 0;
-      }
-
-      .start-stop-container {
-        text-align: center;
-      }
-
-      .start-stop-container img {
+      .icon-button {
+        background: none;
+        border: none;
         cursor: pointer;
-        width: 250px;
-        border-radius: 100%;
-        transition: transform 0.3s ease;
+        font-size: 1.5em;
+        margin-left: 10px;
       }
 
-      .start-stop-container img.animate {
-        transform: scale(1.1);
-        transition: transform 0.3s ease;
+      .icon-button i {
+        font-size: 1em;
       }
     </style>
   </head>
   <body>
+    <!-- Header section -->
     <header class="fixed-header">
       <div class="header-content">
-        <a href="projectList.html" class="back-button">
-          <i class="ph ph-arrow-left"></i
-        ></a>
-        <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img" />
+        <a href="home.html" class="back-button">
+          <i class="ph ph-arrow-left"></i>
+        </a>
+        <img
+          src="asset/logo-wingedSaviors-whitky.svg"
+          alt="Winged Saviors Logo"
+          class="logo-img"
+        />
         <div class="notification-container">
           <a href="#" class="notification-icon" onclick="togglePopup(event)">
             <i class="ph ph-bell"></i>
@@ -73,34 +99,42 @@
       </div>
     </header>
 
-    <main class="background-image">
-      <section class="container project-detail-section">
-        <h2>Project Details</h2>
-        <div class="project-info">
-          <p>
-            <strong>Project Name:</strong>
-            <span id="projectName">Project Alpha</span>
-          </p>
-          <p>
-            <strong>Project Coordinate:</strong>
-            <span id="projectCoordinate">128cm</span>
-          </p>
-          <p>
-            <strong>Drone Detection:</strong>
-            <span id="droneDetection">People</span>
-          </p>
-          <br /><br />
-          <button
-            type="submit"
-            class="button"
-            id="edit-button"
-            onClick="location.href='editProject.html'"
-          >
-            Edit Project
-          </button>
+    <!-- Main content section -->
+    <main>
+      <div class="project-details">
+        <h2>
+          Project Details
+          <i
+            class="ph ph-pencil edit-icon"
+            title="Edit Project Details"
+            onclick="editProjectDetails()"
+          ></i>
+        </h2>
+        <div class="icon">
+          <i class="ph ph-chat"></i>
         </div>
-      </section>
+        <p><strong>Project Name:</strong> <span id="project-name"></span></p>
+        <div class="icon">
+          <i class="ph ph-envelope"></i>
+        </div>
+        <p><strong>Project Description:</strong></p>
+        <p id="project-description"></p>
+        <div class="icon">
+          <i class="ph ph-ruler"></i>
+        </div>
+        <p>
+          <strong>Project Area (cm):</strong>
+          <span id="project-coordinates"></span>
+        </p>
+        <div class="icon">
+          <i class="ph ph-drone"></i>
+        </div>
+        <p><strong>Drone Detection Type(s):</strong></p>
+        <ul id="drone-detections"></ul>
+      </div>
     </main>
+
+    <!-- Footer section -->
     <footer>
       <nav class="bottom-nav">
         <ul>
@@ -126,31 +160,41 @@
       </nav>
     </footer>
 
+    <!-- JavaScript for fetching and displaying project details -->
     <script>
-      let isStarted = false;
+      document.addEventListener("DOMContentLoaded", async function () {
+        try {
+          const urlParams = new URLSearchParams(window.location.search);
+          const projectId = urlParams.get("project");
 
-      const detectionMap = {
-        "-1": "All",
-        0: "Person",
-        2: "Car",
-        15: "Cat",
-        16: "Dog",
-      };
-
-      function toggleStartStop() {
-        const startStopImage = document.getElementById("startStopImage");
-        startStopImage.classList.add("animate");
-        setTimeout(() => {
-          if (isStarted) {
-            startStopImage.src = "img/btnOff.png";
-            isStarted = false;
-          } else {
-            startStopImage.src = "img/btnOn.png";
-            isStarted = true;
+          if (!projectId) {
+            throw new Error("Project ID is missing in the URL");
           }
-          startStopImage.classList.remove("animate");
-        }, 300); // duration matches the CSS animation
-      }
+
+          // Replace with your API endpoint to fetch project details
+          const response = await fetch(
+            `https://your-api-url/projects/${projectId}`
+          );
+          const data = await response.json();
+
+          // Update project details on the page
+          document.getElementById("project-name").textContent = data.name;
+          document.getElementById("project-description").textContent =
+            data.description;
+          document.getElementById("project-coordinates").textContent =
+            data.coordinates;
+
+          const detectionsList = document.getElementById("drone-detections");
+          data.detections.forEach((detection) => {
+            const li = document.createElement("li");
+            li.textContent = detection.name;
+            detectionsList.appendChild(li);
+          });
+        } catch (error) {
+          console.error("Failed to fetch project details:", error);
+          // Display an error message or redirect to an error page if necessary
+        }
+      });
 
       // Toggle notification popup visibility
       function togglePopup(event) {
@@ -158,52 +202,11 @@
         var popup = document.getElementById("notificationPopup");
         popup.classList.toggle("show");
       }
-    </script>
-    <script type="module">
-      import { api } from "./conn.js";
-      document.addEventListener("DOMContentLoaded", () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const projectId = urlParams.get("project");
-        console.log("123");
-        if (projectId) {
-          loadProjectDetails(projectId);
-        }
-      });
 
-      async function loadProjectDetails(projectId) {
-        try {
-          const res = await fetch(api("/check_project?project=" + projectId));
-
-          if (res.status !== 200) {
-            alert("Project not found!");
-            window.location.href = "projectList.html";
-            return;
-          }
-
-          const data = await res.json();
-          console.log(data);
-
-          document.querySelector("#projectName").textContent = data.name;
-          document.querySelector("#projectCoordinate").textContent =
-            data.coordinate;
-
-          const detectType = detectionMap[data.detect];
-          if (detectType) {
-            document.querySelector("#droneDetection").textContent = detectType;
-          } else {
-            document.querySelector("#droneDetection").textContent = "UNKNOWN";
-          }
-
-          document.querySelector("#edit-button").onclick = () =>
-            (window.location.href = "editProject.html?project=" + projectId);
-        } catch (err) {
-          console.error(err);
-        }
+      // Function to handle editing project details
+      function editProjectDetails() {
+        window.location.href = "editProject.html";
       }
-    </script>
-    <script type="module">
-      import { setupNoti } from "./notification.js";
-      setupNoti();
     </script>
   </body>
 </html>
