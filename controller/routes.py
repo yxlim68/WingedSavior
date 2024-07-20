@@ -71,14 +71,21 @@ def login():
         
         if not res:
             return {
-                "message": "Failed"
+                "message": "Invalid username or password"
             }, 400
         
+
+        # check status
+        if res["status"] == 'pending':
+            return {
+                "message": "Account has not been approved yet"
+            }, 400
+
         res['profile_image'] =  base64.b64encode(res['profile_image']).decode('utf-8') if res['profile_image'] is not None else ""
         
         
         return {
-            "message": "Success",
+            "message": "Login Success",
             "user": res
         }, 200
         
@@ -87,7 +94,7 @@ def login():
         log('[login] Error occured')
         print(e) 
         return {
-            "message": "Error",
+            "message": str(e),
             "error": str(e)
         }, 400
 
@@ -329,7 +336,7 @@ def update_user():
     return res, 200
 
 def format_user(res):
-    res['profile_image'] = base64.b64encode(res['profile_image']).decode('utf-8')
+    res['profile_image'] = base64.b64encode(res['profile_image']).decode('utf-8') if res['profile_image'] is not None else None
     return res 
 
 @routes_bp.route('/update_project', methods=['POST'])
@@ -430,3 +437,49 @@ def update_timer():
         log(e)
         return {"error": str(e)}, 500
     
+
+@routes_bp.route("/users")
+def get_users():
+    try:
+        _,cur = db()
+        cur.execute("SELECT * FROM users")
+        res = cur.fetchall()
+
+        res = list(map(format_user, res))
+
+        return res, 200
+    except Exception as e:
+        print("error at get users")
+        print(e)
+        return {
+            "message": "Failed to get users"
+        }, 500
+
+@routes_bp.route("/approve_user", methods=["POST"])
+def approve_user():
+    log = util_log("approve_user")
+    if request.method != "POST":
+        return {
+            "message": "Invalid reqeust"
+        }, 405
+    user_id = request.args.get("user")
+    
+    if not user_id:
+        return {
+            "message": "Invalid request"
+        }, 400
+    
+    try:
+        _,cur = db()
+        query = "UPDATE users SET status = 'approved' WHERE id = %s"
+        cur.execute(query, (user_id,))
+        cur.execute("commit")
+        return {
+            "message": "Approved success"
+        }, 200
+    
+    except Exception as e:
+        log(e)
+        return {
+            "message": "Failed to approve user"
+        }, 500

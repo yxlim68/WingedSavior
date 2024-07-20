@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - Winged Saviors</title>
-    <link href="styles.css" rel="stylesheet" type="text/css" />
-    <style>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>Login - Winged Saviors</title>
+  <link
+    href="styles.css"
+    rel="stylesheet"
+    type="text/css"
+  />
+  <style>
     .login-container {
       background-color: #ffffff;
       border-top-left-radius: 30px;
@@ -15,7 +23,8 @@
       width: 100%;
       text-align: center;
       position: absolute;
-      bottom: 0; /* Adjust bottom distance */
+      bottom: 0;
+      /* Adjust bottom distance */
       left: 50%;
       transform: translateX(-50%);
       text-align: left;
@@ -28,185 +37,203 @@
       flex-direction: column;
       min-height: 100vh;
       background-image: url('img/login-image.png');
-      background-size: 100%; /* Adjust as needed, e.g., 50% width */
-      background-position: center top; /* Adjust positioning as needed */
-      background-repeat: no-repeat; /* Prevents the image from repeating */
-      height: 100vh; /* Ensures the background covers the entire viewport */
-      margin: 0; /* Removes default margin */
-      padding: 0; /* Removes default padding */
-      font-family: Arial, sans-serif; /* Optional: Sets a font for the text */;
-}
+      background-size: 100%;
+      /* Adjust as needed, e.g., 50% width */
+      background-position: center top;
+      /* Adjust positioning as needed */
+      background-repeat: no-repeat;
+      /* Prevents the image from repeating */
+      height: 100vh;
+      /* Ensures the background covers the entire viewport */
+      margin: 0;
+      /* Removes default margin */
+      padding: 0;
+      /* Removes default padding */
+      font-family: Arial, sans-serif;
+      /* Optional: Sets a font for the text */
+      ;
+    }
 
-img.logo {
-  display: block;
-  margin: 65px auto 0 auto; /* top, right, bottom, left */
-  width: auto;
-}
+    img.logo {
+      display: block;
+      margin: 65px auto 0 auto;
+      /* top, right, bottom, left */
+      width: auto;
+    }
 
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
 
-}
+    }
 
-main {
-  flex: 1;
-  overflow-y: auto;
-}
+    main {
+      flex: 1;
+      overflow-y: auto;
+    }
+  </style>
 
-</style>
-  <body>
-        <img
-          src="asset/logo-wingedSaviors-whitky.svg"
-          alt="Winged Saviors Logo"
-          class="logo"
-          height="100px"
-          width="auto"
-        />
-    <main class="background-image">
-      <div class="register-container">
-        <div class="register-box">
-          <h2>Register</h2>
-          <br />
-          <form id="registerForm">
-            <label for="first-name">First Name</label>
-            <input
-              type="text"
-              id="first-name"
-              name="first-name"
-              placeholder="E.g. Abu Bakar"
-              required
-            />
-            <label for="last-name">Last Name</label>
-            <input
-              type="text"
-              id="last-name"
-              name="last-name"
-              placeholder="E.g. Adam"
-              required
-            />
-            <label for="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              placeholder="E.g. AbuBakar12"
-              required
-            />
-            <label for="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="E.g. Ambakudam12@sample.com"
-              required
-            />
-            <label for="organization">Organization</label>
-            <input
-              type="organization"
-              id="organization"
-              name="organization"
-              placeholder="Police Rescue Team"
-              required
-            />
-            <label for="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="E.g ABUbakar123456@"
-              required
-            />
-            <label for="confirm-password">Confirm Password</label>
-            <input
-              type="password"
-              id="confirm-password"
-              name="confirm-password"
-              placeholder="Re-type password"
-              required
-            />
-            <button type="submit" class="button">Register</button>
-          </form>
-          <div class="login-link">
-            <p>Already have an account? <a href="login.html">Login here</a></p>
-          </div>
+<body>
+  <img
+    src="asset/logo-wingedSaviors-whitky.svg"
+    alt="Winged Saviors Logo"
+    class="logo"
+    height="100px"
+    width="auto"
+  />
+  <main class="background-image">
+    <div class="register-container">
+      <div class="register-box">
+        <h2>Register</h2>
+        <br />
+        <form id="registerForm">
+          <label for="first-name">First Name</label>
+          <input
+            type="text"
+            id="first-name"
+            name="first-name"
+            placeholder="E.g. Abu Bakar"
+            required
+          />
+          <label for="last-name">Last Name</label>
+          <input
+            type="text"
+            id="last-name"
+            name="last-name"
+            placeholder="E.g. Adam"
+            required
+          />
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="E.g. AbuBakar12"
+            required
+          />
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="E.g. Ambakudam12@sample.com"
+            required
+          />
+          <label for="organization">Organization</label>
+          <input
+            type="organization"
+            id="organization"
+            name="organization"
+            placeholder="Police Rescue Team"
+            required
+          />
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="E.g ABUbakar123456@"
+            required
+          />
+          <label for="confirm-password">Confirm Password</label>
+          <input
+            type="password"
+            id="confirm-password"
+            name="confirm-password"
+            placeholder="Re-type password"
+            required
+          />
+          <button
+            type="submit"
+            class="button"
+          >Register</button>
+        </form>
+        <div class="login-link">
+          <p>Already have an account? <a href="login.html">Login here</a></p>
         </div>
       </div>
-    </main>
-    <script type="module">
-      import { api } from "./conn.js";
-      document
-        .getElementById("registerForm")
-        .addEventListener("submit", registerUser);
+    </div>
+  </main>
+  <script type="module">
+    import { api } from "./conn.js";
+    document
+      .getElementById( "registerForm" )
+      .addEventListener( "submit", registerUser );
 
-      async function registerUser(e) {
-        e.preventDefault();
+    async function registerUser( e )
+    {
+      e.preventDefault();
 
-        // Perform form validation
-        const password = document.getElementById("password").value;
-        const confirmPassword =
-          document.getElementById("confirm-password").value;
+      // Perform form validation
+      const password = document.getElementById( "password" ).value;
+      const confirmPassword =
+        document.getElementById( "confirm-password" ).value;
 
-        if (password !== confirmPassword) {
-          alert("Passwords do not match.");
-          return false;
-        }
-
-        // Register user
-        const firstname = document.getElementById("first-name").value;
-        const lastname = document.getElementById("last-name").value;
-        const username = document.getElementById("username").value;
-        const email = document.getElementById("email").value;
-        const organization = document.getElementById("organization").value;
-
-        const userData = {
-          firstname,
-          lastname,
-          username,
-          email,
-          password,
-          organization,
-        };
-
-        try {
-          const res = await fetch(api("/register"), {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(userData),
-          });
-
-          if (res.status !== 200) {
-            throw new Error("Failed to create user" + (await res.text()));
-          }
-
-          // Store user data
-          const json = await res.json();
-          const userId = json.user_id;
-
-          // Save user session
-          localStorage.setItem(
-            "user",
-            JSON.stringify({
-              ...userData,
-              id: userId,
-              profile_image: "",
-            })
-          );
-
-          console.log(localStorage.getItem("user"));
-
-          console.log("Register success");
-          alert("Register successful");
-          window.location.href = "profile.html";
-        } catch (e) {
-          console.error(e);
-        }
-
-        return false; // Prevent form from submitting via default behavior
+      if ( password !== confirmPassword )
+      {
+        alert( "Passwords do not match." );
+        return false;
       }
-    </script>
-  </body>
+
+      // Register user
+      const firstname = document.getElementById( "first-name" ).value;
+      const lastname = document.getElementById( "last-name" ).value;
+      const username = document.getElementById( "username" ).value;
+      const email = document.getElementById( "email" ).value;
+      const organization = document.getElementById( "organization" ).value;
+
+      const userData = {
+        firstname,
+        lastname,
+        username,
+        email,
+        password,
+        organization,
+      };
+
+      try
+      {
+        const res = await fetch( api( "/register" ), {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify( userData ),
+        } );
+
+        if ( res.status !== 200 )
+        {
+          throw new Error( "Failed to create user" + ( await res.text() ) );
+        }
+
+        // Store user data
+        const json = await res.json();
+        const userId = json.user_id;
+
+        // Save user session
+        // localStorage.setItem(
+        //   "user",
+        //   JSON.stringify( {
+        //     ...userData,
+        //     id: userId,
+        //     profile_image: "",
+        //   } )
+        // );
+
+        console.log( localStorage.getItem( "user" ) );
+
+        console.log( "Register success" );
+        alert( "Register successful, Please wait for account approval" );
+        window.location.href = "login.html";
+      } catch ( e )
+      {
+        console.error( e );
+      }
+
+      return false; // Prevent form from submitting via default behavior
+    }
+  </script>
+</body>
+
 </html>

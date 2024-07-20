@@ -1,27 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    />
     <title>Register Approvals - Winged Saviors</title>
-    <link href="styles.css" rel="stylesheet" type="text/css">
+    <link
+        href="styles.css"
+        rel="stylesheet"
+        type="text/css"
+    />
     <style>
         /* Custom styles */
         body {
             font-family: Arial, sans-serif;
-            margin-top: 100px; /* Added margin for body */
-            padding: 0; /* Reset default padding */
+            margin-top: 100px;
+            /* Added margin for body */
+            padding: 0;
+            /* Reset default padding */
             background-color: #f2f2f2;
         }
 
         h2 {
-            margin-top: 20px; /* Added margin-top to h2 */
+            margin-top: 20px;
+            /* Added margin-top to h2 */
         }
 
         .container {
             width: 330px;
             padding: 20px;
-            margin: 20px auto; /* Added margin to center the container */
+            margin: 20px auto;
+            /* Added margin to center the container */
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -49,7 +61,8 @@
             margin-top: 10px;
         }
 
-        .approve-button, .reject-button {
+        .approve-button,
+        .reject-button {
             padding: 8px 16px;
             margin-right: 10px;
             cursor: pointer;
@@ -68,126 +81,156 @@
         }
     </style>
 </head>
+
 <body>
     <header class="fixed-header">
         <div class="header-content">
-            <a href="home.html" class="back-button">
+            <a
+                href="home.html"
+                class="back-button"
+            >
                 <i class="ph ph-arrow-left"></i>
             </a>
-            <img src="asset/logo-wingedSaviors-whitky.svg" alt="Winged Saviors Logo" class="logo-img" />
+            <img
+                src="asset/logo-wingedSaviors-whitky.svg"
+                alt="Winged Saviors Logo"
+                class="logo-img"
+            />
             <div class="notification-container">
-                <a href="#" class="notification-icon" onclick="togglePopup(event)">
+                <a
+                    href="#"
+                    class="notification-icon"
+                    onclick="togglePopup(event)"
+                >
                     <i class="ph ph-bell"></i>
                 </a>
-                <div class="notification-popup" id="notificationPopup">
+                <div
+                    class="notification-popup"
+                    id="notificationPopup"
+                >
                     <p>This is a notification popup!</p>
                 </div>
             </div>
         </div>
     </header>
-  
+
     <main>
+        <button
+            style="background-color: red; color: white; display: block; margin-left: auto; margin-right: 20px; padding: 8px 12px; border: none; border-radius: 6px;font-size: 16px;"
+            onclick="(() => {
+                localStorage.removeItem('user')
+                alert('Logout successful')
+                window.location.href = 'login.html'
+            })(this,event)"
+        >Logout</button>
         <div class="container">
             <h2>Register Approval</h2>
-            <div class="user-list" id="userList">
-                <!-- User entries will be dynamically added here -->
+            <div
+                class="empty-list"
+                style="text-align: center; margin: 20px 0"
+            >No pending user</div>
+            <div
+                class="user-list"
+                id="userList"
+            >
+
             </div>
         </div>
     </main>
 
-    <!-- JavaScript for fetching and managing registrations -->
-    <script>
-        document.addEventListener("DOMContentLoaded", async function() {
-            try {
-                const response = await fetch("https://your-api-url/pending-registrations");
-                const data = await response.json();
+    <script type="module">
+        import { api } from "./conn.js";
+        document.addEventListener( "DOMContentLoaded", async function ()
+        {
+            fetchUser();
+        } );
 
-                const userList = document.getElementById("userList");
+        async function fetchUser()
+        {
+            const userList = document.querySelector( "#userList" );
+            const emptyList = document.querySelector( '.empty-list' );
 
-                data.forEach(user => {
-                    const listItem = document.createElement("li");
-                    listItem.classList.add("user-item");
+            try
+            {
+                const res = await fetch( api( "/users" ) );
 
-                    const userDetails = document.createElement("div");
-                    userDetails.classList.add("user-details");
-
-                    const userInfo = document.createElement("div");
-                    userInfo.classList.add("user-info");
-                    userInfo.innerHTML = `
-                        <p><strong>Name:</strong> ${user.firstname} ${user.lastname}</p>
-                        <p><strong>Username:</strong> ${user.username}</p>
-                        <p><strong>Email:</strong> ${user.email}</p>
-                        <p><strong>Organization:</strong> ${user.organization}</p>
-                    `;
-
-                    userDetails.appendChild(userInfo);
-
-                    const userActions = document.createElement("div");
-                    userActions.classList.add("user-actions");
-
-                    const approveButton = document.createElement("button");
-                    approveButton.classList.add("approve-button");
-                    approveButton.textContent = "Approve";
-                    approveButton.addEventListener("click", () => approveUser(user.id));
-
-                    const rejectButton = document.createElement("button");
-                    rejectButton.classList.add("reject-button");
-                    rejectButton.textContent = "Reject";
-                    rejectButton.addEventListener("click", () => rejectUser(user.id));
-
-                    userActions.appendChild(approveButton);
-                    userActions.appendChild(rejectButton);
-
-                    userDetails.appendChild(userActions);
-
-                    listItem.appendChild(userDetails);
-                    userList.appendChild(listItem);
-                });
-
-            } catch (error) {
-                console.error("Failed to fetch pending registrations:", error);
-            }
-        });
-
-        async function approveUser(userId) {
-            try {
-                const response = await fetch(`https://your-api-url/approve-registration/${userId}`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                    // Optionally include body data if needed
-                });
-
-                if (!response.ok) {
-                    throw new Error("Failed to approve user");
+                if ( res.status !== 200 )
+                {
+                    throw new Error( await res.json() );
                 }
 
-                alert("User approved successfully");
-                // Optionally, remove the user entry from UI upon approval
-            } catch (error) {
-                console.error("Error approving user:", error);
-                alert("Failed to approve user");
+                let data = await res.json();
+                data = data.filter( i => i.status === 'pending' );
+                console.log( data );
+
+                if ( data.length === 0 )
+                {
+                    emptyList.style.display = 'block';
+                    userList.innerHTML = '';
+
+                }
+                else
+                {
+                    emptyList.style.display = 'none';
+                }
+
+
+
+                for ( const d of data )
+                {
+                    const userItem = document.createElement( "li" );
+                    userItem.classList.add( "user-item" );
+                    userItem.innerHTML = `
+                        <div class="user-details">
+                            <div class="user-info">
+                                <p><strong>Name: </strong> ${d.firstname} ${d.lastname}</p>
+                                <p><strong>Username: </strong> ${d.username}</p>
+                                <p><strong>Email: </strong> ${d.email}</p>
+                                <p><strong>Organization: </strong> ${d.organization}</p>
+                                <div class="user-actions">
+                                    <button class="approve-button">Approve</button>
+                                    <!-- <button class="reject-button">Reject</button> -->
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    const approveButton = userItem.querySelector( ".approve-button" );
+                    approveButton.addEventListener( "click", () => approveUser( d.id ) );
+
+                    userList.appendChild( userItem );
+                }
+            } catch ( e )
+            {
+                console.error( e );
+                alert( e );
             }
         }
 
-        async function rejectUser(userId) {
-            try {
-                const response = await fetch(`https://your-api-url/reject-registration/${userId}`, {
-                    method: "DELETE"
-                });
+        async function approveUser( userId )
+        {
+            try
+            {
+                const res = await fetch( api( "/approve_user?user=" + userId ), {
+                    method: "POST",
+                } );
 
-                if (!response.ok) {
-                    throw new Error("Failed to reject user");
+                if ( res.status !== 200 )
+                {
+                    throw new Error( await res.json() );
                 }
 
-                alert("User rejected successfully");
-                // Optionally, remove the user entry from UI upon rejection
-            } catch (error) {
-                console.error("Error rejecting user:", error);
-                alert("Failed to reject user");
+                const data = await res.json();
+                alert( 'User approved' );
+                fetchUser();
+            }
+            catch ( e )
+            {
+                console.error( e );
+                alert( "Failed to approve user" );
             }
         }
     </script>
 </body>
+
 </html>
