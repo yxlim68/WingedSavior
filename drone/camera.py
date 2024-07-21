@@ -149,75 +149,6 @@ def save_to_database(confidence, image_bytes):
     except connector.Error as err:
         print(f"Error: {err}")
 
-
-class TelloObstacleAvoidance:
-    def __init__(self, tello, distance_threshold=70, movement_speed=20):
-        self.tello = tello
-        self.distance_threshold = distance_threshold
-        self.movement_speed = movement_speed
-        self.cooldown_time = 25  # Cooldown period in seconds
-        self.last_avoidance_time = 0
-
-    def get_frame(self):
-        frame = self.tello.get_frame_read().frame
-        return cv2.resize(frame, (640, 480))
-
-    def process_frame(self, frame):
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-        edges = cv2.Canny(blurred, 50, 150)
-        return edges
-
-    def detect_obstacles(self, edges):
-        contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        return contours
-
-    def avoid_obstacles(self, obstacles, frame):
-        global actions
-        current_time = time.time()
-        if current_time - self.last_avoidance_time < self.cooldown_time:
-            return
-
-        for obstacle in obstacles:
-            x, y, w, h = cv2.boundingRect(obstacle)
-            distance = self.distance_threshold * (640 - w) / 640
-
-            center_x = x + w // 2
-            center_y = y + h // 2
-
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            cv2.putText(frame, f"{distance:.2f} cm", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-            if w > self.distance_threshold or h > self.distance_threshold:
-                try:
-                    if center_x < 100:
-                        actions = [('right', self.movement_speed), *actions]
-                    elif center_x > 540:
-                        actions = [('left', self.movement_speed), *actions]
-                    if center_y < 100:
-                        actions = [('down', self.movement_speed), *actions]
-                    elif center_y > 380:
-                        actions = [('up', self.movement_speed), *actions]
-                    self.last_avoidance_time = current_time
-                except TelloException as e:
-                    print(f"Error moving drone: {e}")
-
-    def run(self):
-        frame = self.get_frame()
-        edges = self.process_frame(frame)
-        obstacles = self.detect_obstacles(edges)
-        self.avoid_obstacles(obstacles, frame)
-
-        cv2.imshow("Frame", frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            self.tello.end()
-            cv2.destroyAllWindows()
-            return False  # To stop the loop
-
-        return True  # To continue the loop
-
-
-
 def create_distance_chunks(distance):
     SIZE = 40  # maximum 20 size
 
@@ -289,12 +220,12 @@ def fly_thread(tello: Tello):
     global actions
     last_no_command = None
 
-    obstacle_avoidance = TelloObstacleAvoidance(tello)
-
+    initial_actions = actions.copy()  # Save the initial set of actions
     while True:
         try:
             # Process obstacle avoidance in a separate thread or with lower priority
             if len(actions) == 0:
+                actions = initial_actions.copy()
                 if last_no_command is None:
                     last_no_command = time.time()
 
@@ -325,7 +256,6 @@ def fly_thread(tello: Tello):
                 cmd, val = action
 
                 tello.send_control_command(f'{cmd} {val}')
-                obstacle_avoidance.run()
                 time.sleep(2)  # Allow some time for the command to execute
 
         except Exception as e:
