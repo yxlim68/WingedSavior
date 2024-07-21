@@ -1,279 +1,445 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Play Project - Winged Saviors</title>
-    <link href="styles.css" rel="stylesheet" type="text/css" />
-    <script src="phosphor.js" type="module"></script>
-    <style>
-      /* Project Detail Section */
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: beige;
-      }
 
-      .project-detail-card {
-        background-color: beige;
-        border-radius: 10px;
-        max-width: 800px;
-        margin: 50px auto;
-        padding: 20px;
-        overflow: hidden;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>Play Project - Winged Saviors</title>
+  <link
+    href="styles.css"
+    rel="stylesheet"
+    type="text/css"
+  />
+  <script
+    src="phosphor.js"
+    type="module"
+  ></script>
+  <style>
+    /* Project Detail Section */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: beige;
+    }
 
-      .project-detail-card h2 {
-        color: #2f3645;
-        text-align: center;
-        margin-bottom: 20px;
-      }
+    .project-detail-card {
+      background-color: beige;
+      border-radius: 10px;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      overflow: hidden;
+    }
 
-      .project-info {
-        margin-bottom: 20px;
-      }
+    .project-detail-card h2 {
+      color: #2f3645;
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-      .project-info p {
-        font-size: 1.1em;
-        margin: 10px 0;
-      }
+    .project-info {
+      margin-bottom: 20px;
+    }
 
-      .start-stop-container {
-        text-align: center;
-        margin-bottom: 20px;
-      }
+    .project-info p {
+      font-size: 1.1em;
+      margin: 10px 0;
+    }
 
-      .start-stop-container img {
-        cursor: pointer;
-        width: 150px;
-        border-radius: 50%;
-        transition: transform 0.3s ease;
-      }
+    .start-stop-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-      .start-stop-container img.animate {
-        transform: scale(1.1);
-      }
+    .start-stop-container img {
+      cursor: pointer;
+      width: 150px;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
 
-      /* Additional Card Style */
-      .additional-card {
-        background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        width: 90%;
-        max-width: 800px;
-        margin: 20px auto;
-        padding: 20px;
-        overflow: hidden;
-      }
+    .start-stop-container img.animate {
+      transform: scale(1.1);
+    }
 
-      .additional-card h2 {
-        color: #2f3645;
-        text-align: center;
-        margin-bottom: 20px;
-      }
+    /* Additional Card Style */
+    .additional-card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      overflow: hidden;
+    }
 
-      .additional-card .project-info {
-        margin-bottom: 20px;
-      }
+    .additional-card h2 {
+      color: #2f3645;
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-      .additional-card .project-info p {
-        font-size: 1.1em;
-        margin: 10px 0;
-      }
+    .additional-card .project-info {
+      margin-bottom: 20px;
+    }
 
-      /* Timer Card Style */
-      .timer-card {
-        background-color: #ffffff;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        width: 90%;
-        max-width: 800px;
-        margin: 20px auto;
-        padding: 20px;
-        overflow: hidden;
-        z-index: 1000;
-      }
+    .additional-card .project-info p {
+      font-size: 1.1em;
+      margin: 10px 0;
+    }
 
-      .timer-card h2 {
-        color: #2f3645;
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 2em;
-      }
+    /* Timer Card Style */
+    .timer-card {
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      overflow: hidden;
+      z-index: 1000;
+    }
 
-      .timer-card .timer-info {
-        margin-bottom: 20px;
-        text-align: center;
-      }
+    .timer-card h2 {
+      color: #2f3645;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2em;
+    }
 
-      .timer-card .timer-info p {
-        font-size: 1.1em;
-        margin: 10px 0;
-      }
-    </style>
-  </head>
-  <body>
-    <header class="fixed-header">
-      <div class="header-content">
-        <a href="projectList.html" class="back-button">
-          <i class="ph ph-arrow-left"></i>
+    .timer-card .timer-info {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .timer-card .timer-info p {
+      font-size: 1.1em;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="fixed-header">
+    <div class="header-content">
+      <a
+        href="projectList.html"
+        class="back-button"
+      >
+        <i class="ph ph-arrow-left"></i>
+      </a>
+      <img
+        src="asset/logo-wingedSaviors-whitky.svg"
+        alt="Winged Saviors Logo"
+        class="logo-img"
+      />
+      <div class="notification-container">
+        <a
+          href="#"
+          class="notification-icon"
+          onclick="togglePopup(event)"
+        >
+          <i class="ph ph-bell"></i>
         </a>
-        <img
-          src="asset/logo-wingedSaviors-whitky.svg"
-          alt="Winged Saviors Logo"
-          class="logo-img"
-        />
-        <div class="notification-container">
-          <a href="#" class="notification-icon" onclick="togglePopup(event)">
-            <i class="ph ph-bell"></i>
-          </a>
-          <div class="notification-popup" id="notificationPopup">
-            <!-- Notification content goes here -->
-            <p>This is a notification popup!</p>
+        <div
+          class="notification-popup"
+          id="notificationPopup"
+        >
+          <!-- Notification content goes here -->
+          <p>This is a notification popup!</p>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="background-image">
+    <div class="project-detail-card">
+      <h2>Project Control</h2>
+      <div class="project-info">
+        <div class="start-stop-container">
+          <img
+            src="img/btnOff.png"
+            alt="Start"
+            id="startStopImage"
+          />
+          <p id="droneStatus"><strong>Drone Offline</strong></p>
+          <br />
+        </div>
+        <!-- Timer Card -->
+        <div class="timer-card">
+          <h2>Timer</h2>
+          <div class="timer-info">
+            <p id="currentTimer">00:00:00</p>
+            <!-- Timer display -->
           </div>
         </div>
       </div>
-    </header>
-    <main class="background-image">
-      <div class="project-detail-card">
-        <h2>Project Control</h2>
+
+      <!-- Additional Card -->
+      <div class="additional-card">
+        <h2>Additional Information</h2>
         <div class="project-info">
-          <div class="start-stop-container">
-            <img src="img/btnOff.png" alt="Start" id="startStopImage" />
-            <p id="droneStatus"><strong>Drone Offline</strong></p>
-            <br />
-          </div>
-          <!-- Timer Card -->
-          <div class="timer-card">
-            <h2>Timer</h2>
-            <div class="timer-info">
-              <p id="currentTimer">00:00:00</p>
-              <!-- Timer display -->
-            </div>
-          </div>
-        </div>
-
-        <!-- Additional Card -->
-        <div class="additional-card">
-          <h2>Additional Information</h2>
-          <div class="project-info">
-            <p><strong>Project Name:</strong> <span>Project Beta</span></p>
-            <p><strong>Project Area:</strong> <span>256cm</span></p>
-            <p><strong>Drone Detection:</strong> <span>Car</span></p>
-            <p>
-              <strong>Previous Processing Time:</strong> <span>01:30:45</span>
-            </p>
-          </div>
+          <p><strong>Project Name:</strong> <span id="projectName">--</span></p>
+          <p><strong>Project Area:</strong> <span id="projectCoordinate">0cm</span></p>
+          <p><strong>Drone Detection:</strong> <span id="droneDetection">Unknown</span></p>
+          <p>
+            <strong>Previous Processing Time:</strong> <span id="totalTime">00:00:00</span>
+          </p>
         </div>
       </div>
-    </main>
+    </div>
+  </main>
 
-    <footer class="footer">
-      <nav class="bottom-nav">
-        <ul>
-          <li>
-            <a href="home.html">
-              <i class="ph ph-house"></i><br />
-              <span class="nav-name">Home</span>
-            </a>
-          </li>
-          <li>
-            <a href="liveFeed.html">
-              <i class="ph ph-video-camera"></i><br />
-              <span class="nav-name">Live Feed</span>
-            </a>
-          </li>
-          <li>
-            <a href="profile.html">
-              <i class="ph ph-user"></i><br />
-              <span class="nav-name">Profile</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </footer>
+  <footer class="footer">
+    <nav class="bottom-nav">
+      <ul>
+        <li>
+          <a href="home.html">
+            <i class="ph ph-house"></i><br />
+            <span class="nav-name">Home</span>
+          </a>
+        </li>
+        <li>
+          <a href="liveFeed.html">
+            <i class="ph ph-video-camera"></i><br />
+            <span class="nav-name">Live Feed</span>
+          </a>
+        </li>
+        <li>
+          <a href="profile.html">
+            <i class="ph ph-user"></i><br />
+            <span class="nav-name">Profile</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </footer>
 
-    <script>
-      // Toggle notification popup visibility
-      function togglePopup(event) {
-        event.preventDefault();
-        var popup = document.getElementById("notificationPopup");
-        popup.classList.toggle("show");
-      }
+  <script>
+    let projectId;
 
-      // Start/Stop functionality
-      let isStarted = false;
+    const detectionMap = {
+      0: "Person",
+      2: "Car",
+      15: "Cat",
+      16: "Dog",
+    };
 
-      document
-        .getElementById("startStopImage")
-        .addEventListener("click", toggleStartStop);
+    // Toggle notification popup visibility
+    function togglePopup( event )
+    {
+      event.preventDefault();
+      var popup = document.getElementById( "notificationPopup" );
+      popup.classList.toggle( "show" );
+    }
+  </script>
+  <script type="module">
+    import { setupNoti } from "./notification.js";
+    //setupNoti();
+  </script>
+  <script type="module">
+    import { api, detectionTypes } from "./conn.js";
 
-      function toggleStartStop() {
-        const startStopImage = document.getElementById("startStopImage");
-        const droneStatus = document.getElementById("droneStatus");
+    let isStarted = false;
+    let timerInterval;
+    let startTime;
+    let prevTime;
 
-        startStopImage.classList.add("animate");
-        setTimeout(() => {
-          if (isStarted) {
-            stopDrone();
-            startStopImage.src = "img/btnOff.png";
-            droneStatus.innerHTML = "<strong>Drone Offline</strong>";
-            isStarted = false;
-          } else {
-            startDrone();
-            startStopImage.src = "img/btnOn.png";
-            droneStatus.innerHTML = "<strong>Drone Online</strong>";
-            isStarted = true;
+    document.querySelector( "#startStopImage" ).onclick = toggleStartStop;
+
+    function toggleStartStop()
+    {
+      const startStopImage = document.getElementById( "startStopImage" );
+      const droneStatus = document.getElementById( "droneStatus" );
+
+      startStopImage.classList.add( "animate" );
+      setTimeout( () =>
+      {
+        if ( isStarted )
+        {
+          stopDrone();
+          startStopImage.src = "img/btnOff.png";
+          droneStatus.innerHTML = "<strong>Drone Offline</strong>";
+          isStarted = false;
+        } else
+        {
+          startDrone();
+          startStopImage.src = "img/btnOn.png";
+          droneStatus.innerHTML = "<strong>Drone Online</strong>";
+          isStarted = true;
+        }
+        startStopImage.classList.remove( "animate" );
+      }, 300 ); // duration matches the CSS animation
+    }
+
+    function startDrone()
+    {
+      const urlParams = new URLSearchParams( window.location.search );
+      const projectId = urlParams.get( "project" );
+      localStorage.setItem( "project", projectId );
+
+      // Make an AJAX request to start the drone
+      fetch( api( `/start_drone?project=${projectId}` ) )
+        .then( ( response ) =>
+        {
+          response.text().then( console.log );
+          if ( !response.ok )
+          {
+            throw new Error( "Failed to start drone" );
           }
-          startStopImage.classList.remove("animate");
-        }, 300); // duration matches the CSS animation
+          console.log( "Drone started successfully" );
+          startTimer(); // Start the timer
+          // Optionally, update UI or perform additional actions upon successful start
+        } )
+        .catch( ( error ) =>
+        {
+          console.error( "Error starting drone:", error );
+          alert( "Failed to start the drone" );
+        } );
+    }
+
+    function stopDrone()
+    {
+      const urlParams = new URLSearchParams( window.location.search );
+      const projectId = urlParams.get( "project" );
+      const duration = stopTimer(); // Stop the timer and get the duration
+
+      fetch( api( `/stop_drone?project=${projectId}` ) )
+        .then( ( response ) =>
+        {
+          if ( !response.ok )
+          {
+            throw new Error( "Failed to stop drone" );
+          }
+          console.log( "Drone stopped successfully" );
+          // Optionally, update UI or perform additional actions upon successful stop
+        } )
+        .catch( ( error ) =>
+        {
+          console.error( "Error stopping drone:", error );
+          alert( "Failed to stop the drone" );
+        } );
+    }
+
+    function startTimer()
+    {
+      if ( !startTime )
+      {
+        startTime = new Date();
       }
+      timerInterval = setInterval( () =>
+      {
+        const now = new Date();
+        const elapsed = new Date( now - startTime );
+        const elapsed2 = new Date( elapsed.getTime() - prevTime );
 
-      function startDrone() {
-        // Simulated start
-        console.log("Drone started");
-        startTimer();
+        const hours = String( elapsed2.getUTCHours() ).padStart( 2, "0" );
+        const minutes = String( elapsed2.getUTCMinutes() ).padStart( 2, "0" );
+        const seconds = String( elapsed2.getUTCSeconds() ).padStart( 2, "0" );
+        console.log( projectId );
+        /**
+        fetch(
+          api(
+            `/update_timer?project=${projectId}&timer=${
+              elapsed.getTime() / 1000
+            }`
+          )
+        )
+          .then((res) => res.json())
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+        */
+        document.getElementById(
+          "timer"
+        ).textContent = `${hours}:${minutes}:${seconds}`;
+      }, 1000 );
+    }
+
+    function stopTimer()
+    {
+      clearInterval( timerInterval );
+      document.getElementById( "timer" ).textContent = "00:00:00";
+      const endTime = new Date();
+      const duration = ( endTime - startTime ) / 1000; // Duration in seconds
+      console.log( duration );
+
+      // Format the duration to HH:MM:SS
+      const hours = String( Math.floor( duration / 3600 ) ).padStart( 2, "0" );
+      const minutes = String( Math.floor( ( duration % 3600 ) / 60 ) ).padStart(
+        2,
+        "0"
+      );
+      const seconds = String( Math.floor( duration % 60 ) ).padStart( 2, "0" );
+      document.getElementById(
+        "totalTime"
+      ).textContent = `${hours}:${minutes}:${seconds}`;
+
+      return duration;
+    }
+
+    document.addEventListener( "DOMContentLoaded", () =>
+    {
+      const urlParams = new URLSearchParams( window.location.search );
+      const projectId1 = urlParams.get( "project" );
+      console.log( "123" );
+      if ( projectId1 )
+      {
+        projectId = projectId1;
+        loadProjectDetails( projectId1 );
       }
+    } );
 
-      function stopDrone() {
-        // Simulated stop
-        console.log("Drone stopped");
-        stopTimer();
+    async function loadProjectDetails( projectId )
+    {
+      try
+      {
+        const res = await fetch( api( "/check_project?project=" + projectId ) );
+
+        if ( res.status !== 200 )
+        {
+          alert( "Project not found!" );
+          window.location.href = "projectList.html";
+          return;
+        }
+
+        const data = await res.json();
+        console.log( data );
+
+        startTime = new Date( new Date().getTime() - data.timer * 1000 );
+        let duration = data.timer;
+        prevTime = data.timer * 1000;
+
+        // Format the duration to HH:MM:SS
+        const hours = String( Math.floor( duration / 3600 ) ).padStart( 2, "0" );
+        const minutes = String( Math.floor( ( duration % 3600 ) / 60 ) ).padStart(
+          2,
+          "0"
+        );
+        const seconds = String( Math.floor( duration % 60 ) ).padStart( 2, "0" );
+        document.getElementById(
+          "totalTime"
+        ).textContent = `${hours}:${minutes}:${seconds}`;
+
+        document.querySelector( "#projectName" ).textContent = data.name;
+        document.querySelector( "#projectCoordinate" ).textContent =
+          data.coordinate;
+        document.querySelector( "#droneDetection" ).textContent =
+          data.detect.split( ',' ).map( d => detectionTypes[ d ] || "Unknown" ).join( ', ' );
+      } catch ( err )
+      {
+        console.error( err );
       }
+    }
+  </script>
+</body>
 
-      // Timer functionality
-      let timerInterval;
-
-      function startTimer() {
-        let startTime = Date.now();
-        timerInterval = setInterval(() => {
-          let elapsedTime = Date.now() - startTime;
-          displayTimer(elapsedTime);
-        }, 1000);
-      }
-
-      function stopTimer() {
-        clearInterval(timerInterval);
-      }
-
-      function displayTimer(milliseconds) {
-        let seconds = Math.floor(milliseconds / 1000);
-        let minutes = Math.floor(seconds / 60);
-        let hours = Math.floor(minutes / 60);
-
-        seconds %= 60;
-        minutes %= 60;
-        hours %= 24;
-
-        document.getElementById("currentTimer").innerText = `${formatTime(
-          hours
-        )}:${formatTime(minutes)}:${formatTime(seconds)}`;
-      }
-
-      function formatTime(time) {
-        return time < 10 ? `0${time}` : time;
-      }
-    </script>
-  </body>
 </html>
