@@ -8,15 +8,15 @@
     content="width=device-width, initial-scale=1.0"
   />
   <title>View Project - Winged Saviors</title>
+  <script
+    src="phosphor.js"
+    type="module"
+  ></script>
   <link
     href="styles.css"
     rel="stylesheet"
     type="text/css"
   />
-  <script
-    src="phosphor.js"
-    type="module"
-  ></script>
   <style>
     /* General styling similar to newProject.html */
     body {
@@ -135,7 +135,7 @@
         <i
           class="ph ph-pencil edit-icon"
           title="Edit Project Details"
-          onclick="editProjectDetails()"
+          id="edit-project-icon"
         ></i>
       </h2>
       <div class="icon">
@@ -202,13 +202,6 @@
       popup.classList.toggle( "show" );
     }
 
-    // Function to handle editing project details
-    function editProjectDetails()
-    {
-      // TODO: balls
-      console.log( 'TODO' );
-      // window.location.href = "editProject.html";
-    }
   </script>
   <script type="module">
     import { api, detectionTypes } from "./conn.js";
@@ -216,11 +209,19 @@
     {
       const urlParams = new URLSearchParams( window.location.search );
       const projectId = urlParams.get( "project" );
-      console.log( "123" );
+
+
       if ( projectId )
       {
         loadProjectDetails( projectId );
+        document.querySelector( "#edit-project-icon" ).addEventListener( 'click', function ()
+        {
+          //const editProjectName = document.querySelector( "#q" );
+          window.location.href = 'editProject.html?project=' + projectId;
+
+        } );
       }
+
     } );
 
     async function loadProjectDetails( projectId )
@@ -252,8 +253,6 @@
           document.querySelector( "#drone-detections" ).textContent = "UNKNOWN";
         }
 
-        // document.querySelector( "#edit-button" ).onclick = () =>
-        //   ( window.location.href = "editProject.html?project=" + projectId );
       } catch ( err )
       {
         console.error( err );

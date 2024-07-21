@@ -1,133 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create Project - Winged Saviors</title>
-    <link href="styles.css" rel="stylesheet" type="text/css" />
-    <script src="phosphor.js" type="module"></script>
-    <style>
-      body {
-        display: block;
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        width: 100%;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-      }
 
-      .detection-container {
-        display: flex;
-        align-items: center;
-      }
-      .detection-container:not(:last-child) {
-        margin-bottom: 10px;
-      }
-      .detection-container select {
-        flex: 1;
-        padding-left: 10px; /* Adjusted padding to accommodate icon */
-        font-size: 1em;
-        height: 55px; /* Increased height */
-        width: 255px; /* Full width */
-        margin-right: 10px; /* Added margin for spacing */
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>Create Project - Winged Saviors</title>
+  <link
+    href="styles.css"
+    rel="stylesheet"
+    type="text/css"
+  />
+  <script
+    src="phosphor.js"
+    type="module"
+  ></script>
+  <style>
+    body {
+      display: block;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+    }
 
-      .icon-button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 1.5em;
-        margin-left: 10px;
-      }
+    .detection-container {
+      display: flex;
+      align-items: center;
+    }
 
-      .icon-button i {
-        font-size: 1em; /* Adjusted icon size */
-      }
+    .detection-container:not(:last-child) {
+      margin-bottom: 10px;
+    }
 
-      .form-group {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-      }
+    .detection-container select {
+      flex: 1;
+      padding-left: 10px;
+      /* Adjusted padding to accommodate icon */
+      font-size: 1em;
+      height: 55px;
+      /* Increased height */
+      width: 255px;
+      /* Full width */
+      margin-right: 10px;
+      /* Added margin for spacing */
+    }
 
-      .form-group .icon {
-        margin-right: 10px;
-        display: flex;
-        align-items: center; /* Vertically center align with input field */
-      }
+    .icon-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5em;
+      margin-left: 10px;
+    }
 
-      .form-group input[type="text"],
-      .form-group input[type="number"],
-      .form-group select {
-        flex: 1;
-        padding: 8px;
-        height: 50px;
-        font-size: 1em;
-      }
+    .icon-button i {
+      font-size: 1em;
+      /* Adjusted icon size */
+    }
 
-      .more-options .line {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 12px;
-      }
-      .more-options .line label {
-        margin-bottom: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <header class="fixed-header">
-      <div class="header-content">
-        <a href="home.html" class="back-button">
-          <i class="ph ph-arrow-left"></i>
+    .form-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .form-group .icon {
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      /* Vertically center align with input field */
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group select {
+      flex: 1;
+      padding: 8px;
+      height: 50px;
+      font-size: 1em;
+    }
+
+    .more-options .line {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      padding: 8px 0;
+      background-color: #fff;
+      margin: 10px 12px 10px 0;
+      padding-left: 12px;
+      border-radius: 6px;
+      box-shadow: 1px 1px 3px gray;
+    }
+
+    .more-options .line label {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="fixed-header">
+    <div class="header-content">
+      <a
+        href="home.html"
+        class="back-button"
+      >
+        <i class="ph ph-arrow-left"></i>
+      </a>
+      <img
+        src="asset/logo-wingedSaviors-whitky.svg"
+        alt="Winged Saviors Logo"
+        class="logo-img"
+      />
+      <div class="notification-container">
+        <a
+          href="#"
+          class="notification-icon"
+          onclick="togglePopup(event)"
+        >
+          <i class="ph ph-bell"></i>
         </a>
-        <img
-          src="asset/logo-wingedSaviors-whitky.svg"
-          alt="Winged Saviors Logo"
-          class="logo-img"
-        />
-        <div class="notification-container">
-          <a href="#" class="notification-icon" onclick="togglePopup(event)">
-            <i class="ph ph-bell"></i>
-          </a>
-          <div class="notification-popup" id="notificationPopup">
-            <!-- Notification content goes here -->
-            <p>This is a notification popup!</p>
-          </div>
+        <div
+          class="notification-popup"
+          id="notificationPopup"
+        >
+          <!-- Notification content goes here -->
+          <p>This is a notification popup!</p>
         </div>
       </div>
-    </header>
-    <main
-      class="background-image"
-      style="box-sizing: border-box; width: 100%; padding: 20px"
-    >
-      <br /><br /><br />
-      <section class="features container">
-        <h2>Create a New Project</h2>
-        <form id="new-project-form" class="features" method="post">
-          <div class="form-group">
-            <span class="icon">
-              <i class="ph ph-chat" style="font-size: 2em"></i>
-              <!-- Larger icon size -->
-            </span>
-            <input
-              type="text"
-              id="project-name"
-              name="project-name"
-              placeholder="Project Name"
-              required
-            />
-          </div>
-          <!-- <div class="form-group">
+    </div>
+  </header>
+  <main
+    class="background-image"
+    style="box-sizing: border-box; width: 100%; padding: 20px"
+  >
+    <br /><br /><br />
+    <section class="features container">
+      <h2>Create a New Project</h2>
+      <form
+        id="new-project-form"
+        class="features"
+        method="post"
+      >
+        <div class="form-group">
+          <span class="icon">
+            <i
+              class="ph ph-chat"
+              style="font-size: 2em"
+            ></i>
+            <!-- Larger icon size -->
+          </span>
+          <input
+            type="text"
+            id="project-name"
+            name="project-name"
+            placeholder="Project Name"
+            required
+          />
+        </div>
+        <!-- <div class="form-group">
             <span class="icon">
               <i class="ph ph-envelope" style="font-size: 2em"></i>
             </span>
@@ -139,30 +183,42 @@
               style="font-family: inherit"
             ></textarea>
           </div> -->
-          <div class="form-group">
-            <span class="icon">
-              <i class="ph ph-ruler" style="font-size: 2em"></i>
-              <!-- Larger icon size -->
-            </span>
-            <div>
-              <input
-                type="number"
-                min="20"
-                id="project-coordinates"
-                name="project-coordinates"
-                placeholder="Project Area (cm)"
-                required
-              />
-              <small>Minimum area: 20</small>
-            </div>
+        <div class="form-group">
+          <span class="icon">
+            <i
+              class="ph ph-ruler"
+              style="font-size: 2em"
+            ></i>
+            <!-- Larger icon size -->
+          </span>
+          <div>
+            <input
+              type="number"
+              min="20"
+              id="project-coordinates"
+              name="project-coordinates"
+              placeholder="Project Area (cm)"
+              required
+            />
+            <small>Minimum area: 20</small>
           </div>
-          <div class="form-group" style="align-items: start; margin-top: 20px">
-            <span class="icon">
-              <i class="ph ph-drone" style="font-size: 2em"></i>
-              <!-- Larger icon size -->
-            </span>
-            <div id="detection-container" style="flex: 1">
-              <!--<div class="detection-container">
+        </div>
+        <div
+          class="form-group"
+          style="align-items: start; margin-top: 20px"
+        >
+          <span class="icon">
+            <i
+              class="ph ph-drone"
+              style="font-size: 2em"
+            ></i>
+            <!-- Larger icon size -->
+          </span>
+          <div
+            id="detection-container"
+            style="flex: 1"
+          >
+            <!--<div class="detection-container">
                  <select id="drone-detection" name="drone-detection" required>
                   <optgroup label="Select a Detection Type">
                     <option value="0" selected>Person</option>
@@ -179,168 +235,193 @@
                   <i class="ph ph-plus-circle" style="font-size: 1.5em"></i>
                 </button>
               </div> -->
-              <div class="more-options" style="flex: 1">
-                <div class="line">
-                  <input
-                    type="checkbox"
-                    name="detection"
-                    id="person"
-                    value="0"
-                    checked
-                  />
-                  <label for="person"> Person </label>
-                </div>
-                <div class="line">
-                  <input type="checkbox" name="detection" id="cat" value="15" />
-                  <label for="cat"> Cat </label>
-                </div>
-                <div class="line">
-                  <input type="checkbox" name="detection" id="dog" value="16" />
-                  <label for="dog"> Dog </label>
-                </div>
+            <div
+              class="more-options"
+              style="flex: 1"
+            >
+              <label>Drone detection</label>
+              <div class="line">
+                <input
+                  type="checkbox"
+                  name="detection"
+                  id="person"
+                  value="0"
+                  checked
+                />
+                <label for="person"> Person </label>
+              </div>
+              <div class="line">
+                <input
+                  type="checkbox"
+                  name="detection"
+                  id="cat"
+                  value="15"
+                />
+                <label for="cat"> Cat </label>
+              </div>
+              <div class="line">
+                <input
+                  type="checkbox"
+                  name="detection"
+                  id="dog"
+                  value="16"
+                />
+                <label for="dog"> Dog </label>
               </div>
             </div>
           </div>
-          <br />
-          <button type="submit" class="button">Create Project</button>
-        </form>
-      </section>
-    </main>
-    <footer>
-      <nav class="bottom-nav">
-        <ul>
-          <li>
-            <a href="home.html">
-              <i class="ph ph-house"></i><br />
-              <span class="nav-name">Home</span>
-            </a>
-          </li>
-          <li>
-            <a href="liveFeed.html">
-              <i class="ph ph-video-camera"></i><br />
-              <span class="nav-name">Live Feed</span>
-            </a>
-          </li>
-          <li>
-            <a href="profile.html">
-              <i class="ph ph-user"></i><br />
-              <span class="nav-name">Profile</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </footer>
+        </div>
+        <br />
+        <button
+          type="submit"
+          class="button"
+        >Create Project</button>
+      </form>
+    </section>
+  </main>
+  <footer>
+    <nav class="bottom-nav">
+      <ul>
+        <li>
+          <a href="home.html">
+            <i class="ph ph-house"></i><br />
+            <span class="nav-name">Home</span>
+          </a>
+        </li>
+        <li>
+          <a href="liveFeed.html">
+            <i class="ph ph-video-camera"></i><br />
+            <span class="nav-name">Live Feed</span>
+          </a>
+        </li>
+        <li>
+          <a href="profile.html">
+            <i class="ph ph-user"></i><br />
+            <span class="nav-name">Profile</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </footer>
 
-    <script type="module">
-      import { api, getUser } from "./conn.js";
+  <script type="module">
+    import { api, getUser } from "./conn.js";
 
-      document.addEventListener("DOMContentLoaded", function () {
-        const form = document.getElementById("new-project-form");
-        const nameInput = document.getElementById("project-name");
-        const coordinateInput = document.getElementById("project-coordinates");
-        const detectionContainer = document.getElementById(
-          "detection-container"
-        );
-        const addDetectionButton = document.getElementById("add-detection");
-        const user = getUser();
+    document.addEventListener( "DOMContentLoaded", function ()
+    {
+      const form = document.getElementById( "new-project-form" );
+      const nameInput = document.getElementById( "project-name" );
+      const coordinateInput = document.getElementById( "project-coordinates" );
+      const detectionContainer = document.getElementById(
+        "detection-container"
+      );
+      const addDetectionButton = document.getElementById( "add-detection" );
+      const user = getUser();
 
-        /*
-        addDetectionButton.addEventListener("click", function () {
-          const newDetectionContainer = document.createElement("div");
-          newDetectionContainer.className = "detection-container";
-          const newDetectionSelect = document.createElement("select");
-          newDetectionSelect.name = "drone-detection";
-          newDetectionSelect.required = true;
-          newDetectionSelect.innerHTML = `
-                    <optgroup label="Select a Detection Type">
-                        <option value="0" disabled>Person</option>
-                        <option value="15" ${
-                          selected.includes(15) ? "disabled" : ""
-                        }>Cat</option>
-                        <option value="16">Dog</option>
-                    </optgroup>
-                `;
-          const removeButton = document.createElement("button");
-          removeButton.type = "button";
-          removeButton.className = "icon-button";
-          removeButton.title = "Remove detection type";
-          removeButton.innerHTML = `<i class="ph ph-minus-circle" style="font-size: 1.5em;"></i>`; // Larger icon size
-          removeButton.onclick = function () {
-            detectionContainer.removeChild(newDetectionContainer);
-          };
-          newDetectionContainer.appendChild(newDetectionSelect);
-          newDetectionContainer.appendChild(removeButton);
-          detectionContainer.appendChild(newDetectionContainer);
-          newDetectionSelect.addEventListener('')
-        });
-          */
-
-        form.addEventListener("submit", async function (e) {
-          e.preventDefault();
-
-          const name = nameInput.value;
-          const coordinate = coordinateInput.value;
-          const detectionInputs =
-            detectionContainer.querySelectorAll('[name="detection"]');
-          const detections = Array.from(detectionInputs)
-            .filter((i) => i.checked)
-            .map((select) => select.value);
-          //const projectIcon = document.getElementById("project-icon").value;
-
-          // Check if the coordinate is less than 20
-          if (coordinate < 20) {
-            alert("The project area must be at least 20 cm.");
-            return;
-          }
-
-          // validate check
-
-          if (detections.length === 0) {
-            alert("Select at least an object to detect");
-            return;
-          }
-
-          try {
-            // send to backend
-            const res = await fetch(api("/create_project"), {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-              },
-              body: JSON.stringify({
-                name,
-                coordinate,
-                detection: detections.join(","),
-                user: user.id,
-              }),
-            });
-
-            const data = await res.json();
-            const projectId = data.project_id;
-
-            localStorage.setItem("project", projectId);
-
-            // redirect to project page
-            window.location.href = "viewProject.html?project=" + projectId;
-          } catch (e) {
-            alert("Failed to create project\n\n" + e);
-            console.error(e);
-          }
-        });
+      /*
+      addDetectionButton.addEventListener("click", function () {
+        const newDetectionContainer = document.createElement("div");
+        newDetectionContainer.className = "detection-container";
+        const newDetectionSelect = document.createElement("select");
+        newDetectionSelect.name = "drone-detection";
+        newDetectionSelect.required = true;
+        newDetectionSelect.innerHTML = `
+                  <optgroup label="Select a Detection Type">
+                      <option value="0" disabled>Person</option>
+                      <option value="15" ${
+                        selected.includes(15) ? "disabled" : ""
+                      }>Cat</option>
+                      <option value="16">Dog</option>
+                  </optgroup>
+              `;
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "icon-button";
+        removeButton.title = "Remove detection type";
+        removeButton.innerHTML = `<i class="ph ph-minus-circle" style="font-size: 1.5em;"></i>`; // Larger icon size
+        removeButton.onclick = function () {
+          detectionContainer.removeChild(newDetectionContainer);
+        };
+        newDetectionContainer.appendChild(newDetectionSelect);
+        newDetectionContainer.appendChild(removeButton);
+        detectionContainer.appendChild(newDetectionContainer);
+        newDetectionSelect.addEventListener('')
       });
-    </script>
-    <script type="module">
-      import { setupNoti } from "./notification.js";
-      setupNoti();
-    </script>
-    <script>
-      // Toggle notification popup visibility
-      function togglePopup(event) {
-        event.preventDefault();
-        var popup = document.getElementById("notificationPopup");
-        popup.classList.toggle("show");
-      }
-    </script>
-  </body>
+        */
+
+      form.addEventListener( "submit", async function ( e )
+      {
+        e.preventDefault();
+
+        const name = nameInput.value;
+        const coordinate = coordinateInput.value;
+        const detectionInputs =
+          detectionContainer.querySelectorAll( '[name="detection"]' );
+        const detections = Array.from( detectionInputs )
+          .filter( ( i ) => i.checked )
+          .map( ( select ) => select.value );
+        //const projectIcon = document.getElementById("project-icon").value;
+
+        // Check if the coordinate is less than 20
+        if ( coordinate < 20 )
+        {
+          alert( "The project area must be at least 20 cm." );
+          return;
+        }
+
+        // validate check
+
+        if ( detections.length === 0 )
+        {
+          alert( "Select at least an object to detect" );
+          return;
+        }
+
+        try
+        {
+          // send to backend
+          const res = await fetch( api( "/create_project" ), {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify( {
+              name,
+              coordinate,
+              detection: detections.join( "," ),
+              user: user.id,
+            } ),
+          } );
+
+          const data = await res.json();
+          const projectId = data.project_id;
+
+          localStorage.setItem( "project", projectId );
+
+          // redirect to project page
+          window.location.href = "viewProject.html?project=" + projectId;
+        } catch ( e )
+        {
+          alert( "Failed to create project\n\n" + e );
+          console.error( e );
+        }
+      } );
+    } );
+  </script>
+  <script type="module">
+    import { setupNoti } from "./notification.js";
+    setupNoti();
+  </script>
+  <script>
+    // Toggle notification popup visibility
+    function togglePopup( event )
+    {
+      event.preventDefault();
+      var popup = document.getElementById( "notificationPopup" );
+      popup.classList.toggle( "show" );
+    }
+  </script>
+</body>
+
 </html>

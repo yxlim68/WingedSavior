@@ -1,87 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Edit Project - Winged Saviors</title>
-    <link href="styles.css" rel="stylesheet" type="text/css" />
-    <script src="phosphor.js" type="module"></script>
-    <style>
-      /* Project Detail Section */
-      .project-detail-section {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        width: 90%;
-        max-width: 800px;
-        height: 75vh;
-        overflow-y: auto;
-        max-height: 90vh;
-        margin: 100px auto 20px;
-      }
 
-      .project-detail-section h2 {
-        color: #2f3645;
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 2em;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>Edit Project - Winged Saviors</title>
+  <link
+    href="styles.css"
+    rel="stylesheet"
+    type="text/css"
+  />
+  <script
+    src="phosphor.js"
+    type="module"
+  ></script>
+  <style>
+    /* Project Detail Section */
+    .project-detail-section {
+      /* background-color: #ffffff; */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 800px;
+      height: 75vh;
+      overflow-y: auto;
+      max-height: 90vh;
+      margin: 100px auto 20px;
+    }
 
-      .project-info {
-        margin-bottom: 20px;
-      }
+    .project-detail-section h2 {
+      color: #2f3645;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2em;
+    }
 
-      .project-info p {
-        font-size: 24px;
-        margin: 10px 0;
-      }
+    .project-info {
+      margin-bottom: 20px;
+    }
 
-      .start-stop-container {
-        text-align: center;
-      }
+    .project-info p {
+      font-size: 24px;
+      margin: 10px 0;
+    }
 
-      .start-stop-container img {
-        cursor: pointer;
-        width: 250px;
-        border-radius: 100%;
-        transition: transform 0.3s ease;
-      }
+    .start-stop-container {
+      text-align: center;
+    }
 
-      .start-stop-container img.animate {
-        transform: scale(1.1);
-        transition: transform 0.3s ease;
-      }
-    </style>
-  </head>
-  <body>
-    <header class="fixed-header">
-      <div class="header-content">
-        <a href="viewProject.html" class="back-button">
-          <i class="ph ph-arrow-left"></i
-        ></a>
-        <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img" />
-        <div class="notification-container">
-          <a href="#" class="notification-icon" onclick="togglePopup(event)">
-            <i class="ph ph-bell"></i>
-          </a>
-          <div class="notification-popup" id="notificationPopup">
-            <!-- Notification content goes here -->
-            <p>This is a notification popup!</p>
-          </div>
+    .start-stop-container img {
+      cursor: pointer;
+      width: 250px;
+      border-radius: 100%;
+      transition: transform 0.3s ease;
+    }
+
+    .start-stop-container img.animate {
+      transform: scale(1.1);
+      transition: transform 0.3s ease;
+    }
+
+    .form-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      flex: 1;
+    }
+
+    .form-group .icon {
+      font-size: 2em
+    }
+
+    .line {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      padding: 8px 0;
+      background-color: #fff;
+      margin: 10px 12px 10px 0;
+      padding-left: 12px;
+      border-radius: 6px;
+      box-shadow: 1px 1px 3px gray;
+    }
+
+    .line label {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="fixed-header">
+    <div class="header-content">
+      <a
+        class="back-button"
+        onclick="window.history.back()"
+      >
+        <i class="ph ph-arrow-left"></i></a>
+      <img
+        src="img/logo.png"
+        alt="Winged Saviors Logo"
+        class="logo-img"
+      />
+      <div class="notification-container">
+        <a
+          href="#"
+          class="notification-icon"
+          onclick="togglePopup(event)"
+        >
+          <i class="ph ph-bell"></i>
+        </a>
+        <div
+          class="notification-popup"
+          id="notificationPopup"
+        >
+          <!-- Notification content goes here -->
+          <p>This is a notification popup!</p>
         </div>
       </div>
-    </header>
-    <main class="background-image">
-      <section class="container project-detail-section">
-        <h2>Edit Project</h2>
-        <div class="project-info">
-          <form id="editProjectForm" class="edit-form">
-            <div>
-              <label for="projectName">Project Name:</label>
-              <input type="text" id="projectName" name="projectName" required />
+    </div>
+  </header>
+  <main class="background-image">
+    <section class="container project-detail-section">
+      <h2>Edit Project</h2>
+      <div class="project-info">
+        <form
+          id="editProjectForm"
+          class="edit-form"
+        >
+          <div class="form-group">
+            <div class="icon">
+              <i class="ph ph-chat"></i>
             </div>
-            <div>
+            <div class="input-group">
+              <label for="projectName">Project Name:</label>
+              <input
+                type="text"
+                id="projectName"
+                name="projectName"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="icon"><i class="ph ph-ruler"></i></div>
+            <div class="input-group">
               <label for="coordinate">Coordinate:</label>
               <input
                 type="number"
@@ -91,139 +164,199 @@
                 required
               />
             </div>
-            <div>
+          </div>
+          <div
+            class="form-group"
+            style="align-items: start;"
+          >
+            <div class="icon"><i class="ph ph-drone"></i></div>
+            <div class="input-group">
               <label for="drone-detection">Drone Detection:</label>
-              <select id="drone-detection" name="drone-detection" required>
-                <optgroup label="Select a Detection Type">
-                  <option value="0" selected>Person</option>
-                  <option value="15">Cat</option>
-                  <option value="16">Dog</option>
-                  <option value="2">Car</option>
-                  <option value="-1">All</option>
-                </optgroup>
-              </select>
+              <div class="line">
+                <input
+                  type="checkbox"
+                  name="detection"
+                  id="person"
+                  value="0"
+                  checked
+                />
+                <label for="person"> Person </label>
+              </div>
+              <div class="line">
+                <input
+                  type="checkbox"
+                  name="detection"
+                  id="cat"
+                  value="15"
+                />
+                <label for="cat"> Cat </label>
+              </div>
+              <div class="line">
+                <input
+                  type="checkbox"
+                  name="detection"
+                  id="dog"
+                  value="16"
+                />
+                <label for="dog"> Dog </label>
+              </div>
             </div>
-            <button type="submit" class="button">Save Changes</button>
-          </form>
-        </div>
-      </section>
-    </main>
-    <footer>
-      <nav class="bottom-nav">
-        <ul>
-          <li>
-            <a href="home.html">
-              <i class="ph ph-house"></i><br />
-              <span class="nav-name">Home</span>
-            </a>
-          </li>
-          <li>
-            <a href="liveFeed.html">
-              <i class="ph ph-video-camera"></i><br />
-              <span class="nav-name">Live Feed</span>
-            </a>
-          </li>
-          <li>
-            <a href="profile.html">
-              <i class="ph ph-user"></i><br />
-              <span class="nav-name">Profile</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </footer>
+          </div>
+          <button
+            type="submit"
+            class="button"
+          >
+            Save Changes
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <nav class="bottom-nav">
+      <ul>
+        <li>
+          <a href="home.html">
+            <i class="ph ph-house"></i><br />
+            <span class="nav-name">Home</span>
+          </a>
+        </li>
+        <li>
+          <a href="liveFeed.html">
+            <i class="ph ph-video-camera"></i><br />
+            <span class="nav-name">Live Feed</span>
+          </a>
+        </li>
+        <li>
+          <a href="profile.html">
+            <i class="ph ph-user"></i><br />
+            <span class="nav-name">Profile</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </footer>
 
-    <script>
-      let isStarted = false;
+  <script>
+    let isStarted = false;
 
-      function toggleStartStop() {
-        const startStopImage = document.getElementById("startStopImage");
-        startStopImage.classList.add("animate");
-        setTimeout(() => {
-          if (isStarted) {
-            startStopImage.src = "img/btnOff.png";
-            isStarted = false;
-          } else {
-            startStopImage.src = "img/btnOn.png";
-            isStarted = true;
-          }
-          startStopImage.classList.remove("animate");
-        }, 300); // duration matches the CSS animation
-      }
-
-      // Toggle notification popup visibility
-      function togglePopup(event) {
-        event.preventDefault();
-        var popup = document.getElementById("notificationPopup");
-        popup.classList.toggle("show");
-      }
-    </script>
-    <script type="module">
-      import { api } from "./conn.js";
-
-      const name = document.querySelector("#projectName");
-      const coordinate = document.querySelector("#coordinate");
-      const detect = document.querySelector("#drone-detection");
-      let projectId;
-
-      document.addEventListener("DOMContentLoaded", () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        projectId = urlParams.get("project");
-
-        if (projectId) {
-          loadProjectDetails(projectId);
+    function toggleStartStop()
+    {
+      const startStopImage = document.getElementById( "startStopImage" );
+      startStopImage.classList.add( "animate" );
+      setTimeout( () =>
+      {
+        if ( isStarted )
+        {
+          startStopImage.src = "img/btnOff.png";
+          isStarted = false;
+        } else
+        {
+          startStopImage.src = "img/btnOn.png";
+          isStarted = true;
         }
-      });
+        startStopImage.classList.remove( "animate" );
+      }, 300 ); // duration matches the CSS animation
+    }
 
-      document
-        .querySelector("#editProjectForm")
-        .addEventListener("submit", async function (e) {
-          e.preventDefault();
-          const data = {
-            id: projectId,
-            name: name.value,
-            coordinate: coordinate.value,
-            detect: detect.value,
-          };
+    // Toggle notification popup visibility
+    function togglePopup( event )
+    {
+      event.preventDefault();
+      var popup = document.getElementById( "notificationPopup" );
+      popup.classList.toggle( "show" );
+    }
+  </script>
+  <script type="module">
+    import { api } from "./conn.js";
 
-          try {
-            const res = await fetch(api("/update_project"), {
-              method: "POST",
-              headers: {
-                "content-type": "application/json",
-              },
-              body: JSON.stringify(data),
-            });
+    const name = document.querySelector( "#projectName" );
+    const coordinate = document.querySelector( "#coordinate" );
+    // const detect = document.querySelector( "#drone-detection" );
+    let projectId;
+    const detectionCb = document.querySelectorAll( "[name='detection']" );
+    console.log( detectionCb );
 
-            if (res.status !== 200) {
-              alert("failed to update project");
-              return;
-            }
+    document.addEventListener( "DOMContentLoaded", () =>
+    {
+      const urlParams = new URLSearchParams( window.location.search );
+      projectId = urlParams.get( "project" );
 
-            alert("update project success");
-            window.location.href = "viewProject.html?project=" + projectId;
-          } catch (err) {
-            console.error(err);
-          }
-        });
-      async function loadProjectDetails(projectId) {
-        try {
-          const res = await fetch(api("/check_project?project=" + projectId));
+      if ( projectId )
+      {
+        loadProjectDetails( projectId );
+      }
+    } );
 
-          if (res.status !== 200) {
-            alert("Project not found");
-            window.location.href = "projectList.html";
+    document
+      .querySelector( "#editProjectForm" )
+      .addEventListener( "submit", async function ( e )
+      {
+        e.preventDefault();
+
+        const detects = Array.from( detectionCb ).filter( cb => cb.checked ).map( cb => cb.value ).join( ',' );
+        const data = {
+          id: projectId,
+          name: name.value,
+          coordinate: coordinate.value,
+          detect: detects,
+        };
+
+        try
+        {
+          const res = await fetch( api( "/update_project" ), {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify( data ),
+          } );
+
+          if ( res.status !== 200 )
+          {
+            alert( "failed to update project" );
             return;
           }
 
-          const data = await res.json();
-          name.value = data.name;
-          coordinate.value = data.coordinate;
-          detect.value = data.detect;
-        } catch (err) {
-          console.error(err);
+          alert( "update project success" );
+          window.location.href = "viewProject.html?project=" + projectId;
+        } catch ( err )
+        {
+          console.error( err );
         }
+      } );
+    async function loadProjectDetails( projectId )
+    {
+      try
+      {
+        const res = await fetch( api( "/check_project?project=" + projectId ) );
+
+        if ( res.status !== 200 )
+        {
+          alert( "Project not found" );
+          window.location.href = "projectList.html";
+          return;
+        }
+
+        const data = await res.json();
+        name.value = data.name;
+        coordinate.value = data.coordinate;
+        // detect.value = data.detect;
+        // console.log( data );
+        const detects = data.detect.split( "," );
+        detectionCb.forEach( cb =>
+        {
+          if ( detects.includes( cb.value ) )
+          {
+            cb.checked = true;
+          }
+        } );
+      } catch ( err )
+      {
+        console.error( err );
       }
-    </script>
-  </body>
+    }
+  </script>
+</body>
+
 </html>
