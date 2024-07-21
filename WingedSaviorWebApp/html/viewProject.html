@@ -1,194 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>View Project - Winged Saviors</title>
-    <link href="styles.css" rel="stylesheet" type="text/css" />
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <style>
-      /* Project Detail Section */
-      .project-detail-section {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        width: 90%;
-        max-width: 800px;
-        height: 75vh;
-        overflow-y: auto;
-        max-height: 90vh;
-        margin: 100px auto 20px;
-      }
 
-      .project-detail-section h2 {
-        color: #2f3645;
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 2em;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>View Project - Winged Saviors</title>
+  <script
+    src="phosphor.js"
+    type="module"
+  ></script>
+  <link
+    href="styles.css"
+    rel="stylesheet"
+    type="text/css"
+  />
+  <style>
+    /* General styling similar to newProject.html */
+    body {
+      display: block;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      margin-top: 100px;
+    }
 
-      .project-info {
-        margin-bottom: 20px;
-      }
+    .project-details {
+      margin-top: 20px;
+      text-align: center;
+    }
 
-      .project-info p {
-        font-size: 24px;
-        margin: 10px 0;
-      }
+    .project-details h2 {
+      color: #333;
+      text-align: center;
+      /* Center align the text */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-      .start-stop-container {
-        text-align: center;
-      }
+    .project-details h2 .edit-icon {
+      margin-left: 10px;
+      cursor: pointer;
+      color: #666;
+    }
 
-      .start-stop-container img {
-        cursor: pointer;
-        width: 250px;
-        border-radius: 100%;
-        transition: transform 0.3s ease;
-      }
+    .project-details p {
+      text-align: center;
+      /* Center align paragraphs */
+      margin: 10px 0;
+      line-height: 1.6;
+    }
 
-      .start-stop-container img.animate {
-        transform: scale(1.1);
-        transition: transform 0.3s ease;
-      }
-    </style>
-  </head>
-  <body>
-    <header class="fixed-header">
-      <div class="header-content">
-        <a href="projectList.html" class="back-button">
-          <i class="ph ph-arrow-left"></i
-        ></a>
-        <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img" />
-        <div class="notification-container">
-          <a href="#" class="notification-icon" onclick="togglePopup(event)">
-            <i class="ph ph-bell"></i>
-          </a>
-          <div class="notification-popup" id="notificationPopup">
-            <!-- Notification content goes here -->
-            <p>This is a notification popup!</p>
-          </div>
+    .project-details .icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    /* Specific styles for icons */
+    .icon i {
+      font-size: 2em;
+    }
+
+    .icon-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5em;
+      margin-left: 10px;
+    }
+
+    .icon-button i {
+      font-size: 1em;
+    }
+
+    .c {
+      font-size: 24px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header section -->
+  <header class="fixed-header">
+    <div class="header-content">
+      <a
+        href="home.html"
+        class="back-button"
+      >
+        <i class="ph ph-arrow-left"></i>
+      </a>
+      <img
+        src="asset/logo-wingedSaviors-whitky.svg"
+        alt="Winged Saviors Logo"
+        class="logo-img"
+      />
+      <div class="notification-container">
+        <a
+          href="#"
+          class="notification-icon"
+          onclick="togglePopup(event)"
+        >
+          <i class="ph ph-bell"></i>
+        </a>
+        <div
+          class="notification-popup"
+          id="notificationPopup"
+        >
+          <!-- Notification content goes here -->
+          <p>This is a notification popup!</p>
         </div>
       </div>
-    </header>
+    </div>
+  </header>
 
-    <main class="background-image">
-      <section class="container project-detail-section">
-        <h2>Project Details</h2>
-        <div class="project-info">
-          <p>
-            <strong>Project Name:</strong>
-            <span id="projectName">Project Alpha</span>
-          </p>
-          <p>
-            <strong>Project Coordinate:</strong>
-            <span id="projectCoordinate">128cm</span>
-          </p>
-          <p>
-            <strong>Drone Detection:</strong>
-            <span id="droneDetection">People</span>
-          </p>
-          <br /><br />
-          <button
-            type="submit"
-            class="button"
-            id="edit-button"
-            onClick="location.href='editProject.html'"
-          >
-            Edit Project
-          </button>
-        </div>
-      </section>
-    </main>
-    <footer>
-      <nav class="bottom-nav">
-        <ul>
-          <li>
-            <a href="home.html">
-              <i class="ph ph-house"></i><br />
-              <span class="nav-name">Home</span>
-            </a>
-          </li>
-          <li>
-            <a href="liveFeed.html">
-              <i class="ph ph-video-camera"></i><br />
-              <span class="nav-name">Live Feed</span>
-            </a>
-          </li>
-          <li>
-            <a href="profile.html">
-              <i class="ph ph-user"></i><br />
-              <span class="nav-name">Profile</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </footer>
+  <!-- Main content section -->
+  <main>
+    <div class="project-details">
+      <h2>
+        Project Details
+        <i
+          class="ph ph-pencil edit-icon"
+          title="Edit Project Details"
+          id="edit-project-icon"
+        ></i>
+      </h2>
+      <div class="icon">
+        <i class="ph ph-chat"></i>
+        <strong>Project Name:</strong>
+      </div>
+      <p class="c"> <span id="project-name"></span></p>
+      <div class="icon">
+        <i class="ph ph-ruler"></i>
+        <strong>Project Area (cm):</strong>
+      </div>
+      <p class="c">
+        <span id="project-coordinates"></span>
+      </p>
+      <div class="icon">
+        <i class="ph ph-drone"></i>
+        <p><strong>Drone Detection Type(s):</strong></p>
+      </div>
+      <ul
+        style="margin: 0; padding: 0;"
+        class="c"
+        id="drone-detections"
+      ></ul>
+    </div>
+  </main>
 
-    <script>
-      let isStarted = false;
+  <!-- Footer section -->
+  <footer>
+    <nav class="bottom-nav">
+      <ul>
+        <li>
+          <a href="home.html">
+            <i class="ph ph-house"></i><br />
+            <span class="nav-name">Home</span>
+          </a>
+        </li>
+        <li>
+          <a href="liveFeed.html">
+            <i class="ph ph-video-camera"></i><br />
+            <span class="nav-name">Live Feed</span>
+          </a>
+        </li>
+        <li>
+          <a href="profile.html">
+            <i class="ph ph-user"></i><br />
+            <span class="nav-name">Profile</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </footer>
 
-      function toggleStartStop() {
-        const startStopImage = document.getElementById("startStopImage");
-        startStopImage.classList.add("animate");
-        setTimeout(() => {
-          if (isStarted) {
-            startStopImage.src = "img/btnOff.png";
-            isStarted = false;
-          } else {
-            startStopImage.src = "img/btnOn.png";
-            isStarted = true;
-          }
-          startStopImage.classList.remove("animate");
-        }, 300); // duration matches the CSS animation
+  <script type="module">
+    import { setupNoti } from "./notification.js";
+    setupNoti();
+  </script>
+
+  <script>
+    // Toggle notification popup visibility
+    function togglePopup( event )
+    {
+      event.preventDefault();
+      var popup = document.getElementById( "notificationPopup" );
+      popup.classList.toggle( "show" );
+    }
+
+  </script>
+  <script type="module">
+    import { api, detectionTypes } from "./conn.js";
+    document.addEventListener( "DOMContentLoaded", () =>
+    {
+      const urlParams = new URLSearchParams( window.location.search );
+      const projectId = urlParams.get( "project" );
+
+
+      if ( projectId )
+      {
+        loadProjectDetails( projectId );
+        document.querySelector( "#edit-project-icon" ).addEventListener( 'click', function ()
+        {
+          //const editProjectName = document.querySelector( "#q" );
+          window.location.href = 'editProject.html?project=' + projectId;
+
+        } );
       }
 
-      // Toggle notification popup visibility
-      function togglePopup(event) {
-        event.preventDefault();
-        var popup = document.getElementById("notificationPopup");
-        popup.classList.toggle("show");
-      }
-    </script>
-    <script type="module">
-      import { api } from "./conn.js";
-      document.addEventListener("DOMContentLoaded", () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const projectId = urlParams.get("project");
-        console.log("123");
-        if (projectId) {
-          loadProjectDetails(projectId);
+    } );
+
+    async function loadProjectDetails( projectId )
+    {
+      try
+      {
+        const res = await fetch( api( "/check_project?project=" + projectId ) );
+
+        if ( res.status !== 200 )
+        {
+          alert( "Project not found!" );
+          window.location.href = "projectList.html";
+          return;
         }
-      });
 
-      async function loadProjectDetails(projectId) {
-        try {
-          const res = await fetch(api("/check_project?project=" + projectId));
+        const data = await res.json();
+        console.log( data );
 
-          if (res.status !== 200) {
-            alert("Project not found!");
-            window.location.href = "projectList.html";
-            return;
-          }
+        document.querySelector( "#project-name" ).textContent = data.name;
+        document.querySelector( "#project-coordinates" ).textContent =
+          data.coordinate;
 
-          const data = await res.json();
-          console.log(data);
-
-          document.querySelector("#projectName").textContent = data.name;
-          document.querySelector("#projectCoordinate").textContent =
-            data.coordinate;
-          document.querySelector("#droneDetection").textContent = data.detect;
-          document.querySelector("#edit-button").onclick = () =>
-            (window.location.href = "editProject.html?project=" + projectId);
-        } catch (err) {
-          console.error(err);
+        const detectType = data.detect.split( ',' ).map( i => i.trim() ).map( i => detectionTypes[ i ] || "UNKNOWN" ).join( ', ' );
+        if ( detectType )
+        {
+          document.querySelector( "#drone-detections" ).textContent = detectType;
+        } else
+        {
+          document.querySelector( "#drone-detections" ).textContent = "UNKNOWN";
         }
+
+      } catch ( err )
+      {
+        console.error( err );
       }
-    </script>
-    <script type="module">
-      import { setupNoti } from "./notification.js";
-      setupNoti();
-    </script>
-  </body>
+    }
+  </script>
+</body>
+
 </html>

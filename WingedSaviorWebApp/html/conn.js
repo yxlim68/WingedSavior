@@ -13,6 +13,12 @@ if (DEBUG_VIDEO) {
 export const WEB_PORT = "8766";
 export const WS_PORT = "8765";
 
+export const detectionTypes = {
+  0: "Person",
+  15: "Cat",
+  16: "Dog",
+};
+
 export function ws() {
   return `ws://${BACKEND_URL}:${WS_PORT}`;
 }

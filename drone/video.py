@@ -4,11 +4,12 @@ from djitellopy import TelloException
 from flask import Blueprint, Response, request
 from controller.db import db
 from controller.util import log as util_log
+from drone.camera import CLASS_NAMES, add_actions
 from drone.config import DEBUG_VIDEO
 from drone.detection import detect_person
 from drone.location import get_location
 from drone.yolo import model
-
+from drone.tello import tello
 
 
 video_bp = Blueprint("Video BP", __name__)
@@ -92,40 +93,50 @@ def upload_image( project_id: int, id: int, image_bytes, conf: float):
     except Exception as e:
         print(e)
         
+if DEBUG_VIDEO:
+    cap = cv2.VideoCapture(0)
+     
+def get_frame(tello):
+    if DEBUG_VIDEO:
+        _, frame = cap.read()
+        return frame
+    
+    frame = tello.get_frame_read().frame
+    return cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+        
 
 latest_frame = None
 tracked_objects = list()
 video_project = None
 video_start = False
+project_data = None
 
 def set_video_project(id):
-    global video_project
+    global video_project, project_data
     video_project = id
+    
+    if video_project is None:
+        project_data = None
+        return
+    _, cur = db()
+    # get project data
+    cur.execute("SELECT * FROM project WHERE id = %s", (video_project,))
+    res = cur.fetchone()
+    if not res:
+        print('cant get project data')
+    project_data = res
+    print(project_data)
+    
 
 def start_video_thread():
-    global latest_frame, tracked_objects, video_project, video_start
+    global latest_frame, tracked_objects, video_project, video_start, project_data
     
     log = util_log('video')
     
-    if DEBUG_VIDEO:
-        cap = cv2.VideoCapture(0)
-     
-    def get_frame():
-        if DEBUG_VIDEO:
-            _, frame = cap.read()
-            return frame
-        
-        frame = tello.get_frame_read().frame
-        return cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
     
     if not DEBUG_VIDEO:
-        from drone.tello import tello, tello_connect_if_not
-        try:
-            tello_connect_if_not()
-            tello.streamon()        
-        except:
-            # do nothing if cant connect now
-            pass
+        add_actions(['connect','streamon', 'motoron'], first=True)
+
     
     last_video = None
     
@@ -137,18 +148,29 @@ def start_video_thread():
                 if last_video is None:
                     last_video = time.time() * 1000
                     
-                # try to reconnect every 5 seconds
+                # try to reconnect every 10 seconds
                 if time.time() * 1000 -  last_video > 10000:
                     log('reconnect if not')
                     last_video = None # reset try
-                    tello_connect_if_not()
-                    tello.streamon()
+                    add_actions(['connect','streamon', 'motoron'], first=True)
                     
-            frame = get_frame()
+            frame = get_frame(tello)
             
-            results = model.track(frame, persist=True, classes=0, verbose=False)
+            detect_type = None
 
-            person_detected = detect_person(results[0])
+            if project_data:
+                to_detect = project_data['detect']
+                
+                if to_detect in CLASS_NAMES.keys():
+                    detect_type = to_detect
+                    detect_type = list(map(lambda x: int(x), detect_type.split(',')))
+
+            min_threshold = 0.5
+                
+            results = model.track(frame, persist=True, classes=detect_type, verbose=False, conf=min_threshold)
+
+            person_detected = len(results[0].boxes) > 0
+            # person_detected = detect_person(results[0])
 
             if person_detected:
                 output = results[0].plot() 

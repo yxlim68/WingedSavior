@@ -1,17 +1,38 @@
 @import url("./alert.css");
 
+:root {
+  --primary-color: beige;
+  --secondary-color: #2f3645;
+  --light-color: #fff;
+}
+
+body {
+  background-color: var(--primary-color);
+}
+
+.header-content {
+  color: var(--light-color);
+}
+
+.button {
+  background-color: var(--primary-color);
+  color: var(--light-color);
+}
+
+.button:hover {
+  background-color: var(--secondary-color);
+}
+
 /* Base Styles */
 body {
-  font-family: Arial, sans-serif;
+  font-family: Arial, sans-serif !important;
   margin: 0;
   padding: 0;
   height: 100vh; /* Full height of the viewport */
   width: 100%; /* Full width of the viewport */
-  background-image: url("img/droneBg3.jpeg"); /* Update with your image path */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat; /* Ensures the image doesn't repeat */
-  display: flex;
   justify-content: center;
   align-items: flex-start;
 }
@@ -23,7 +44,7 @@ body {
   width: 300px;
   max-height: 80vh;
   overflow-y: auto;
-  background-color: #fff;
+  background-color: beige;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
@@ -36,21 +57,11 @@ body {
 
 .notification-popup.show {
   display: block; /* Show the popup when the .show class is added */
+  background-color: white;
 }
 
 .notification-popup p {
   margin: 0;
-}
-
-/* Main Background Image */
-.background-image {
-  height: absolute;
-  width: 100%;
-  background-size: cover;
-  background-position: center;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 20px; /* Padding to ensure spacing from edges */
 }
 
 .button {
@@ -71,10 +82,9 @@ body {
 
 /* Slider Styles */
 .slider {
-  width: 100%;
-  overflow: hidden;
   position: relative;
   border-radius: 15px;
+  padding: 20px;
 }
 
 .slide {
@@ -84,7 +94,7 @@ body {
 
 .slide img {
   width: 100%;
-  height: auto;
+  height: 100%;
   border-radius: 15px;
   box-shadow: 0 10px 5px rgba(0, 0, 0, 0.1);
 }
@@ -120,10 +130,6 @@ body {
   text-align: center;
 }
 
-.slide-content .button:hover {
-  background-color: #0056b3;
-}
-
 /* Header Styles */
 .fixed-header {
   position: fixed;
@@ -151,7 +157,7 @@ body {
 }
 
 .logo-img {
-  height: 50px;
+  height: 65px;
   width: auto;
 }
 
@@ -168,9 +174,8 @@ body {
 
 /* Container Styles */
 .container {
-  margin: 0 auto;
-  margin-top: 200px;
-  padding: 10px;
+  margin-top: 30px;
+  padding: 0;
 }
 
 .profile-container,
@@ -179,23 +184,17 @@ body {
 .settings-container {
   justify-content: center;
   align-items: center;
-  margin-top: 80px;
+  margin-top: 40px;
 }
 
 .profile-box,
-.login-box,
 .register-box,
 .settings-box {
-  background-color: #fff;
+  background-color: beige;
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  width: 80%;
-  height: 80vh;
   padding: 2em;
   text-align: left; /* Align text to the left */
   margin: 0 auto; /* Center the box horizontally */
-  margin-top: 10px;
-  max-height: 80vh;
   overflow-y: auto;
 }
 
@@ -210,15 +209,20 @@ body {
   height: 100px;
   border-radius: 50%;
   margin-bottom: 1em;
+  display: block;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
 }
 
 .profile-box h2,
 .login-box h2,
 .register-box h2,
 .settings-box h2 {
-  font-size: 2em;
   margin-bottom: 0.5em;
   color: #2f3645;
+  text-align: center;
 }
 
 .profile-box p .setting-box p {
@@ -229,6 +233,21 @@ body {
 
 .profile-box p i {
   margin-right: 10px; /* Space between icon and text */
+}
+
+.profile-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 60px; /* Adjust margin as needed */
+}
+
+.profile-actions .button {
+  width: 45%; /* Adjust width to fit both buttons in a row */
+}
+
+.profile-actions .logout-button {
+  background-color: #f44336; /* Example color for logout button */
 }
 
 /* Form Styles */
@@ -242,11 +261,12 @@ body {
 label {
   font-size: 1.2em;
   margin-bottom: 0.5em;
-  color: #333;
+  color: #2f3645;
   text-align: left;
   width: 100%;
 }
 
+input[type="number"],
 input[type="text"],
 input[type="password"],
 input[type="email"],
@@ -254,7 +274,6 @@ input[type="organization"],
 textarea {
   width: calc(100% - 22px);
   padding: 0.5em;
-  margin-bottom: 1em;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1em;
@@ -328,11 +347,6 @@ input[type="checkbox"]:hover {
 }
 
 /* Link Styles */
-a {
-  color: #007bff;
-  text-decoration: none;
-}
-
 a:hover {
   text-decoration: underline;
 }
@@ -344,50 +358,12 @@ a:hover {
   margin-top: 1em;
 }
 
-/* Splash Screen Styles */
-.splash-screen {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #007bff;
-  color: white;
-  text-align: center;
-}
-
-.splash-screen h1 {
-  font-size: 3em;
-  margin-top: 20px;
-  animation: fadeInOut 5s ease-in-out;
-}
-
-.splash-screen img {
-  height: 150px;
-  width: auto;
-  animation: fadeInOut 5s ease-in-out;
-}
-
-@keyframes fadeInOut {
-  0% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
 /* Feature Styles */
-.features {
-  background-color: #fff;
+/* .features {
+  background-color: white;
   padding: 20px;
   margin-top: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-}
+} */
 
 .features h2 {
   color: #2f3645;
@@ -397,7 +373,6 @@ a:hover {
 
 .feature {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 100px;
   padding: 10px;
@@ -412,7 +387,7 @@ a:hover {
 }
 
 .feature h3 {
-  color: #2f3645;
+  color: white;
   font-size: 1.2em;
 }
 
@@ -495,10 +470,6 @@ table th {
   justify-content: center;
 }
 
-.profile-pic-label:hover .profile-pic {
-  border-color: #007bff;
-}
-
 .upload-button {
   position: absolute;
   bottom: 0;
@@ -518,10 +489,6 @@ table th {
 
 .upload-button i {
   font-size: 1.2em;
-}
-
-.profile-pic-label:hover .upload-button {
-  background-color: #0056b3;
 }
 
 #profile-pic {
@@ -573,12 +540,52 @@ footer {
   padding: 5px;
   color: white;
   text-decoration: none;
-  transition: background-color 0.5s, color 0.5s;
+  transition: background-color 0.5s, color 0.5s, transform 0.3s ease-in-out;
+  position: relative;
+}
+
+.bottom-nav ul li a::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: beige;
+  transition: width 1s ease, left 1s ease;
+}
+
+.bottom-nav ul li a:hover::after,
+.bottom-nav ul li a:focus::after,
+.bottom-nav ul li a:active::after,
+.bottom-nav ul li a.active::after {
+  width: 100%;
+  left: 0;
 }
 
 .bottom-nav ul li a i {
   font-size: 22px;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.bottom-nav ul li a:hover i,
+.bottom-nav ul li a:focus i,
+.bottom-nav ul li a:active i,
+.bottom-nav ul li a.active i {
+  color: beige;
+  transform: scale(1.2);
+}
+
+.bottom-nav ul li a span {
+  display: block;
   transition: color 0.3s;
+}
+
+.bottom-nav ul li a:hover span,
+.bottom-nav ul li a:focus span,
+.bottom-nav ul li a:active span,
+.bottom-nav ul li a.active span {
+  color: beige;
 }
 
 /* Style for Combo Box */
@@ -611,5 +618,27 @@ select option {
 
 /* Additional padding for main content */
 main {
-  padding-bottom: 60px; /* Adjust the value as needed */
+  padding-bottom: 20px; /* Adjust the value as needed */
+}
+
+@media (max-width: 768px) {
+  .fixed-header {
+    height: 60px;
+  }
+
+  .button {
+    width: 90%;
+  }
+
+  .notification-popup {
+    width: 90%;
+    right: 5%;
+  }
+
+  .profile-box,
+  .login-box,
+  .register-box {
+    padding: 2em;
+    height: auto;
+  }
 }

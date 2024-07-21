@@ -1,108 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - Winged Saviors</title>
-    <link href="styles.css" rel="stylesheet" type="text/css" />
-  </head>
-  <body>
-    <header class="fixed-header">
-      <div class="header-content">
-        <img
-          src="img/logo.png"
-          alt="Winged Saviors Logo"
-          class="logo"
-          height="50px"
-        />
-      </div>
-    </header>
 
-    <main class="background-image">
-      <div class="login-container">
-        <div class="login-box">
-          <h2>Login to Winged Saviors</h2>
-          <br />
-          <form action="#" id="login-form" method="POST">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required />
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required />
-            <div class="form-check">
-              <div class="forgot-password">
-                <a href="#">Forgot password?</a>
-              </div>
-              <div class="password-toggle">
-                <img
-                  src="img/icon_HidePassword.png"
-                  alt="Show Password"
-                  id="togglePassword"
-                />
-              </div>
-            </div>
-            <div class="form-check">
-              <input type="checkbox" id="remember" name="remember" />
-              <label for="remember" style="margin-bottom: 0">Remember me</label>
-            </div>
-            <button type="submit" class="button">Login</button>
-          </form>
-          <div class="register-link">
-            <p>
-              Don't have an account?
-              <a href="register.html"><br />Register here</a>
-            </p>
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>Login - Winged Saviors</title>
+  <link
+    href="styles.css"
+    rel="stylesheet"
+    type="text/css"
+  />
+  <style>
+    .login-container {
+      background-color: beige;
+      border-top-left-radius: 30px;
+      border-top-right-radius: 30px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      position: absolute;
+      bottom: 0;
+      /* Adjust bottom distance */
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: left;
+    }
+
+    body {
+      background-image: url('img/login-image.png');
+      background-size: 100%;
+      /* Adjust as needed, e.g., 50% width */
+      background-position: center top;
+      /* Adjust positioning as needed */
+      background-repeat: no-repeat;
+      /* Prevents the image from repeating */
+      height: 100vh;
+      /* Ensures the background covers the entire viewport */
+      margin: 0;
+      /* Removes default margin */
+      padding: 0;
+      /* Removes default padding */
+      font-family: Arial, sans-serif;
+      /* Optional: Sets a font for the text */
+      ;
+    }
+
+    /* Adjustments for image */
+    img {
+      margin-top: 65px;
+      width: auto;
+      display: block;
+      /* Ensures the image behaves like a block element */
+      margin-left: auto;
+      /* Centers the image horizontally */
+      margin-right: auto;
+    }
+
+
+    .login-box h2,
+    .register-box h2 {
+      margin-bottom: 0.5em;
+      color: #2f3645;
+      text-align: center;
+      font-size: 2em;
+    }
+  </style>
+</head>
+<img
+  src="asset/logo-wingedSaviors-whitky.svg"
+  alt="Winged Saviors Logo"
+  class="logo"
+  height="100px"
+/>
+
+
+<main class="background-image">
+  <div class="login-container">
+    <div class="login-box">
+      <h2>Login</h2>
+      <br />
+      <form
+        action="#"
+        id="login-form"
+        method="POST"
+      >
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          required
+        />
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+        />
+        <div class="form-check">
+          <div class="forgot-password">
+            <!-- <a href="#">Forgot password?</a> -->
+          </div>
+          <div class="password-toggle">
+            <img
+              src="img/icon_HidePassword.png"
+              alt="Show Password"
+              id="togglePassword"
+            />
           </div>
         </div>
+        <div class="form-check">
+          <input
+            type="checkbox"
+            id="remember"
+            name="remember"
+          />
+          <label
+            for="remember"
+            style="margin-bottom: 0"
+          >Remember me</label>
+        </div>
+        <button
+          type="submit"
+          class="button"
+        >Login</button>
+      </form>
+      <div class="register-link">
+        <p>
+          Don't have an account?
+          <a href="register.html"><br />Register here</a>
+        </p>
       </div>
-    </main>
+    </div>
+  </div>
+</main>
 
-    <script type="module">
-      import { api } from "./conn.js";
-      import "./jquery.min.js";
-      const togglePassword = document.getElementById("togglePassword");
-      const password = document.getElementById("password");
+<script type="module">
+  import { api } from "./conn.js";
+  const togglePassword = document.getElementById( "togglePassword" );
+  const password = document.getElementById( "password" );
 
-      togglePassword.addEventListener("click", function () {
-        const type =
-          password.getAttribute("type") === "password" ? "text" : "password";
-        password.setAttribute("type", type);
-        this.src =
-          type === "password"
-            ? "img/icon_HidePassword.png"
-            : "img/icon_ShowPassword.png";
-      });
+  togglePassword.addEventListener( "click", function ()
+  {
+    const type =
+      password.getAttribute( "type" ) === "password" ? "text" : "password";
+    password.setAttribute( "type", type );
+    this.src =
+      type === "password"
+        ? "img/icon_HidePassword.png"
+        : "img/icon_ShowPassword.png";
+  } );
 
-      document.querySelector("#login-form").addEventListener("submit", login);
-      async function login(e) {
-        e.preventDefault();
+  document.querySelector( "#login-form" ).addEventListener( "submit", login );
+  async function login( e )
+  {
+    e.preventDefault();
 
-        const username = document.querySelector("#username").value;
-        const password = document.querySelector("#password").value;
+    const username = document.querySelector( "#username" ).value;
+    const password = document.querySelector( "#password" ).value;
 
-        try {
-          const userData = { username, password };
-          const res = await fetch(api("/login"), {
-            method: "post",
-            headers: {
-              "content-type": "application/json",
-            },
-            body: JSON.stringify(userData),
-          });
+    try
+    {
+      const userData = { username, password };
+      const res = await fetch( api( "/login" ), {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify( userData ),
+      } );
 
-          if (res.status !== 200) {
-            throw new Error("Login failed: " + (await res.text()));
-          }
 
-          const data = (await res.json()).user;
-
-          localStorage.setItem("user", JSON.stringify(data));
-          window.location.href = "home.html";
-        } catch (e) {
-          alert("Login failed");
-
-          console.error(e);
-        }
+      if ( res.status >= 500 )
+      {
+        throw new Error( "Login failed: " + ( await res.text() ) );
       }
-    </script>
-  </body>
+
+      if ( res.status >= 400 )
+      {
+        throw new Error( "Login failed: " + ( await res.json() ).message );
+      }
+
+      const data = ( await res.json() ).user;
+
+      localStorage.setItem( "user", JSON.stringify( data ) );
+      if ( username === 'admin' )
+      {
+        window.location.href = 'register-approval.html';
+        return;
+      }
+      window.location.href = "home.html";
+    } catch ( e )
+    {
+
+      if ( e instanceof TypeError )
+      {
+        alert( "Server cannot be reach" );
+      }
+      else
+      {
+        alert( e );
+      }
+      console.error( e );
+    }
+  }
+</script>
+</body>
+
 </html>

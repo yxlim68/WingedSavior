@@ -5,21 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home - Winged Saviors</title>
     <link href="styles.css" rel="stylesheet" type="text/css" />
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="phosphor.js" type="module"></script>
   </head>
 
   <style>
     /* Feature Styles */
-    .features {
-      background-color: #fff;
+    h1 {
       padding: 20px;
+      padding-top: 90px;
+      margin: 0 0 0; /* Top margin added */
+    }
+
+    /* Feature Styles */
+    .features {
+      background-color: #2f3645;
+      padding: 20px;
+      padding-bottom: 20px;
+      border-top-right-radius: 20px;
+      border-top-left-radius: 20px;
       margin-top: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     }
 
     .features h2 {
-      color: #2f3645;
+      color: white;
       text-align: center;
       margin-bottom: 20px;
     }
@@ -31,7 +39,7 @@
       align-items: center;
       margin-bottom: 20px;
       padding: 20px;
-      background-color: white;
+      background-color: beige;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease;
@@ -82,17 +90,16 @@
     .feature.show .feature-header h3 i {
       transform: rotate(180deg);
     }
-
-    .greeting p {
-      margin-top: 90px;
-      color: #2f3645;
-    }
   </style>
 
   <body>
     <header class="fixed-header">
       <div class="header-content">
-        <img src="img/logo.png" alt="Winged Saviors Logo" class="logo-img" />
+        <img
+          src="asset/logo-wingedSaviors-whitky.svg"
+          alt="Winged Saviors Logo"
+          class="logo-img"
+        />
         <div class="notification-container">
           <a href="#" class="notification-icon" onclick="togglePopup(event)">
             <i class="ph ph-bell"></i>
@@ -106,12 +113,9 @@
     </header>
 
     <main class="background-image">
-      <!-- Greeting Section -->
-      <section class="greeting">
-        <p>
-            <h1>Welcome, <span id="username-display">*User</span></h1>
-        </p>
-      </section>
+      <div class="greeting">
+        <h1>Welcome, User</h1>
+      </div>
       <section class="slider">
         <div class="slide">
           <img src="img/droneBg.jpg" alt="Slide 1" height="auto" width="80%" />
@@ -161,7 +165,7 @@
             <h3>Create Project<i class="ph ph-caret-down"></i></h3>
           </div>
           <div class="feature-content">
-            <p>Start your new project with measurements.</p>
+            <p>Start your new project with measurements (cm).</p>
             <button onclick="location.href='newProject.html'" class="button">
               Create Project
             </button>
@@ -182,6 +186,24 @@
             <p>Check your created projects here.</p>
             <button onclick="location.href='projectList.html'" class="button">
               Project List
+            </button>
+          </div>
+        </div>
+        <div class="feature" onclick="toggleFeature(this)">
+          <div class="feature-header">
+            <a href="newProject.html">
+              <img
+                src="img/question.png"
+                alt="Create New Project Icon"
+                class="feature-icon"
+              />
+            </a>
+            <h3>User Manual<i class="ph ph-caret-down"></i></h3>
+          </div>
+          <div class="feature-content">
+            <p>Information about Drone and Application Guide already here!</p>
+            <button onclick="location.href='manual.html'" class="button">
+              Click Here!
             </button>
           </div>
         </div>
@@ -250,16 +272,30 @@
       }
     </script>
     <script type="module">
-      document.addEventListener("DOMContentLoaded", function () {
-        const userData = JSON.parse(localStorage.getItem("user"));
-
-        document.getElementById(
-          "username-display"
-        ).textContent = `${userData.firstname} ${userData.lastname}`;
-      });
-
       import { setupNoti } from "./notification.js";
       setupNoti();
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const links = document.querySelectorAll(".bottom-nav ul li a");
+        links.forEach((link) => {
+          if (link.href === window.location.href) {
+            link.classList.add("active");
+          }
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const userData = JSON.parse(localStorage.getItem("user"));
+        const greetingElement = document.querySelector(".greeting h1");
+
+        if (userData) {
+          greetingElement.textContent = `Welcome, ${userData.firstname} ${userData.lastname}`;
+        } else {
+          greetingElement.textContent = `Welcome, Guest`;
+        }
+      });
+
+      // Existing scripts for notification setup and active link highlighting
     </script>
   </body>
 </html>

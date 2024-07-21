@@ -1,4 +1,3 @@
-import threading
 import time
 import cv2
 import numpy as np
@@ -28,7 +27,6 @@ CLASS_NAMES = {
     79: "toothbrush"
 }
 
-
 def white_balance(img):
     result = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
     avg_a = np.average(result[:, :, 1])
@@ -38,7 +36,6 @@ def white_balance(img):
     result = cv2.cvtColor(result, cv2.COLOR_LAB2BGR)
     return result
 
-
 def adjust_color_balance(image, red_gain=1.0, green_gain=1.0, blue_gain=1.0):
     b, g, r = cv2.split(image)
     r = cv2.multiply(r, red_gain)
@@ -46,12 +43,10 @@ def adjust_color_balance(image, red_gain=1.0, green_gain=1.0, blue_gain=1.0):
     b = cv2.multiply(b, blue_gain)
     return cv2.merge((b, g, r))
 
-
 def gamma_correction(image, gamma=1.0):
     invGamma = 1.0 / gamma
     table = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
     return cv2.LUT(image, table)
-
 
 def enhance_contrast(image):
     lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
@@ -61,14 +56,12 @@ def enhance_contrast(image):
     limg = cv2.merge((cl, a, b))
     return cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
 
-
 def send_notification(message):
     notification.notify(
         title="Detection",
         message=message,
         timeout=5
     )
-
 
 def get_project_parameters(project_id):
     db_config = {
@@ -100,7 +93,6 @@ def get_project_parameters(project_id):
         print(f"Error: {err}")
         return None
 
-
 def snap(frame, confidence, x, y, w, h):
     snapshot_dir = 'C:\\xampp\\htdocs\\snapshots'
     if not os.path.exists(snapshot_dir):
@@ -121,7 +113,6 @@ def snap(frame, confidence, x, y, w, h):
     download_url = f"http://localhost/snapshots/{filename}"
     print(f"Download URL: {download_url}")
     send_notification(f"Snapshot available at {download_url}")
-
 
 def save_to_database(confidence, image_bytes):
     db_config = {
@@ -148,6 +139,75 @@ def save_to_database(confidence, image_bytes):
         print("Detection saved to database")
     except connector.Error as err:
         print(f"Error: {err}")
+
+
+class TelloObstacleAvoidance:
+    def __init__(self, tello, distance_threshold=70, movement_speed=20):
+        self.tello = tello
+        self.distance_threshold = distance_threshold
+        self.movement_speed = movement_speed
+        self.cooldown_time = 25  # Cooldown period in seconds
+        self.last_avoidance_time = 0
+
+    def get_frame(self):
+        frame = self.tello.get_frame_read().frame
+        return cv2.resize(frame, (640, 480))
+
+    def process_frame(self, frame):
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+        edges = cv2.Canny(blurred, 50, 150)
+        return edges
+
+    def detect_obstacles(self, edges):
+        contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        return contours
+
+    def avoid_obstacles(self, obstacles, frame):
+        global actions
+        current_time = time.time()
+        if current_time - self.last_avoidance_time < self.cooldown_time:
+            return
+
+        for obstacle in obstacles:
+            x, y, w, h = cv2.boundingRect(obstacle)
+            distance = self.distance_threshold * (640 - w) / 640
+
+            center_x = x + w // 2
+            center_y = y + h // 2
+
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            cv2.putText(frame, f"{distance:.2f} cm", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+            if w > self.distance_threshold or h > self.distance_threshold:
+                try:
+                    if center_x < 100:
+                        actions = [('right', self.movement_speed), *actions]
+                    elif center_x > 540:
+                        actions = [('left', self.movement_speed), *actions]
+                    if center_y < 100:
+                        actions = [('down', self.movement_speed), *actions]
+                    elif center_y > 380:
+                        actions = [('up', self.movement_speed), *actions]
+                    self.last_avoidance_time = current_time
+                except TelloException as e:
+                    print(f"Error moving drone: {e}")
+
+    def run(self):
+        frame = self.get_frame()
+        edges = self.process_frame(frame)
+        obstacles = self.detect_obstacles(edges)
+        self.avoid_obstacles(obstacles, frame)
+
+        cv2.imshow("Frame", frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            self.tello.end()
+            cv2.destroyAllWindows()
+            return False  # To stop the loop
+
+        return True  # To continue the loop
+
+
 
 def create_distance_chunks(distance):
     SIZE = 40  # maximum 20 size
@@ -197,6 +257,18 @@ def start_drone(tello, project_id):
         ('ccw', 90),
     ]
 
+    actions = [
+        'connect',
+        'takeoff',
+        *forward_distances,
+        ('ccw', 90),
+        *forward_distances,
+        ('ccw', 90),
+        *forward_distances,
+        ('ccw', 90),
+        *forward_distances,
+        ('ccw', 90),
+    ]
 
 def stop_drone(tello, movements):
     global actions
@@ -245,10 +317,10 @@ def fly_thread(tello: Tello):
 
             if action == 'land':
                 tello.land()
-
+                
             if action == 'streamon':
                 tello.streamon()
-
+            
             if action == 'motoron':
                 tello.turn_motor_on()
 
@@ -257,6 +329,7 @@ def fly_thread(tello: Tello):
 
                 tello.send_control_command(f'{cmd} {val}')
                 time.sleep(2)  # Allow some time for the command to execute
+
 
         except Exception as e:
             print(f"Exception in fly_thread: {e}")
