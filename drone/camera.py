@@ -27,6 +27,7 @@ CLASS_NAMES = {
     79: "toothbrush"
 }
 
+
 def white_balance(img):
     result = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
     avg_a = np.average(result[:, :, 1])
@@ -36,6 +37,7 @@ def white_balance(img):
     result = cv2.cvtColor(result, cv2.COLOR_LAB2BGR)
     return result
 
+
 def adjust_color_balance(image, red_gain=1.0, green_gain=1.0, blue_gain=1.0):
     b, g, r = cv2.split(image)
     r = cv2.multiply(r, red_gain)
@@ -43,10 +45,12 @@ def adjust_color_balance(image, red_gain=1.0, green_gain=1.0, blue_gain=1.0):
     b = cv2.multiply(b, blue_gain)
     return cv2.merge((b, g, r))
 
+
 def gamma_correction(image, gamma=1.0):
     invGamma = 1.0 / gamma
     table = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
     return cv2.LUT(image, table)
+
 
 def enhance_contrast(image):
     lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
@@ -56,12 +60,14 @@ def enhance_contrast(image):
     limg = cv2.merge((cl, a, b))
     return cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
 
+
 def send_notification(message):
     notification.notify(
         title="Detection",
         message=message,
         timeout=5
     )
+
 
 def get_project_parameters(project_id):
     db_config = {
@@ -93,6 +99,7 @@ def get_project_parameters(project_id):
         print(f"Error: {err}")
         return None
 
+
 def snap(frame, confidence, x, y, w, h):
     snapshot_dir = 'C:\\xampp\\htdocs\\snapshots'
     if not os.path.exists(snapshot_dir):
@@ -114,10 +121,11 @@ def snap(frame, confidence, x, y, w, h):
     print(f"Download URL: {download_url}")
     send_notification(f"Snapshot available at {download_url}")
 
+
 def save_to_database(confidence, image_bytes):
     db_config = {
         'user': 'root',
-        'password': '',
+        'password': 'root',
         'host': 'localhost',
         'database': 'drone',
         'raise_on_warnings': True
@@ -208,7 +216,6 @@ class TelloObstacleAvoidance:
         return True  # To continue the loop
 
 
-
 def create_distance_chunks(distance):
     SIZE = 40  # maximum 20 size
 
@@ -233,11 +240,12 @@ def create_commands(cmd, values):
 
 def start_drone(tello, project_id):
     global actions
+    global loopActions
+
     parameters = get_project_parameters(project_id)
     forward_distance = int(parameters['coordinate'])
 
     # create chunks of forward commands to prevent running into wall
-    # forward_chunks = create_distance_chunks(forward_distance)
     forward_chunks = create_distance_chunks(forward_distance)
     forward_distances = create_commands('forward', forward_chunks)
 
@@ -257,9 +265,7 @@ def start_drone(tello, project_id):
         ('ccw', 90),
     ]
 
-    actions = [
-        'connect',
-        'takeoff',
+    loopActions = [
         *forward_distances,
         ('ccw', 90),
         *forward_distances,
@@ -269,6 +275,7 @@ def start_drone(tello, project_id):
         *forward_distances,
         ('ccw', 90),
     ]
+
 
 def stop_drone(tello, movements):
     global actions
@@ -286,23 +293,24 @@ def add_actions(_actions, first=False):
 
 
 actions = list()
+loopActions = list()  # Add this line to define loopActions globally
 
 
 def fly_thread(tello: Tello):
     global actions
+    global loopActions
     last_no_command = None
 
-    initial_actions = actions.copy()  # Save the initial set of actions
     while True:
         try:
-            # Process obstacle avoidance in a separate thread or with lower priority
             if len(actions) == 0:
-                actions = initial_actions.copy()
                 if last_no_command is None:
                     last_no_command = time.time()
 
                 if time.time() - last_no_command > 5:
                     last_no_command = None
+                    actions = loopActions.copy()  # Reset actions to loopActions
+
                 time.sleep(0.1)
                 continue
 
@@ -317,19 +325,17 @@ def fly_thread(tello: Tello):
 
             if action == 'land':
                 tello.land()
-                
+
             if action == 'streamon':
                 tello.streamon()
-            
+
             if action == 'motoron':
                 tello.turn_motor_on()
 
             if type(action) is tuple:
                 cmd, val = action
-
                 tello.send_control_command(f'{cmd} {val}')
                 time.sleep(2)  # Allow some time for the command to execute
-
 
         except Exception as e:
             print(f"Exception in fly_thread: {e}")

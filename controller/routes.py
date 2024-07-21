@@ -121,10 +121,12 @@ def create_project():
 
 def format_results(result):
         ssb64 = base64.b64encode(result['SS'])
-    
+
         result['SS'] = ssb64.decode('utf-8')
         result['Time'] = result['Time'].strftime('%d/%m/%Y')
-        result['location'] = result['location'].decode('utf-8') if result['location'] is not None else None
+        if type(result['location']) != str:
+
+            result['location'] = result['location'].decode('utf-8') if result['location'] is not None else None
         
         return result
 

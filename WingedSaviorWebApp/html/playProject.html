@@ -174,7 +174,7 @@
         <div class="timer-card">
           <h2>Timer</h2>
           <div class="timer-info">
-            <p id="currentTimer">00:00:00</p>
+            <p id="timer">00:00:00</p>
             <!-- Timer display -->
           </div>
         </div>
@@ -342,7 +342,6 @@
         const minutes = String( elapsed2.getUTCMinutes() ).padStart( 2, "0" );
         const seconds = String( elapsed2.getUTCSeconds() ).padStart( 2, "0" );
         console.log( projectId );
-        /**
         fetch(
           api(
             `/update_timer?project=${projectId}&timer=${
@@ -357,7 +356,6 @@
           .catch((err) => {
             console.error(err);
           });
-        */
         document.getElementById(
           "timer"
         ).textContent = `${hours}:${minutes}:${seconds}`;

@@ -110,7 +110,6 @@ tracked_objects = list()
 video_project = None
 video_start = False
 project_data = None
-
 def set_video_project(id):
     global video_project, project_data
     video_project = id
@@ -126,7 +125,8 @@ def set_video_project(id):
         print('cant get project data')
     project_data = res
     print(project_data)
-    
+
+set_video_project(31)
 
 def start_video_thread():
     global latest_frame, tracked_objects, video_project, video_start, project_data
@@ -160,10 +160,10 @@ def start_video_thread():
 
             if project_data:
                 to_detect = project_data['detect']
-                
-                if to_detect in CLASS_NAMES.keys():
-                    detect_type = to_detect
-                    detect_type = list(map(lambda x: int(x), detect_type.split(',')))
+
+
+                detect_type = to_detect
+                detect_type = list(map(lambda x: int(x), detect_type.split(',')))
 
             min_threshold = 0.5
                 

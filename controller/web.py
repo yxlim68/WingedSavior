@@ -3,12 +3,6 @@ import asyncio
 import sys, os
 import threading
 from flask import Flask
-
-
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-
-from controller.util import log
-
 from drone.tello import tello
 from drone.camera import fly_thread
 import controller.routes as routes
@@ -16,6 +10,8 @@ from drone.video import start_video_thread, video_bp
 from drone.location import location_bp
 
 from flask_cors import CORS
+
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 app = Flask(__name__)
 app.register_blueprint(routes.routes_bp)
@@ -43,6 +39,4 @@ def init_app():
     
 
 if __name__ == '__main__':
-    l = log('web')
-    l('Starting server')
     init_app()
