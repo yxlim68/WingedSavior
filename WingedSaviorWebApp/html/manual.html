@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
   <title>Drone Manual - Winged Saviors</title>
-  <link href="styles.css" rel="stylesheet" type="text/css" />
-  <script src="phosphor.js" type="module"></script>
+  <link
+    href="styles.css"
+    rel="stylesheet"
+    type="text/css"
+  />
+  <script
+    src="phosphor.js"
+    type="module"
+  ></script>
   <style>
     /* Manual-specific styles */
     body {
@@ -23,11 +34,14 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       padding: 20px;
     }
-    
+
     .manual-section {
       margin-bottom: 30px;
+      background-color: #fff;
+      color: black;
+      border-radius: 12px;
     }
-    
+
     .manual-section h1 {
       color: #2f3645;
       font-size: 24px;
@@ -36,69 +50,146 @@
       padding-top: 50px;
       margin-top: 0;
     }
-    
+
     .manual-section h2 {
       color: #2f3645;
       font-size: 20px;
       border-bottom: 1px solid #2f3645;
       padding-bottom: 5px;
       margin-top: 30px;
+      padding: 12px;
     }
-    
-    .manual-section p {
+
+    .manual-section .content {
+      padding: 12px;
+    }
+
+    .content li,
+    .content li {
       line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .content code {
+      background-color: #2f3645;
+      color: #fff;
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 6px;
     }
   </style>
 </head>
+
 <body>
-    <header class="fixed-header">
-        <div class="header-content">
-          <a href="home.html" class="back-button">
-            <i class="ph ph-arrow-left"></i
-          ></a>
-          <img src="asset/logo-wingedSaviors-whitky.svg" alt="Winged Saviors Logo" class="logo-img" />
-          <div class="notification-container">
-            <a href="#" class="notification-icon" onclick="togglePopup(event)">
-              <i class="ph ph-bell"></i>
-            </a>
-            <div class="notification-popup" id="notificationPopup">
-              <!-- Notification content goes here -->
-              <p>This is a notification popup!</p>
-            </div>
-          </div>
+  <header class="fixed-header">
+    <div class="header-content">
+      <a
+        href="home.html"
+        class="back-button"
+      >
+        <i class="ph ph-arrow-left"></i></a>
+      <img
+        src="asset/logo-wingedSaviors-whitky.svg"
+        alt="Winged Saviors Logo"
+        class="logo-img"
+      />
+      <div class="notification-container">
+        <a
+          href="#"
+          class="notification-icon"
+          onclick="togglePopup(event)"
+        >
+          <i class="ph ph-bell"></i>
+        </a>
+        <div
+          class="notification-popup"
+          id="notificationPopup"
+        >
+          <!-- Notification content goes here -->
+          <p>This is a notification popup!</p>
         </div>
-      </header>
+      </div>
+    </div>
+  </header>
 
   <main>
     <div class="manual-content">
-      <div class="manual-section">
-        <h1>Welcome to the Drone Manual</h1>
+      <div class="balls">
+        <h1>Welcome to the Winged Saviors manual</h1>
         <p>
-          This manual provides instructions and guidelines for using the drone effectively in various scenarios.
+          This manual provides instructions and guidelines for using the application effectively in various scenarios.
         </p>
       </div>
 
       <div class="manual-section">
         <h2>Getting Started</h2>
-        <p>
-          Before flying the drone, ensure that you have read and understood the user manual provided with your drone. Familiarize yourself with the controls and safety precautions.
-        </p>
+        <div class="content">
+          Before flying the application, ensure that you have read and understood the user manual provided with your
+          drone.
+          Familiarize yourself with the controls and safety precautions.
+        </div>
       </div>
 
       <div class="manual-section">
-        <h2>Basic Operations</h2>
-        <p>
-          - Power on/off: Learn how to safely power the drone on and off.<br />
-          - Takeoff and landing: Understand the procedures for taking off and landing the drone smoothly.<br />
-          - Flight controls: Practice using the joystick or remote control to maneuver the drone in different directions.
-        </p>
+        <h2>Create a new project</h2>
+        <div class="content">
+          <ol>
+            <li>Go to <code>Home</code> page</li>
+            <li>Click on the <code>Create Project</code> dropdown</li>
+            <li>Click on <code>Create Project</code> button. This will take you to create project page</li>
+            <li>Enter <code>Project Name</code>, <code>Project Area</code>, and choose at least <b>one</b>
+              <code>Drone Detection</code>
+            </li>
+            <li>After all information is filled, click <code>Create Project</code> button and the project will be
+              created
+            </li>
+            <li>The will take you to <code>Project Detail</code> page</li>
+          </ol>
+        </div>
       </div>
 
       <div class="manual-section">
-        <h2>Advanced Features</h2>
-        <p>
-          Explore advanced features such as waypoint navigation, automated flight modes, and camera controls if applicable to your drone model.
-        </p>
+        <h2>View created projects</h2>
+        <div class="content">
+          <ol>
+            <li>Go to <code>Home</code> page</li>
+            <li>Click on <code>Project List</code> dropdown</li>
+            <li>Click on <code>Project List</code> button to go to the project list page</li>
+            <li>This page will display all projects created by you, click on any of them to display the information</li>
+            <li>
+              Click <br>
+              <ul>
+                <li><code>Start</code> button to start the project</li>
+                <li><code>View</code> button to view project details</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div class="manual-section">
+        <h2>Start a project</h2>
+        <div class="content">
+          <ol>
+            <li>Click <code>Start</code> button in the project you want to start at <code>Project List</code> page</li>
+            <li>Click <br>
+              <ul>
+                <li><code>Start Icon(Red Icon)</code>: to start the project</li>
+                <li><code>Stop Icon(Green Icon)</code>: to stop the project</li>
+              </ul>
+            </li>
+            <li>
+              Additionally, you can view the project timer and project as well as the last project run time.
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div class="manual-section">
+        <h2>View live feed</h2>
+        <div class="content">
+          <ol>
+            <li>Go to <code>Live Feed</code> page to view live feed</li>
+          </ol>
+        </div>
       </div>
     </div>
   </main>
@@ -129,11 +220,13 @@
   </footer>
 
   <script>
-    function togglePopup(event) {
+    function togglePopup( event )
+    {
       event.preventDefault();
-      var popup = document.getElementById("notificationPopup");
-      popup.classList.toggle("show");
+      var popup = document.getElementById( "notificationPopup" );
+      popup.classList.toggle( "show" );
     }
   </script>
 </body>
+
 </html>

@@ -294,12 +294,18 @@
       {
         e.preventDefault();
 
-        const detects = Array.from( detectionCb ).filter( cb => cb.checked ).map( cb => cb.value ).join( ',' );
+        const detects = Array.from( detectionCb ).filter( cb => cb.checked ).map( cb => cb.value );
+
+        if ( detects.length === 0 )
+        {
+          alert( "Select at least an object to detect" );
+          return;
+        }
         const data = {
           id: projectId,
           name: name.value,
           coordinate: coordinate.value,
-          detect: detects,
+          detect: detects.join( ',' ),
         };
 
         try
