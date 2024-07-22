@@ -1,301 +1,356 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home - Winged Saviors</title>
-    <link href="styles.css" rel="stylesheet" type="text/css" />
-    <script src="phosphor.js" type="module"></script>
-  </head>
 
-  <style>
-    /* Feature Styles */
-    h1 {
-      padding: 20px;
-      padding-top: 90px;
-      margin: 0 0 0; /* Top margin added */
-    }
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>Home - Winged Saviors</title>
+  <link
+    href="styles.css"
+    rel="stylesheet"
+    type="text/css"
+  />
+  <script
+    src="phosphor.js"
+    type="module"
+  ></script>
+</head>
 
-    /* Feature Styles */
-    .features {
-      background-color: #2f3645;
-      padding: 20px;
-      padding-bottom: 20px;
-      border-top-right-radius: 20px;
-      border-top-left-radius: 20px;
-      margin-top: 20px;
-    }
+<style>
+  /* Feature Styles */
+  h1 {
+    padding: 20px;
+    padding-top: 90px;
+    margin: 0 0 0;
+    /* Top margin added */
+  }
 
-    .features h2 {
-      color: white;
-      text-align: center;
-      margin-bottom: 20px;
-    }
+  /* Feature Styles */
+  .features {
+    background-color: #2f3645;
+    padding: 20px;
+    padding-bottom: 20px;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+    margin-top: 20px;
+  }
 
-    .feature {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding: 20px;
-      background-color: beige;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
-      cursor: pointer;
-    }
+  .features h2 {
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+  }
 
-    .feature:hover {
-      transform: translateY(-5px);
-    }
+  .feature {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: beige;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
 
-    .feature-header {
-      display: flex;
-      align-items: center;
-      width: 100%;
-    }
+  .feature:hover {
+    transform: translateY(-5px);
+  }
 
-    .feature-header h3 {
-      color: #2f3645;
-      font-size: 1.5em;
-      margin-left: 20px;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-    }
+  .feature-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
 
-    .feature-header h3 i {
-      margin-left: 10px;
-      transition: transform 0.3s ease;
-    }
+  .feature-header h3 {
+    color: #2f3645;
+    font-size: 1.5em;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
 
-    .feature-icon {
-      height: 50px;
-      width: 50px;
-    }
+  .feature-header h3 i {
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+  }
 
-    .feature-content {
-      display: none;
-      width: 100%;
-      text-align: left;
-      margin-top: 10px;
-    }
+  .feature-icon {
+    height: 50px;
+    width: 50px;
+  }
 
-    /* Dropdown Toggle Styles */
-    .feature.show .feature-content {
-      display: block;
-    }
+  .feature-content {
+    display: none;
+    width: 100%;
+    text-align: left;
+    margin-top: 10px;
+  }
 
-    .feature.show .feature-header h3 i {
-      transform: rotate(180deg);
-    }
-  </style>
+  /* Dropdown Toggle Styles */
+  .feature.show .feature-content {
+    display: block;
+  }
 
-  <body>
-    <header class="fixed-header">
-      <div class="header-content">
+  .feature.show .feature-header h3 i {
+    transform: rotate(180deg);
+  }
+</style>
+
+<body>
+  <header class="fixed-header">
+    <div class="header-content">
+      <img
+        src="asset/logo-wingedSaviors-whitky.svg"
+        alt="Winged Saviors Logo"
+        class="logo-img"
+      />
+      <div class="notification-container">
+        <a
+          href="#"
+          class="notification-icon"
+          onclick="togglePopup(event)"
+        >
+          <i class="ph ph-bell"></i>
+        </a>
+        <div
+          class="notification-popup"
+          id="notificationPopup"
+        >
+          <!-- Notification content goes here -->
+          <p>This is a notification popup!</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="background-image">
+    <div class="greeting">
+      <h1>Welcome, User</h1>
+    </div>
+    <section class="slider">
+      <div class="slide">
         <img
-          src="asset/logo-wingedSaviors-whitky.svg"
-          alt="Winged Saviors Logo"
-          class="logo-img"
+          src="img/droneBg.jpg"
+          alt="Slide 1"
+          height="auto"
+          width="80%"
         />
-        <div class="notification-container">
-          <a href="#" class="notification-icon" onclick="togglePopup(event)">
-            <i class="ph ph-bell"></i>
+        <div class="slide-content">
+          <h3>Explore the World from Above</h3>
+          <p>
+            Join us in our mission to make search and rescue more efficient.
+          </p>
+          <button
+            onclick="location.href='newProject.html'"
+            class="button"
+          >
+            Get Started
+          </button>
+        </div>
+      </div>
+      <div class="slide">
+        <img
+          src="img/droneBg2.jpg"
+          alt="Slide 2"
+        />
+        <div class="slide-content">
+          <h3>Advanced Drone Technology</h3>
+          <p>Leveraging cutting-edge technology for critical missions.</p>
+          <button
+            onclick="location.href='newProject.html'"
+            class="button"
+          >
+            Learn More
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="features container">
+      <h2>Our Features</h2>
+      <div
+        class="feature"
+        onclick="toggleFeature(this)"
+      >
+        <div class="feature-header">
+          <a href="newProject.html">
+            <img
+              src="img/file-plus.png"
+              alt="Create New Project Icon"
+              class="feature-icon"
+            />
           </a>
-          <div class="notification-popup" id="notificationPopup">
-            <!-- Notification content goes here -->
-            <p>This is a notification popup!</p>
-          </div>
+          <h3>Create Project<i class="ph ph-caret-down"></i></h3>
+        </div>
+        <div class="feature-content">
+          <p>Start your new project with measurements (cm).</p>
+          <button
+            onclick="location.href='newProject.html'"
+            class="button"
+          >
+            Create Project
+          </button>
         </div>
       </div>
-    </header>
-
-    <main class="background-image">
-      <div class="greeting">
-        <h1>Welcome, User</h1>
+      <div
+        class="feature"
+        onclick="toggleFeature(this)"
+      >
+        <div class="feature-header">
+          <a href="projectList.html">
+            <img
+              src="img/list-checks.png"
+              alt="Project List Icon"
+              class="feature-icon"
+            />
+          </a>
+          <h3>Project List<i class="ph ph-caret-down"></i></h3>
+        </div>
+        <div class="feature-content">
+          <p>Check your created projects here.</p>
+          <button
+            onclick="location.href='projectList.html'"
+            class="button"
+          >
+            Project List
+          </button>
+        </div>
       </div>
-      <section class="slider">
-        <div class="slide">
-          <img src="img/droneBg.jpg" alt="Slide 1" height="auto" width="80%" />
-          <div class="slide-content">
-            <h3>Explore the World from Above</h3>
-            <p>
-              Join us in our mission to make search and rescue more efficient.
-            </p>
-            <button onclick="location.href='newProject.html'" class="button">
-              Get Started
-            </button>
-          </div>
+      <div
+        class="feature"
+        onclick="toggleFeature(this)"
+      >
+        <div class="feature-header">
+          <a href="newProject.html">
+            <img
+              src="img/question.png"
+              alt="Create New Project Icon"
+              class="feature-icon"
+            />
+          </a>
+          <h3>User Manual<i class="ph ph-caret-down"></i></h3>
         </div>
-        <div class="slide">
-          <img src="img/droneBg2.jpg" alt="Slide 2" />
-          <div class="slide-content">
-            <h3>Advanced Drone Technology</h3>
-            <p>Leveraging cutting-edge technology for critical missions.</p>
-            <button onclick="location.href='newProject.html'" class="button">
-              Learn More
-            </button>
-          </div>
+        <div class="feature-content">
+          <p>Information about Drone and Application Guide already here!</p>
+          <button
+            onclick="location.href='manual.html'"
+            class="button"
+          >
+            Click Here!
+          </button>
         </div>
-        <div class="slide">
-          <img src="img/droneBg3.jpeg" alt="Slide 3" />
-          <div class="slide-content">
-            <h3>Join Our Team</h3>
-            <p>Become a part of a dedicated and skilled team.</p>
-            <button onclick="location.href='index.html'" class="button">
-              Join Us
-            </button>
-          </div>
-        </div>
-      </section>
+      </div>
+    </section>
+    <br /><br />
+  </main>
 
-      <section class="features container">
-        <h2>Our Features</h2>
-        <div class="feature" onclick="toggleFeature(this)">
-          <div class="feature-header">
-            <a href="newProject.html">
-              <img
-                src="img/file-plus.png"
-                alt="Create New Project Icon"
-                class="feature-icon"
-              />
-            </a>
-            <h3>Create Project<i class="ph ph-caret-down"></i></h3>
-          </div>
-          <div class="feature-content">
-            <p>Start your new project with measurements (cm).</p>
-            <button onclick="location.href='newProject.html'" class="button">
-              Create Project
-            </button>
-          </div>
-        </div>
-        <div class="feature" onclick="toggleFeature(this)">
-          <div class="feature-header">
-            <a href="projectList.html">
-              <img
-                src="img/list-checks.png"
-                alt="Project List Icon"
-                class="feature-icon"
-              />
-            </a>
-            <h3>Project List<i class="ph ph-caret-down"></i></h3>
-          </div>
-          <div class="feature-content">
-            <p>Check your created projects here.</p>
-            <button onclick="location.href='projectList.html'" class="button">
-              Project List
-            </button>
-          </div>
-        </div>
-        <div class="feature" onclick="toggleFeature(this)">
-          <div class="feature-header">
-            <a href="newProject.html">
-              <img
-                src="img/question.png"
-                alt="Create New Project Icon"
-                class="feature-icon"
-              />
-            </a>
-            <h3>User Manual<i class="ph ph-caret-down"></i></h3>
-          </div>
-          <div class="feature-content">
-            <p>Information about Drone and Application Guide already here!</p>
-            <button onclick="location.href='manual.html'" class="button">
-              Click Here!
-            </button>
-          </div>
-        </div>
-      </section>
-      <br /><br />
-    </main>
+  <footer>
+    <nav class="bottom-nav">
+      <ul>
+        <li>
+          <a href="home.html">
+            <i class="ph ph-house"></i><br />
+            <span class="nav-name">Home</span>
+          </a>
+        </li>
+        <li>
+          <a href="liveFeed.html">
+            <i class="ph ph-video-camera"></i><br />
+            <span class="nav-name">Live Feed</span>
+          </a>
+        </li>
+        <li>
+          <a href="profile.html">
+            <i class="ph ph-user"></i><br />
+            <span class="nav-name">Profile</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </footer>
 
-    <footer>
-      <nav class="bottom-nav">
-        <ul>
-          <li>
-            <a href="home.html">
-              <i class="ph ph-house"></i><br />
-              <span class="nav-name">Home</span>
-            </a>
-          </li>
-          <li>
-            <a href="liveFeed.html">
-              <i class="ph ph-video-camera"></i><br />
-              <span class="nav-name">Live Feed</span>
-            </a>
-          </li>
-          <li>
-            <a href="profile.html">
-              <i class="ph ph-user"></i><br />
-              <span class="nav-name">Profile</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </footer>
+  <script>
+    let currentIndex = 0;
+    const slides = document.querySelectorAll( ".slide" );
 
-    <script>
-      let currentIndex = 0;
-      const slides = document.querySelectorAll(".slide");
+    function showSlide( index )
+    {
+      slides.forEach( ( slide, i ) =>
+      {
+        slide.style.display = i === index ? "block" : "none";
+      } );
+    }
 
-      function showSlide(index) {
-        slides.forEach((slide, i) => {
-          slide.style.display = i === index ? "block" : "none";
-        });
-      }
+    function nextSlide()
+    {
+      currentIndex = ( currentIndex + 1 ) % slides.length;
+      showSlide( currentIndex );
+    }
 
-      function nextSlide() {
-        currentIndex = (currentIndex + 1) % slides.length;
-        showSlide(currentIndex);
-      }
+    setInterval( nextSlide, 10000 ); // Change slide every 10 seconds
+    showSlide( currentIndex );
 
-      setInterval(nextSlide, 10000); // Change slide every 10 seconds
-      showSlide(currentIndex);
-
-      function toggleFeature(element) {
-        const allFeatures = document.querySelectorAll(".feature");
-        allFeatures.forEach((feature) => {
-          if (feature !== element) {
-            feature.classList.remove("show");
-          }
-        });
-        element.classList.toggle("show");
-      }
-
-      // Toggle notification popup visibility
-      function togglePopup(event) {
-        event.preventDefault();
-        var popup = document.getElementById("notificationPopup");
-        popup.classList.toggle("show");
-      }
-    </script>
-    <script type="module">
-      import { setupNoti } from "./notification.js";
-      setupNoti();
-
-      document.addEventListener("DOMContentLoaded", function () {
-        const links = document.querySelectorAll(".bottom-nav ul li a");
-        links.forEach((link) => {
-          if (link.href === window.location.href) {
-            link.classList.add("active");
-          }
-        });
-      });
-
-      document.addEventListener("DOMContentLoaded", function () {
-        const userData = JSON.parse(localStorage.getItem("user"));
-        const greetingElement = document.querySelector(".greeting h1");
-
-        if (userData) {
-          greetingElement.textContent = `Welcome, ${userData.firstname} ${userData.lastname}`;
-        } else {
-          greetingElement.textContent = `Welcome, Guest`;
+    function toggleFeature( element )
+    {
+      const allFeatures = document.querySelectorAll( ".feature" );
+      allFeatures.forEach( ( feature ) =>
+      {
+        if ( feature !== element )
+        {
+          feature.classList.remove( "show" );
         }
-      });
+      } );
+      element.classList.toggle( "show" );
+    }
 
-      // Existing scripts for notification setup and active link highlighting
-    </script>
-  </body>
+    // Toggle notification popup visibility
+    function togglePopup( event )
+    {
+      event.preventDefault();
+      var popup = document.getElementById( "notificationPopup" );
+      popup.classList.toggle( "show" );
+    }
+  </script>
+  <script type="module">
+    import { setupNoti } from "./notification.js";
+    setupNoti();
+
+    document.addEventListener( "DOMContentLoaded", function ()
+    {
+      const links = document.querySelectorAll( ".bottom-nav ul li a" );
+      links.forEach( ( link ) =>
+      {
+        if ( link.href === window.location.href )
+        {
+          link.classList.add( "active" );
+        }
+      } );
+    } );
+
+    document.addEventListener( "DOMContentLoaded", function ()
+    {
+      const userData = JSON.parse( localStorage.getItem( "user" ) );
+      const greetingElement = document.querySelector( ".greeting h1" );
+
+      if ( userData )
+      {
+        greetingElement.textContent = `Welcome, ${userData.firstname} ${userData.lastname}`;
+      } else
+      {
+        greetingElement.textContent = `Welcome, Guest`;
+      }
+    } );
+
+    // Existing scripts for notification setup and active link highlighting
+  </script>
+</body>
+
 </html>
