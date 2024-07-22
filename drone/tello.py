@@ -1,6 +1,5 @@
 from djitellopy import Tello
 from drone.config import DEBUG_VIDEO, DEBUG_WEBSOCKET, TELLO_HOST
-from tello_asyncio import Tello as TelloIO
 
 import subprocess
 
