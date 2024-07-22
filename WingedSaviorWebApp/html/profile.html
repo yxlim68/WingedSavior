@@ -1,194 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Winged Saviors - Profile</title>
-    <link href="styles.css" rel="stylesheet" type="text/css" />
-    <script src="phosphor.js" type="module"></script>
-    <style>
-      .profile-box i.ph {
-        vertical-align: bottom;
-      }
-    </style>
-  </head>
 
-  <body>
-    <header class="fixed-header">
-      <div class="header-content">
-        <a href="home.html" class="back-button">
-          <i class="ph ph-arrow-left"></i
-        ></a>
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>Winged Saviors - Profile</title>
+  <link
+    href="styles.css"
+    rel="stylesheet"
+    type="text/css"
+  />
+  <script
+    src="phosphor.js"
+    type="module"
+  ></script>
+  <style>
+    .profile-box i.ph {
+      vertical-align: bottom;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="fixed-header">
+    <div class="header-content">
+      <a
+        href="home.html"
+        class="back-button"
+      >
+        <i class="ph ph-arrow-left"></i></a>
+      <img
+        src="asset/logo-wingedSaviors-whitky.svg"
+        alt="Winged Saviors Logo"
+        class="logo-img"
+      />
+      <div class="notification-container">
+        <a
+          href="#"
+          class="notification-icon"
+          onclick="togglePopup(event)"
+        >
+          <i class="ph ph-bell"></i>
+        </a>
+        <div
+          class="notification-popup"
+          id="notificationPopup"
+        >
+          <!-- Notification content goes here -->
+          <p>This is a notification popup!</p>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="background-image">
+    <div class="profile-container">
+      <div class="profile-box">
         <img
-          src="asset/logo-wingedSaviors-whitky.svg"
-          alt="Winged Saviors Logo"
-          class="logo-img"
+          id="profile-pic-display"
+          src="img/default-avatar.svg"
+          alt="User Avatar"
+          class="profile-avatar"
         />
-        <div class="notification-container">
-          <a href="#" class="notification-icon" onclick="togglePopup(event)">
-            <i class="ph ph-bell"></i>
-          </a>
-          <div class="notification-popup" id="notificationPopup">
-            <!-- Notification content goes here -->
-            <p>This is a notification popup!</p>
-          </div>
+        <h2 id="name-display">Ahmad Raju</h2>
+        <hr />
+        <p>
+          <i class="ph ph-user"></i><b>Full Name: </b>
+          <span id="first-name-display">Ahmad Raju A/L Rajandran</span>
+        </p>
+        <hr />
+        <p>
+          <i class="ph ph-user-circle"></i><b>Username: </b><span id="username-display">username</span>
+        </p>
+        <hr />
+        <p>
+          <i class="ph ph-envelope"></i><b>Email: </b><span id="email-display">user@example.com</span>
+        </p>
+        <hr />
+        <p>
+          <i class="ph ph-calendar"></i><b>Member Since: </b><span id="register-display">Jun 2024</span>
+        </p>
+        <hr />
+        <p>
+          <i class="ph ph-building"></i><b>Organization: </b><span id="organization-display">Rescue Team Force</span>
+        </p>
+        <hr />
+        <br /><br />
+        <div class="profile-actions">
+          <button
+            class="button"
+            onclick="location.href='setting.html'"
+          >
+            Edit Profile
+          </button>
+          <button class="button logout-button">Log Out</button>
         </div>
-      </div>
-    </header>
-    <main class="background-image">
-      <div class="profile-container">
-        <div class="profile-box">
-          <img
-            id="profile-pic-display"
-            src="img/default-avatar.svg"
-            alt="User Avatar"
-            class="profile-avatar"
-          />
-          <h2 id="name-display">Ahmad Raju</h2>
-          <hr />
-          <p>
-            <i class="ph ph-user"></i><b>Full Name: </b>
-            <span id="first-name-display">Ahmad Raju A/L Rajandran</span>
-          </p>
-          <hr />
-          <p>
-            <i class="ph ph-user-circle"></i><b>Username: </b
-            ><span id="username-display">username</span>
-          </p>
-          <hr />
-          <p>
-            <i class="ph ph-envelope"></i><b>Email: </b
-            ><span id="email-display">user@example.com</span>
-          </p>
-          <hr />
-          <p>
-            <i class="ph ph-calendar"></i><b>Member Since: </b
-            ><span id="register-display">Jun 2024</span>
-          </p>
-          <hr />
-          <p>
-            <i class="ph ph-building"></i><b>Organization: </b
-            ><span id="organization-display">Rescue Team Force</span>
-          </p>
-          <hr />
+        <div class="feedback-link">
+          <!-- <p>Have feedback? <a href="#">Leave feedback</a></p> -->
           <br /><br />
-          <div class="profile-actions">
-            <button class="button" onclick="location.href='setting.html'">
-              Edit Profile
-            </button>
-            <button class="button logout-button">Log Out</button>
-          </div>
-          <div class="feedback-link">
-            <!-- <p>Have feedback? <a href="#">Leave feedback</a></p> -->
-            <br /><br />
-          </div>
         </div>
       </div>
-    </main>
+    </div>
+  </main>
 
-    <footer>
-      <nav class="bottom-nav">
-        <ul>
-          <li>
-            <a href="home.html">
-              <i class="ph ph-house"></i><br />
-              <span class="nav-name">Home</span>
-            </a>
-          </li>
-          <li>
-            <a href="liveFeed.html">
-              <i class="ph ph-video-camera"></i><br />
-              <span class="nav-name">Live Feed</span>
-            </a>
-          </li>
-          <li>
-            <a href="profile.html">
-              <i class="ph ph-user"></i><br />
-              <span class="nav-name">Profile</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </footer>
+  <footer>
+    <nav class="bottom-nav">
+      <ul>
+        <li>
+          <a href="home.html">
+            <i class="ph ph-house"></i><br />
+            <span class="nav-name">Home</span>
+          </a>
+        </li>
+        <li>
+          <a href="liveFeed.html">
+            <i class="ph ph-video-camera"></i><br />
+            <span class="nav-name">Live Feed</span>
+          </a>
+        </li>
+        <li>
+          <a href="profile.html">
+            <i class="ph ph-user"></i><br />
+            <span class="nav-name">Profile</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </footer>
 
-    <script type="module">
-      import { api } from "./conn.js";
+  <script type="module">
+    import { api } from "./conn.js";
 
-      // Load profile data from localStorage
-      window.onload = function () {
-        const user = localStorage.getItem("user");
+    // Load profile data from localStorage
+    window.onload = function ()
+    {
+      const user = localStorage.getItem( "user" );
 
-        if (!user) {
-          alert("Invalid user");
-          window.location.href = "login.html";
-          return;
-        }
-
-        document
-          .querySelector(".logout-button")
-          .addEventListener("click", function () {
-            localStorage.removeItem("user");
-            alert("Logout Success");
-            window.location.href = "login.html";
-          });
-
-        // parse user data
-        const userData = JSON.parse(user);
-
-        const name = `${userData.firstname} ${userData.lastname}`;
-        const email = userData.email;
-        const username = userData.username;
-        const registerAt = userData.create_at;
-
-        if (userData.profile_image.length > 0) {
-          document.querySelector("#profile-pic-display").src =
-            "data:image/jpeg;base64," + userData.profile_image;
-        }
-
-        document.querySelector("#first-name-display").textContent = name;
-        document.querySelector("#organization-display").textContent =
-          userData.organization;
-        if (name) {
-          document.querySelector("#name-display").textContent =
-            userData.firstname;
-        }
-        if (email) {
-          document.querySelector("#email-display").textContent = email;
-        }
-        if (username) {
-          document.querySelector("#username-display").textContent = username;
-        }
-
-        if (registerAt) {
-          // parse
-          const realDate = new Date(registerAt);
-          document.querySelector(
-            "#register-display"
-          ).textContent = `${realDate.getDate()}/${realDate.getMonth()}/${realDate.getFullYear()}`;
-        }
-      };
-
-      // Toggle notification popup visibility
-      function togglePopup(event) {
-        event.preventDefault();
-        var popup = document.getElementById("notificationPopup");
-        popup.classList.toggle("show");
+      if ( !user )
+      {
+        alert( "Invalid user" );
+        window.location.href = "login.html";
+        return;
       }
-    </script>
-    <script type="module">
-      import { setupNoti } from "./notification.js";
-      setupNoti();
-    </script>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const links = document.querySelectorAll(".bottom-nav ul li a");
-        links.forEach((link) => {
-          if (link.href === window.location.href) {
-            link.classList.add("active");
-          }
-        });
-      });
-    </script>
-  </body>
+      document
+        .querySelector( ".logout-button" )
+        .addEventListener( "click", function ()
+        {
+          localStorage.removeItem( "user" );
+          localStorage.removeItem( 'project' );
+          alert( "Logout Success" );
+          window.location.href = "login.html";
+        } );
+
+      // parse user data
+      const userData = JSON.parse( user );
+
+      const name = `${userData.firstname} ${userData.lastname}`;
+      const email = userData.email;
+      const username = userData.username;
+      const registerAt = userData.create_at;
+
+      if ( userData.profile_image.length > 0 )
+      {
+        document.querySelector( "#profile-pic-display" ).src =
+          "data:image/jpeg;base64," + userData.profile_image;
+      }
+
+      document.querySelector( "#first-name-display" ).textContent = name;
+      document.querySelector( "#organization-display" ).textContent =
+        userData.organization;
+      if ( name )
+      {
+        document.querySelector( "#name-display" ).textContent =
+          userData.firstname;
+      }
+      if ( email )
+      {
+        document.querySelector( "#email-display" ).textContent = email;
+      }
+      if ( username )
+      {
+        document.querySelector( "#username-display" ).textContent = username;
+      }
+
+      if ( registerAt )
+      {
+        // parse
+        const realDate = new Date( registerAt );
+        document.querySelector(
+          "#register-display"
+        ).textContent = `${realDate.getDate()}/${realDate.getMonth()}/${realDate.getFullYear()}`;
+      }
+    };
+
+    // Toggle notification popup visibility
+    function togglePopup( event )
+    {
+      event.preventDefault();
+      var popup = document.getElementById( "notificationPopup" );
+      popup.classList.toggle( "show" );
+    }
+  </script>
+  <script type="module">
+    import { setupNoti } from "./notification.js";
+    setupNoti();
+  </script>
+
+  <script>
+    document.addEventListener( "DOMContentLoaded", function ()
+    {
+      const links = document.querySelectorAll( ".bottom-nav ul li a" );
+      links.forEach( ( link ) =>
+      {
+        if ( link.href === window.location.href )
+        {
+          link.classList.add( "active" );
+        }
+      } );
+    } );
+  </script>
+</body>
+
 </html>
