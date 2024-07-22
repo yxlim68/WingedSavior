@@ -1,6 +1,9 @@
 import asyncio
 
 import sys, os
+
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
 import threading
 from flask import Flask
 from drone.tello import tello
@@ -11,7 +14,6 @@ from drone.location import location_bp
 
 from flask_cors import CORS
 
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 app = Flask(__name__)
 app.register_blueprint(routes.routes_bp)

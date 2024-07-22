@@ -486,3 +486,30 @@ def approve_user():
         return {
             "message": "Failed to approve user"
         }, 500
+    
+
+@routes_bp.route("/reject_user")
+def reject_user():
+    user_id = request.args.get('user')
+
+    if not user_id:
+        return {
+            "message": "Please provide user id"
+        }, 400
+    
+    query = "DELETE FROM users WHERE id = %s"
+    try:
+        _, cur = db()
+
+        cur.execute(query, (user_id,))
+        cur.execute('commit')
+
+        return {
+            "message": "Successful"
+        }, 200
+        
+    except Exception as e:
+        print('reject user', e)
+        return {
+            'message': 'Failed to delete user'
+        }, 500

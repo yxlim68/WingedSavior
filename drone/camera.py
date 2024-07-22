@@ -72,7 +72,7 @@ def send_notification(message):
 def get_project_parameters(project_id):
     db_config = {
         'user': 'root',
-        'password': 'root',
+        'password': '',
         'host': 'localhost',
         'database': 'drone',
         'raise_on_warnings': True
@@ -125,7 +125,7 @@ def snap(frame, confidence, x, y, w, h):
 def save_to_database(confidence, image_bytes):
     db_config = {
         'user': 'root',
-        'password': 'root',
+        'password': '',
         'host': 'localhost',
         'database': 'drone',
         'raise_on_warnings': True
