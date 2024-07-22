@@ -3,20 +3,10 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Play Project - Winged Saviors</title>
-  <link
-    href="styles.css"
-    rel="stylesheet"
-    type="text/css"
-  />
-  <script
-    src="phosphor.js"
-    type="module"
-  ></script>
+  <link href="styles.css" rel="stylesheet" type="text/css" />
+  <script src="phosphor.js" type="module"></script>
   <style>
     /* Project Detail Section */
     body {
@@ -64,6 +54,16 @@
 
     .start-stop-container img.animate {
       transform: scale(1.1);
+    }
+
+    .mode-selection-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .mode-selection-container label {
+      margin-right: 10px;
+      font-size: 1.1em;
     }
 
     /* Additional Card Style */
@@ -128,29 +128,15 @@
 <body>
   <header class="fixed-header">
     <div class="header-content">
-      <a
-        href="projectList.html"
-        class="back-button"
-      >
+      <a href="projectList.html" class="back-button">
         <i class="ph ph-arrow-left"></i>
       </a>
-      <img
-        src="asset/logo-wingedSaviors-whitky.svg"
-        alt="Winged Saviors Logo"
-        class="logo-img"
-      />
+      <img src="asset/logo-wingedSaviors-whitky.svg" alt="Winged Saviors Logo" class="logo-img" />
       <div class="notification-container">
-        <a
-          href="#"
-          class="notification-icon"
-          onclick="togglePopup(event)"
-        >
+        <a href="#" class="notification-icon" onclick="togglePopup(event)">
           <i class="ph ph-bell"></i>
         </a>
-        <div
-          class="notification-popup"
-          id="notificationPopup"
-        >
+        <div class="notification-popup" id="notificationPopup">
           <!-- Notification content goes here -->
           <p>This is a notification popup!</p>
         </div>
@@ -162,13 +148,14 @@
       <h2>Project Control</h2>
       <div class="project-info">
         <div class="start-stop-container">
-          <img
-            src="img/btnOff.png"
-            alt="Start"
-            id="startStopImage"
-          />
+          <img src="img/btnOff.png" alt="Start" id="startStopImage" />
           <p id="droneStatus"><strong>Drone Offline</strong></p>
           <br />
+        </div>
+        <!-- Mode Selection -->
+        <div class="mode-selection-container" id="modeSelectionContainer">
+          <label><input type="radio" name="mode" value="through" checked /> Through Mode</label>
+          <label><input type="radio" name="mode" value="square" /> Square Mode</label>
         </div>
         <!-- Timer Card -->
         <div class="timer-card">
@@ -187,10 +174,9 @@
           <p><strong>Project Name:</strong> <span id="projectName">--</span></p>
           <p><strong>Project Area:</strong> <span id="projectCoordinate">0cm</span></p>
           <p><strong>Drone Detection:</strong> <span id="droneDetection">Unknown</span></p>
-          <p>
-            <strong>Previous Processing Time:</strong> <span id="totalTime">00:00:00</span>
-          </p>
-        </div>
+          <p><strong>Previous Processing Time:</strong> <span id="totalTime">00:00:00</span></p>
+          <p><strong>Current Mode:</strong> <span id="droneMode">None</span></p> <!-- New element for mode -->
+        </div>        
       </div>
     </div>
   </main>
@@ -231,11 +217,10 @@
     };
 
     // Toggle notification popup visibility
-    function togglePopup( event )
-    {
+    function togglePopup(event) {
       event.preventDefault();
-      var popup = document.getElementById( "notificationPopup" );
-      popup.classList.toggle( "show" );
+      var popup = document.getElementById("notificationPopup");
+      popup.classList.toggle("show");
     }
   </script>
   <script type="module">
@@ -250,98 +235,85 @@
     let startTime;
     let prevTime;
 
-    document.querySelector( "#startStopImage" ).onclick = toggleStartStop;
+    document.querySelector("#startStopImage").onclick = toggleStartStop;
 
-    function toggleStartStop()
-    {
-      const startStopImage = document.getElementById( "startStopImage" );
-      const droneStatus = document.getElementById( "droneStatus" );
+    function toggleStartStop() {
+      const startStopImage = document.getElementById("startStopImage");
+      const droneStatus = document.getElementById("droneStatus");
+      const modeSelectionContainer = document.getElementById("modeSelectionContainer");
 
-      startStopImage.classList.add( "animate" );
-      setTimeout( () =>
-      {
-        if ( isStarted )
-        {
+      startStopImage.classList.add("animate");
+      setTimeout(() => {
+        if (isStarted) {
           stopDrone();
           startStopImage.src = "img/btnOff.png";
           droneStatus.innerHTML = "<strong>Drone Offline</strong>";
+          modeSelectionContainer.style.display = "block"; // Show the radio buttons when stopping
           isStarted = false;
-        } else
-        {
+        } else {
           startDrone();
           startStopImage.src = "img/btnOn.png";
           droneStatus.innerHTML = "<strong>Drone Online</strong>";
+          modeSelectionContainer.style.display = "none"; // Hide the radio buttons when starting
           isStarted = true;
         }
-        startStopImage.classList.remove( "animate" );
-      }, 300 ); // duration matches the CSS animation
+        startStopImage.classList.remove("animate");
+      }, 300); // duration matches the CSS animation
     }
 
-    function startDrone()
-    {
-      const urlParams = new URLSearchParams( window.location.search );
-      const projectId = urlParams.get( "project" );
-      localStorage.setItem( "project", projectId );
-
-      // Make an AJAX request to start the drone
-      fetch( api( `/start_drone?project=${projectId}` ) )
-        .then( ( response ) =>
-        {
-          response.text().then( console.log );
-          if ( !response.ok )
-          {
-            throw new Error( "Failed to start drone" );
-          }
-          console.log( "Drone started successfully" );
-          startTimer(); // Start the timer
-          // Optionally, update UI or perform additional actions upon successful start
-        } )
-        .catch( ( error ) =>
-        {
-          console.error( "Error starting drone:", error );
-          alert( "Failed to start the drone" );
-        } );
+    function startDrone() {
+      const projectId = getProjectId(); // Implement this function to get the current project ID
+      const mode = getSelectedMode();   // Implement this function to get the selected mode
+      
+      fetch(`/start_drone?project=${projectId}&mode=${mode}`, {
+        method: 'GET'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message === "Drone started successfully") {
+          // Update mode display
+          document.getElementById('droneMode').innerText = mode;
+          // Optionally hide the mode if needed after some time
+          setTimeout(() => {
+            document.getElementById('droneMode').innerText = 'None';
+          }, 5000); // Adjust the timeout as needed
+        } else {
+          console.error('Failed to start drone:', data.message);
+        }
+      })
+      .catch(error => console.error('Error:', error));
     }
 
-    function stopDrone()
-    {
-      const urlParams = new URLSearchParams( window.location.search );
-      const projectId = urlParams.get( "project" );
-      const duration = stopTimer(); // Stop the timer and get the duration
-
-      fetch( api( `/stop_drone?project=${projectId}` ) )
-        .then( ( response ) =>
-        {
-          if ( !response.ok )
-          {
-            throw new Error( "Failed to stop drone" );
-          }
-          console.log( "Drone stopped successfully" );
-          // Optionally, update UI or perform additional actions upon successful stop
-        } )
-        .catch( ( error ) =>
-        {
-          console.error( "Error stopping drone:", error );
-          alert( "Failed to stop the drone" );
-        } );
+    // Function to stop the drone
+    function stopDrone() {
+      fetch('/stop_drone', {
+        method: 'GET'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message === "Drone stop initiated") {
+          // Optionally hide the mode if needed
+          document.getElementById('droneMode').innerText = 'None';
+        } else {
+          console.error('Failed to stop drone:', data.message);
+        }
+      })
+      .catch(error => console.error('Error:', error));
     }
 
-    function startTimer()
-    {
-      if ( !startTime )
-      {
+    function startTimer() {
+      if (!startTime) {
         startTime = new Date();
       }
-      timerInterval = setInterval( () =>
-      {
+      timerInterval = setInterval(() => {
         const now = new Date();
-        const elapsed = new Date( now - startTime );
-        const elapsed2 = new Date( elapsed.getTime() - prevTime );
+        const elapsed = new Date(now - startTime);
+        const elapsed2 = new Date(elapsed.getTime() - prevTime);
 
-        const hours = String( elapsed2.getUTCHours() ).padStart( 2, "0" );
-        const minutes = String( elapsed2.getUTCMinutes() ).padStart( 2, "0" );
-        const seconds = String( elapsed2.getUTCSeconds() ).padStart( 2, "0" );
-        console.log( projectId );
+        const hours = String(elapsed2.getUTCHours()).padStart(2, "0");
+        const minutes = String(elapsed2.getUTCMinutes()).padStart(2, "0");
+        const seconds = String(elapsed2.getUTCSeconds()).padStart(2, "0");
+        console.log(projectId);
         fetch(
           api(
             `/update_timer?project=${projectId}&timer=${
@@ -359,24 +331,23 @@
         document.getElementById(
           "timer"
         ).textContent = `${hours}:${minutes}:${seconds}`;
-      }, 1000 );
+      }, 1000);
     }
 
-    function stopTimer()
-    {
-      clearInterval( timerInterval );
-      document.getElementById( "timer" ).textContent = "00:00:00";
+    function stopTimer() {
+      clearInterval(timerInterval);
+      document.getElementById("timer").textContent = "00:00:00";
       const endTime = new Date();
-      const duration = ( endTime - startTime ) / 1000; // Duration in seconds
-      console.log( duration );
+      const duration = (endTime - startTime) / 1000; // Duration in seconds
+      console.log(duration);
 
       // Format the duration to HH:MM:SS
-      const hours = String( Math.floor( duration / 3600 ) ).padStart( 2, "0" );
-      const minutes = String( Math.floor( ( duration % 3600 ) / 60 ) ).padStart(
+      const hours = String(Math.floor(duration / 3600)).padStart(2, "0");
+      const minutes = String(Math.floor((duration % 3600) / 60)).padStart(
         2,
         "0"
       );
-      const seconds = String( Math.floor( duration % 60 ) ).padStart( 2, "0" );
+      const seconds = String(Math.floor(duration % 60)).padStart(2, "0");
       document.getElementById(
         "totalTime"
       ).textContent = `${hours}:${minutes}:${seconds}`;
@@ -384,57 +355,51 @@
       return duration;
     }
 
-    document.addEventListener( "DOMContentLoaded", () =>
-    {
-      const urlParams = new URLSearchParams( window.location.search );
-      const projectId1 = urlParams.get( "project" );
-      console.log( "123" );
-      if ( projectId1 )
-      {
+    document.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const projectId1 = urlParams.get("project");
+      console.log("123");
+      if (projectId1) {
         projectId = projectId1;
-        loadProjectDetails( projectId1 );
+        loadProjectDetails(projectId1);
       }
-    } );
+    });
 
-    async function loadProjectDetails( projectId )
-    {
-      try
-      {
-        const res = await fetch( api( "/check_project?project=" + projectId ) );
+    async function loadProjectDetails(projectId) {
+      try {
+        const res = await fetch(api("/check_project?project=" + projectId));
 
-        if ( res.status !== 200 )
-        {
-          alert( "Project not found!" );
+        if (res.status !== 200) {
+          alert("Project not found!");
           window.location.href = "projectList.html";
           return;
         }
 
         const data = await res.json();
-        console.log( data );
+        console.log(data);
 
-        startTime = new Date( new Date().getTime() - data.timer * 1000 );
+        startTime = new Date(new Date().getTime() - data.timer * 1000);
         let duration = data.timer;
         prevTime = data.timer * 1000;
 
         // Format the duration to HH:MM:SS
-        const hours = String( Math.floor( duration / 3600 ) ).padStart( 2, "0" );
-        const minutes = String( Math.floor( ( duration % 3600 ) / 60 ) ).padStart(
+        const hours = String(Math.floor(duration / 3600)).padStart(2, "0");
+        const minutes = String(Math.floor((duration % 3600) / 60)).padStart(
           2,
           "0"
         );
-        const seconds = String( Math.floor( duration % 60 ) ).padStart( 2, "0" );
+        const seconds = String(Math.floor(duration % 60)).padStart(2, "0");
         document.getElementById(
           "totalTime"
         ).textContent = `${hours}:${minutes}:${seconds}`;
 
-        document.querySelector( "#projectName" ).textContent = data.name;
-        document.querySelector( "#projectCoordinate" ).textContent =
+        document.querySelector("#projectName").textContent = data.name;
+        document.querySelector("#projectCoordinate").textContent =
           data.coordinate;
-        document.querySelector( "#droneDetection" ).textContent =
-          data.detect.split( ',' ).map( d => detectionTypes[ d ] || "Unknown" ).join( ', ' );
-      } catch ( err )
-      {
-        console.error( err );
+        document.querySelector("#droneDetection").textContent =
+          data.detect.split(",").map((d) => detectionTypes[d] || "Unknown").join(", ");
+      } catch (err) {
+        console.error(err);
       }
     }
   </script>

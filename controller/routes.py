@@ -366,7 +366,8 @@ def start_drone_route():
     global drone_thread, drone_running, tello, movements, video_project
     
     project_id = request.args.get('project')
-    
+    mode = request.args.get('mode')  # Get mode from the request
+
     if not project_id:
         return {"message": "Invalid project"}, 400
 
@@ -383,7 +384,7 @@ def start_drone_route():
     # drone_thread = threading.Thread(target=start_drone, args=(tello,project_id,), daemon=True)
     # drone_thread.start()
 
-    start_drone(tello,project_id)
+    start_drone(tello,project_id, mode)
     return jsonify({"message": "Drone started successfully"}), 200
 
 @routes_bp.route('/stop_drone')
