@@ -1,4 +1,5 @@
 import base64
+import datetime
 import json
 from io import BytesIO
 import time
@@ -362,10 +363,11 @@ drone_thread = None
 drone_running = False
 movements = []
 start_time = None
+project = None
 
 @routes_bp.route('/start_drone')
 def start_drone_route():
-    global drone_thread, drone_running, tello, movements, video_project, start_time
+    global drone_thread, drone_running, tello, movements, video_project, start_time, project
     
     project_id = request.args.get('project')
     mode = request.args.get('mode')  # Get mode from the request
@@ -381,7 +383,8 @@ def start_drone_route():
     # project_id = data.get('project_id', 12)  # Default project ID
 
     drone_running = True
-    start_time = time.time() 
+    start_time = int(time.time())
+    project =project_id
     set_video_project(project_id)
 
     # drone_thread = threading.Thread(target=start_drone, args=(tello,project_id,), daemon=True)
@@ -392,9 +395,14 @@ def start_drone_route():
 
 @routes_bp.route('/check_running')
 def check_running():
-    global drone_running, start_time
+    global drone_running, start_time, project
 
-    if drone_running:
+    project_id = request.args.get('project')
+
+
+
+
+    if drone_running and project_id == project:
         return {
             "message": True,
             "time": start_time

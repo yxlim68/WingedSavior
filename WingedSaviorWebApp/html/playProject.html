@@ -346,6 +346,7 @@
   
       timerInterval = setInterval(() => {
         const now = new Date();
+<<<<<<< HEAD
         const elapsed = now - startTime;
         const hours = String(Math.floor(elapsed / 3600000)).padStart(2, "0");
         const minutes = String(Math.floor((elapsed % 3600000) / 60000)).padStart(2, "0");
@@ -362,6 +363,34 @@
   
         document.getElementById("timer").textContent = `${hours}:${minutes}:${seconds}`;
       }, 1000);
+=======
+        const elapsed = new Date( now.getTime() - startTime.getTime() );
+        const elapsed2 = new Date( elapsed.getTime() - prevTime );
+        console.log( now.getTime(), startTime.getTime(), elapsed.getTime(), elapsed2.getTime(), );
+
+        const hours = String( elapsed.getUTCHours() ).padStart( 2, "0" );
+        const minutes = String( elapsed.getUTCMinutes() ).padStart( 2, "0" );
+        const seconds = String( elapsed.getUTCSeconds() ).padStart( 2, "0" );
+        fetch(
+          api(
+            `/update_timer?project=${projectId}&timer=${elapsed.getTime() / 1000
+            }`
+          )
+        )
+          .then( ( res ) => res.json() )
+          .then( ( res ) =>
+          {
+            // console.log( res );
+          } )
+          .catch( ( err ) =>
+          {
+            console.error( err );
+          } );
+        document.getElementById(
+          "timer"
+        ).textContent = `${hours}:${minutes}:${seconds}`;
+      }, 1000 );
+>>>>>>> 487c7ab60c84cfde69c30673f014f89fe0ee1bea
     }
   
     function stopTimer() {
@@ -387,6 +416,7 @@
         loadProjectDetails(projectId1);
         checkRunning(projectId1);
       }
+<<<<<<< HEAD
     });
   
     async function checkRunning(projectId) {
@@ -395,6 +425,24 @@
         const data = await res.json();
         if (data.message) {
           isStarted = true;
+=======
+    } );
+
+
+    async function checkRunning( projectId )
+    {
+      try
+      {
+        const res = await fetch( api( '/check_running?project=' + projectId ) );
+        const data = await res.json();
+        if ( data.message )
+        {
+          console.log( data );
+          isStarted = true;
+          startTime = new Date( data.time * 1000 );
+          console.log( data.time, startTime );
+          startTimer();
+>>>>>>> 487c7ab60c84cfde69c30673f014f89fe0ee1bea
           startStopImage.src = "img/btnOn.png";
         }
       } catch (e) {
