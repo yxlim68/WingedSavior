@@ -270,100 +270,96 @@
   </script>
   <script type="module">
     import { api, detectionTypes } from "./conn.js";
-  
+
     let isStarted = false;
     let timerInterval;
     let startTime;
-  
-    document.querySelector("#startStopImage").onclick = toggleStartStop;
-  
-    const startStopImage = document.getElementById("startStopImage");
-  
-    function toggleStartStop() {
-      const droneStatus = document.getElementById("droneStatus");
-      const modeSelectionContainer = document.getElementById("modeSelectionContainer");
-  
-      startStopImage.classList.add("animate");
-      setTimeout(() => {
-        if (isStarted) {
+    let prevTime;
+
+    document.querySelector( "#startStopImage" ).onclick = toggleStartStop;
+
+    const startStopImage = document.getElementById( "startStopImage" );
+    function toggleStartStop()
+    {
+      const droneStatus = document.getElementById( "droneStatus" );
+      const modeSelectionContainer = document.getElementById( "modeSelectionContainer" );
+
+      startStopImage.classList.add( "animate" );
+      setTimeout( () =>
+      {
+        if ( isStarted )
+        {
           stopDrone();
           startStopImage.src = "img/btnOff.png";
           droneStatus.innerHTML = "<strong>Drone Offline</strong>";
           modeSelectionContainer.style.display = "block"; // Show the radio buttons when stopping
           isStarted = false;
-        } else {
+        } else
+        {
           startDrone();
           startStopImage.src = "img/btnOn.png";
           droneStatus.innerHTML = "<strong>Drone Online</strong>";
           modeSelectionContainer.style.display = "none"; // Hide the radio buttons when starting
           isStarted = true;
         }
-        startStopImage.classList.remove("animate");
-      }, 300); // duration matches the CSS animation
+        startStopImage.classList.remove( "animate" );
+      }, 300 ); // duration matches the CSS animation
     }
-  
-    function startDrone() {
-      const mode = document.querySelector('[name="mode"]:checked').value;
-  
-      fetch(api(`/start_drone?project=${projectId}&mode=${mode}`), {
+
+    function startDrone()
+    {
+      const mode = document.querySelector( '[name="mode"]:checked' ).value;
+
+      fetch( api( `/start_drone?project=${projectId}&mode=${mode}` ), {
         method: 'GET'
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.message === "Drone started successfully") {
+      } )
+        .then( response => response.json() )
+        .then( data =>
+        {
+          if ( data.message === "Drone started successfully" )
+          {
             // Update mode display
-            document.getElementById('droneMode').innerText = mode;
+            document.getElementById( 'droneMode' ).innerText = mode;
             startTimer();
-          } else {
-            console.error('Failed to start drone:', data.message);
+          } else
+          {
+            console.error( 'Failed to start drone:', data.message );
           }
-        })
-        .catch(error => console.error('Error:', error));
+        } )
+        .catch( error => console.error( 'Error:', error ) );
     }
-  
+
     // Function to stop the drone
-    function stopDrone() {
-      const duration = stopTimer(); // Stop the timer and get the duration
-  
-      fetch(api(`/stop_drone?project=${projectId}`), {
+    function stopDrone()
+    {
+      fetch( api( '/stop_drone' ), {
         method: 'GET'
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.message === "Drone stop initiated") {
+      } )
+        .then( response => response.json() )
+        .then( data =>
+        {
+          if ( data.message === "Drone stop initiated" )
+          {
             // Optionally hide the mode if needed
-            document.getElementById('droneMode').innerText = 'None';
-          } else {
-            console.error('Failed to stop drone:', data.message);
+            document.getElementById( 'droneMode' ).innerText = 'None';
+            stopTimer();
+          } else
+          {
+            console.error( 'Failed to stop drone:', data.message );
           }
-        })
-        .catch(error => console.error('Error:', error));
+        } )
+        .catch( error => console.error( 'Error:', error ) );
     }
-  
-    function startTimer() {
-      startTime = new Date();
-      document.getElementById("timer").textContent = "00:00:00"; // Reset the timer display
-  
-      timerInterval = setInterval(() => {
+
+    function startTimer()
+    {
+      if ( !startTime )
+      {
+        startTime = new Date();
+      }
+      timerInterval = setInterval( () =>
+      {
         const now = new Date();
-<<<<<<< HEAD
-        const elapsed = now - startTime;
-        const hours = String(Math.floor(elapsed / 3600000)).padStart(2, "0");
-        const minutes = String(Math.floor((elapsed % 3600000) / 60000)).padStart(2, "0");
-        const seconds = String(Math.floor((elapsed % 60000) / 1000)).padStart(2, "0");
-  
-        fetch(api(`/update_timer?project=${projectId}&timer=${elapsed / 1000}`))
-          .then(res => res.json())
-          .then(res => {
-            console.log(res);
-          })
-          .catch(err => {
-            console.error(err);
-          });
-  
-        document.getElementById("timer").textContent = `${hours}:${minutes}:${seconds}`;
-      }, 1000);
-=======
         const elapsed = new Date( now.getTime() - startTime.getTime() );
         const elapsed2 = new Date( elapsed.getTime() - prevTime );
         console.log( now.getTime(), startTime.getTime(), elapsed.getTime(), elapsed2.getTime(), );
@@ -390,42 +386,41 @@
           "timer"
         ).textContent = `${hours}:${minutes}:${seconds}`;
       }, 1000 );
->>>>>>> 487c7ab60c84cfde69c30673f014f89fe0ee1bea
     }
-  
-    function stopTimer() {
-      clearInterval(timerInterval);
+
+    function stopTimer()
+    {
+      clearInterval( timerInterval );
+      document.getElementById( "timer" ).textContent = "00:00:00";
       const endTime = new Date();
-      const duration = (endTime - startTime) / 1000; // Duration in seconds
-  
+      const duration = ( endTime - startTime ) / 1000; // Duration in seconds
+      console.log( duration );
+
       // Format the duration to HH:MM:SS
-      const hours = String(Math.floor(duration / 3600)).padStart(2, "0");
-      const minutes = String(Math.floor((duration % 3600) / 60)).padStart(2, "0");
-      const seconds = String(Math.floor(duration % 60)).padStart(2, "0");
-      document.getElementById("totalTime").textContent = `${hours}:${minutes}:${seconds}`;
-  
-      document.getElementById("timer").textContent = "00:00:00";
+      const hours = String( Math.floor( duration / 3600 ) ).padStart( 2, "0" );
+      const minutes = String( Math.floor( ( duration % 3600 ) / 60 ) ).padStart(
+        2,
+        "0"
+      );
+      const seconds = String( Math.floor( duration % 60 ) ).padStart( 2, "0" );
+      document.getElementById(
+        "totalTime"
+      ).textContent = `${hours}:${minutes}:${seconds}`;
+
       return duration;
     }
-  
-    document.addEventListener("DOMContentLoaded", () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const projectId1 = urlParams.get("project");
-      if (projectId1) {
+
+    document.addEventListener( "DOMContentLoaded", () =>
+    {
+      const urlParams = new URLSearchParams( window.location.search );
+      const projectId1 = urlParams.get( "project" );
+      console.log( "123" );
+      if ( projectId1 )
+      {
         projectId = projectId1;
-        loadProjectDetails(projectId1);
-        checkRunning(projectId1);
+        loadProjectDetails( projectId1 );
+        checkRunning( projectId1 );
       }
-<<<<<<< HEAD
-    });
-  
-    async function checkRunning(projectId) {
-      try {
-        const res = await fetch(api('/check_running'));
-        const data = await res.json();
-        if (data.message) {
-          isStarted = true;
-=======
     } );
 
 
@@ -442,40 +437,57 @@
           startTime = new Date( data.time * 1000 );
           console.log( data.time, startTime );
           startTimer();
->>>>>>> 487c7ab60c84cfde69c30673f014f89fe0ee1bea
           startStopImage.src = "img/btnOn.png";
         }
-      } catch (e) {
-        console.error(e);
+      }
+      catch ( e )
+      {
+        console.error( e );
       }
     }
-  
-    async function loadProjectDetails(projectId) {
-      try {
-        const res = await fetch(api("/check_project?project=" + projectId));
-  
-        if (res.status !== 200) {
-          alert("Project not found!");
+
+    async function loadProjectDetails( projectId )
+    {
+      try
+      {
+        const res = await fetch( api( "/check_project?project=" + projectId ) );
+
+        if ( res.status !== 200 )
+        {
+          alert( "Project not found!" );
           window.location.href = "projectList.html";
           return;
         }
-  
+
         const data = await res.json();
-  
+        console.log( data );
+
+        startTime = new Date( new Date().getTime() - data.timer * 1000 );
+        let duration = data.timer;
+        prevTime = data.timer * 1000;
+
         // Format the duration to HH:MM:SS
-        const hours = String(Math.floor(data.timer / 3600)).padStart(2, "0");
-        const minutes = String(Math.floor((data.timer % 3600) / 60)).padStart(2, "0");
-        const seconds = String(Math.floor((data.timer % 60))).padStart(2, "0");
-        document.getElementById("totalTime").textContent = `${hours}:${minutes}:${seconds}`;
-  
-        document.querySelector("#projectName").textContent = data.name;
-        document.querySelector("#projectCoordinate").textContent = data.coordinate;
-        document.querySelector("#droneDetection").textContent =
-          data.detect.split(",").map(d => detectionTypes[d] || "Unknown").join(", ");
-      } catch (err) {
-        console.error(err);
+        const hours = String( Math.floor( duration / 3600 ) ).padStart( 2, "0" );
+        const minutes = String( Math.floor( ( duration % 3600 ) / 60 ) ).padStart(
+          2,
+          "0"
+        );
+        const seconds = String( Math.floor( duration % 60 ) ).padStart( 2, "0" );
+        document.getElementById(
+          "totalTime"
+        ).textContent = `${hours}:${minutes}:${seconds}`;
+
+        document.querySelector( "#projectName" ).textContent = data.name;
+        document.querySelector( "#projectCoordinate" ).textContent =
+          data.coordinate;
+        document.querySelector( "#droneDetection" ).textContent =
+          data.detect.split( "," ).map( ( d ) => detectionTypes[ d ] || "Unknown" ).join( ", " );
+      } catch ( err )
+      {
+        console.error( err );
       }
     }
   </script>
 </body>
+
 </html>
