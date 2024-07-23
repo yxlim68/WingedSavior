@@ -1,6 +1,7 @@
 import base64
 import json
 from io import BytesIO
+import time
 import cv2
 from flask import Blueprint, Response, jsonify, request, Flask, send_file
 import threading
@@ -360,10 +361,11 @@ def update_project():
 drone_thread = None
 drone_running = False
 movements = []
+start_time = None
 
 @routes_bp.route('/start_drone')
 def start_drone_route():
-    global drone_thread, drone_running, tello, movements, video_project
+    global drone_thread, drone_running, tello, movements, video_project, start_time
     
     project_id = request.args.get('project')
     mode = request.args.get('mode')  # Get mode from the request
@@ -379,13 +381,28 @@ def start_drone_route():
     # project_id = data.get('project_id', 12)  # Default project ID
 
     drone_running = True
+    start_time = time.time() 
     set_video_project(project_id)
 
     # drone_thread = threading.Thread(target=start_drone, args=(tello,project_id,), daemon=True)
     # drone_thread.start()
 
-    start_drone(tello,project_id, mode)
+    # start_drone(tello,project_id, mode)
     return jsonify({"message": "Drone started successfully"}), 200
+
+@routes_bp.route('/check_running')
+def check_running():
+    global drone_running, start_time
+
+    if drone_running:
+        return {
+            "message": True,
+            "time": start_time
+        }, 200
+    else:
+        return {
+            "message": False
+        }, 200
 
 @routes_bp.route('/stop_drone')
 def stop_drone_route():
